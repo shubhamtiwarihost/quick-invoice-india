@@ -425,11 +425,16 @@ function FileField({
             const reader = new FileReader();
             reader.onload = () => onData(String(reader.result || ""));
             reader.readAsDataURL(file);
+            e.target.value = "";
           }}
           className="block w-full text-xs"
         />
         {hasValue ? (
-          <button type="button" onClick={onClear} className="text-xs text-red-600">
+          <button
+            type="button"
+            onClick={onClear}
+            className="shrink-0 rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50"
+          >
             Remove
           </button>
         ) : null}

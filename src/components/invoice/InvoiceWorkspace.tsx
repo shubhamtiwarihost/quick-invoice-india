@@ -5,7 +5,7 @@ import { Download, MessageCircle, Printer, RotateCcw, Sparkles } from "lucide-re
 import { InvoiceForm } from "@/components/invoice/InvoiceForm";
 import { InvoicePreview } from "@/components/invoice/InvoicePreview";
 import { downloadInvoicePdf, whatsappInvoiceText } from "@/lib/exportPdf";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDateIN } from "@/lib/format";
 import { computeInvoice } from "@/lib/gstEngine";
 import { useInvoiceStore } from "@/lib/store";
 
@@ -51,7 +51,7 @@ export function InvoiceWorkspace() {
     invoiceNo: draft.meta.invoiceNo,
     buyer: draft.client.name,
     total: formatCurrency(summary.grandTotal, draft.meta.currency),
-    dueDate: draft.meta.dueDate,
+    dueDate: formatDateIN(draft.meta.dueDate) || draft.meta.dueDate,
   });
 
   return (

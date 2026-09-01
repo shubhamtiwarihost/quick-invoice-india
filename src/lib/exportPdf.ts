@@ -12,6 +12,16 @@ export async function downloadInvoicePdf(
     useCORS: true,
     backgroundColor: "#ffffff",
     logging: false,
+    onclone: (clonedDoc) => {
+      const clonedEl = clonedDoc.getElementById(element.id || "invoice-a4");
+      if (clonedEl) {
+        let parent = clonedEl.parentElement;
+        while (parent) {
+          parent.style.transform = "none";
+          parent = parent.parentElement;
+        }
+      }
+    },
   });
 
   const imgData = canvas.toDataURL("image/jpeg", 0.95);

@@ -15,15 +15,30 @@ export default function HsnFinderPage() {
 
   function applyToInvoice(code: string, description: string, gst: number) {
     const slab = gst === 3 ? 5 : gst === 0 || gst === 5 || gst === 12 || gst === 18 || gst === 28 ? gst : 18;
-    addItem();
-    const latest = useInvoiceStore.getState().items;
-    const created = latest[latest.length - 1];
-    if (created) {
-      updateItem(created.id, {
+    const currentItems = useInvoiceStore.getState().items;
+    const isSingleEmptyItem =
+      currentItems.length === 1 &&
+      !currentItems[0].description.trim() &&
+      !currentItems[0].hsnSac.trim() &&
+      currentItems[0].rate === 0;
+
+    if (isSingleEmptyItem) {
+      updateItem(currentItems[0].id, {
         description,
         hsnSac: code,
         gstSlab: slab as 0 | 5 | 12 | 18 | 28,
       });
+    } else {
+      addItem();
+      const latest = useInvoiceStore.getState().items;
+      const created = latest[latest.length - 1];
+      if (created) {
+        updateItem(created.id, {
+          description,
+          hsnSac: code,
+          gstSlab: slab as 0 | 5 | 12 | 18 | 28,
+        });
+      }
     }
     router.push("/");
   }

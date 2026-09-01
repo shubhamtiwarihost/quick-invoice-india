@@ -1,5 +1,5 @@
 import { formatDateIN } from "@/lib/format";
-import { clientBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
+import { clientBlock, clientShippingBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
 
 export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
   const { seller, client, items, meta, config } = draft;
@@ -43,11 +43,7 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           </div>
           <div className="px-4 py-3">
             <p className="font-bold uppercase">Ship to</p>
-            <p className="mt-1">
-              {client.shippingSameAsBilling
-                ? "Same as billing address"
-                : `${client.shippingAddress}, ${client.shippingCity} - ${client.shippingPincode}`}
-            </p>
+            <p className="mt-1">{clientShippingBlock(draft)}</p>
             {config.reverseCharge ? (
               <p className="mt-2 font-semibold">Reverse Charge Applicable</p>
             ) : null}

@@ -57,8 +57,12 @@ export default function GstCalculatorPage() {
           <input
             type="number"
             min={0}
-            value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
+            value={amount === 0 ? "" : amount}
+            placeholder="0"
+            onChange={(e) => {
+              const v = e.target.value;
+              setAmount(v === "" ? 0 : Number(v));
+            }}
             className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-teal-600"
           />
         </label>

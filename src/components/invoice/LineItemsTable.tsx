@@ -91,7 +91,10 @@ function ItemCard({
             min={0}
             step="any"
             value={item.quantity}
-            onChange={(e) => onChange({ quantity: Number(e.target.value) })}
+            onChange={(e) => {
+              const v = e.target.value;
+              onChange({ quantity: v === "" ? 0 : Number(v) });
+            }}
             className={inputClass}
           />
         </Mini>
@@ -112,7 +115,10 @@ function ItemCard({
             min={0}
             step="any"
             value={item.rate}
-            onChange={(e) => onChange({ rate: Number(e.target.value) })}
+            onChange={(e) => {
+              const v = e.target.value;
+              onChange({ rate: v === "" ? 0 : Number(v) });
+            }}
             className={inputClass}
           />
         </Mini>
@@ -133,7 +139,10 @@ function ItemCard({
               min={0}
               step="any"
               value={item.discountValue}
-              onChange={(e) => onChange({ discountValue: Number(e.target.value) })}
+              onChange={(e) => {
+                const v = e.target.value;
+                onChange({ discountValue: v === "" ? 0 : Number(v) });
+              }}
               className={inputClass}
             />
           </div>
