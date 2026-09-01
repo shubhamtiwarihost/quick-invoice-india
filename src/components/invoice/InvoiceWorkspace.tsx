@@ -131,14 +131,14 @@ export function InvoiceWorkspace() {
         </button>
       </div>
 
-      <div className="grid flex-1 lg:grid-cols-[minmax(340px,420px)_1fr]">
+      <div className="invoice-workspace-grid grid flex-1 lg:grid-cols-[minmax(340px,420px)_1fr]">
         <aside
           className={`no-print overflow-y-auto bg-slate-50 p-3 ${tab === "form" ? "block" : "hidden"} lg:block`}
         >
           <InvoiceForm grandTotal={summary.grandTotal} />
         </aside>
         <section
-          className={`overflow-auto bg-slate-200/70 p-4 ${tab === "preview" ? "block" : "hidden"} lg:block`}
+          className={`invoice-preview-section overflow-auto bg-slate-200/70 p-4 ${tab === "preview" ? "block" : "hidden"} lg:block`}
         >
           <div className="invoice-scale mx-auto w-fit">
             <InvoicePreview draft={draft} summary={summary} />

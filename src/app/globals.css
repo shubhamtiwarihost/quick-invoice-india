@@ -17,31 +17,6 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media print {
-  .no-print {
-    display: none !important;
-  }
-
-  body {
-    background: white !important;
-  }
-
-  .invoice-scale {
-    transform: none !important;
-  }
-
-  .invoice-a4 {
-    box-shadow: none !important;
-    width: 210mm !important;
-    min-height: 297mm !important;
-    padding: 12mm !important;
-  }
-
-  footer {
-    display: none !important;
-  }
-}
-
 @media (max-width: 1100px) {
   .invoice-scale {
     transform: scale(0.72);
@@ -53,5 +28,86 @@ body {
   .invoice-scale {
     transform: scale(0.82);
     transform-origin: top center;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-sizing: border-box !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .no-print,
+  header,
+  footer,
+  aside,
+  nav {
+    display: none !important;
+  }
+
+  main,
+  section,
+  div {
+    overflow: visible !important;
+  }
+
+  .invoice-workspace-grid,
+  .invoice-preview-section {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  .invoice-scale {
+    transform: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .invoice-print-root {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .invoice-a4 {
+    box-shadow: none !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    box-sizing: border-box !important;
+    padding: 10mm !important;
+    margin: 0 auto !important;
+    background: #ffffff !important;
+  }
+
+  .invoice-a4 > div {
+    min-height: auto !important;
+    height: auto !important;
   }
 }
