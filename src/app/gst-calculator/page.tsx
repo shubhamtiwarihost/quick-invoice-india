@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { formatIndianNumber } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
 import { numberToWordsIndian } from "@/lib/numberToWordsIndian";
 import { round2 } from "@/lib/gstEngine";
 
@@ -134,7 +134,7 @@ function Card({ label, value, accent }: { label: string; value: number; accent?:
   return (
     <div className={`rounded-2xl border p-4 ${accent ? "border-teal-700 bg-teal-50" : "border-slate-200 bg-white"}`}>
       <p className="text-xs text-slate-500">{label}</p>
-      <p className="mt-1 text-xl font-semibold">₹{formatIndianNumber(value)}</p>
+      <p className="mt-1 text-xl font-semibold">{formatCurrency(value)}</p>
     </div>
   );
 }

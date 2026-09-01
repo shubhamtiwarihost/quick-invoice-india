@@ -5,7 +5,7 @@ import { Download, MessageCircle, Printer, RotateCcw, Sparkles } from "lucide-re
 import { InvoiceForm } from "@/components/invoice/InvoiceForm";
 import { InvoicePreview } from "@/components/invoice/InvoicePreview";
 import { downloadInvoicePdf, whatsappInvoiceText } from "@/lib/exportPdf";
-import { formatMoney } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
 import { computeInvoice } from "@/lib/gstEngine";
 import { useInvoiceStore } from "@/lib/store";
 
@@ -50,7 +50,7 @@ export function InvoiceWorkspace() {
     seller: draft.seller.businessName,
     invoiceNo: draft.meta.invoiceNo,
     buyer: draft.client.name,
-    total: formatMoney(summary.grandTotal, draft.meta.currency),
+    total: formatCurrency(summary.grandTotal, draft.meta.currency),
     dueDate: draft.meta.dueDate,
   });
 
@@ -65,7 +65,7 @@ export function InvoiceWorkspace() {
               : summary.supplyType === "inter"
                 ? "Inter-state: IGST"
                 : "Bill of supply (no GST columns)"}{" "}
-            · Total {formatMoney(summary.grandTotal, draft.meta.currency)}
+            · Total {formatCurrency(summary.grandTotal, draft.meta.currency)}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

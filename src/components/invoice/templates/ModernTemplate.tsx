@@ -1,5 +1,5 @@
 import { formatDateIN } from "@/lib/format";
-import { clientBlock, money, sellerBlock, type TemplateProps } from "./shared";
+import { clientBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
 
 export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
   const { seller, client, items, meta, config } = draft;
@@ -61,11 +61,11 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             <th className="px-2 py-2 text-left font-medium">#</th>
             <th className="px-2 py-2 text-left font-medium">Item</th>
             <th className="px-2 py-2 text-left font-medium">HSN/SAC</th>
-            <th className="px-2 py-2 text-right font-medium">Qty</th>
-            <th className="px-2 py-2 text-right font-medium">Rate</th>
-            <th className="px-2 py-2 text-right font-medium">Disc.</th>
-            {gst ? <th className="px-2 py-2 text-right font-medium">GST</th> : null}
-            <th className="px-2 py-2 text-right font-medium">Amount</th>
+            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Qty</th>
+            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Rate</th>
+            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Disc.</th>
+            {gst ? <th className="px-2 py-2 text-right font-medium whitespace-nowrap">GST</th> : null}
+            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Amount</th>
           </tr>
         </thead>
         <tbody>
@@ -76,13 +76,13 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
                 <td className="px-2 py-2">{i + 1}</td>
                 <td className="px-2 py-2 font-medium">{item.description || "—"}</td>
                 <td className="px-2 py-2">{item.hsnSac}</td>
-                <td className="px-2 py-2 text-right">
+                <td className="px-2 py-2 text-right whitespace-nowrap">
                   {item.quantity} {item.unit}
                 </td>
-                <td className="px-2 py-2 text-right">{money(item.rate, meta.currency)}</td>
-                <td className="px-2 py-2 text-right">{money(line?.discountAmount ?? 0, meta.currency)}</td>
-                {gst ? <td className="px-2 py-2 text-right">{item.gstSlab}%</td> : null}
-                <td className="px-2 py-2 text-right font-medium">{money(line?.lineTotal ?? 0, meta.currency)}</td>
+                <td className="px-2 py-2 text-right whitespace-nowrap">{formatCurrency(item.rate, meta.currency)}</td>
+                <td className="px-2 py-2 text-right whitespace-nowrap">{formatCurrency(line?.discountAmount ?? 0, meta.currency)}</td>
+                {gst ? <td className="px-2 py-2 text-right whitespace-nowrap">{item.gstSlab}%</td> : null}
+                <td className="px-2 py-2 text-right font-medium whitespace-nowrap">{formatCurrency(line?.lineTotal ?? 0, meta.currency)}</td>
               </tr>
             );
           })}
@@ -90,23 +90,23 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
       </table>
 
       <section className="mt-4 ml-auto w-64 text-[11px]">
-        <Row label="Taxable value" value={money(summary.taxableValue, meta.currency)} />
+        <Row label="Taxable value" value={formatCurrency(summary.taxableValue, meta.currency)} />
         {gst && summary.supplyType === "intra" ? (
           <>
-            <Row label="CGST" value={money(summary.cgst, meta.currency)} />
-            <Row label="SGST/UTGST" value={money(summary.sgst, meta.currency)} />
+            <Row label="CGST" value={formatCurrency(summary.cgst, meta.currency)} />
+            <Row label="SGST/UTGST" value={formatCurrency(summary.sgst, meta.currency)} />
           </>
         ) : null}
         {gst && summary.supplyType === "inter" ? (
-          <Row label="IGST" value={money(summary.igst, meta.currency)} />
+          <Row label="IGST" value={formatCurrency(summary.igst, meta.currency)} />
         ) : null}
-        <Row label="Round off" value={money(summary.roundOff, meta.currency)} />
+        <Row label="Round off" value={formatCurrency(summary.roundOff, meta.currency)} />
         <div
-          className="mt-2 flex items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-white"
+          className="mt-2 flex items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-white whitespace-nowrap"
           style={{ backgroundColor: color }}
         >
           <span>Total</span>
-          <span>{money(summary.grandTotal, meta.currency)}</span>
+          <span>{formatCurrency(summary.grandTotal, meta.currency)}</span>
         </div>
       </section>
 
@@ -132,7 +132,7 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
         <div className="rounded-xl border border-slate-200 p-3">
           <p className="font-semibold">Terms</p>
           <pre className="mt-1 whitespace-pre-wrap font-sans text-[10px] leading-4 text-slate-600">
-            {meta.terms}
+            {cleanTerms(meta.terms)}
           </pre>
           <div className="mt-6 text-right">
             {seller.signatureImage ? (

@@ -13,7 +13,7 @@ export default function HsnFinderPage() {
   const items = useInvoiceStore((s) => s.items);
   const router = useRouter();
 
-  function useOnInvoice(code: string, description: string, gst: number) {
+  function applyToInvoice(code: string, description: string, gst: number) {
     const slab = gst === 3 ? 5 : gst === 0 || gst === 5 || gst === 12 || gst === 18 || gst === 28 ? gst : 18;
     addItem();
     const latest = useInvoiceStore.getState().items;
@@ -62,7 +62,7 @@ export default function HsnFinderPage() {
                 <td className="px-4 py-2 text-right">
                   <button
                     type="button"
-                    onClick={() => useOnInvoice(row.code, row.description, row.typicalGst)}
+                    onClick={() => applyToInvoice(row.code, row.description, row.typicalGst)}
                     className="text-xs font-medium text-teal-700 hover:underline"
                   >
                     Add to invoice

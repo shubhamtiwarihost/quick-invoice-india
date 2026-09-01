@@ -1,5 +1,5 @@
 import { formatDateIN } from "@/lib/format";
-import { clientBlock, money, sellerBlock, type TemplateProps } from "./shared";
+import { clientBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
 
 export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
   const { seller, client, items, meta, config } = draft;
@@ -46,10 +46,10 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
               <tr>
                 <th className="px-3 py-2 text-left">Item</th>
                 <th className="px-3 py-2">HSN</th>
-                <th className="px-3 py-2 text-right">Qty</th>
-                <th className="px-3 py-2 text-right">Rate</th>
-                {gst ? <th className="px-3 py-2 text-right">GST</th> : null}
-                <th className="px-3 py-2 text-right">Total</th>
+                <th className="px-3 py-2 text-right whitespace-nowrap">Qty</th>
+                <th className="px-3 py-2 text-right whitespace-nowrap">Rate</th>
+                {gst ? <th className="px-3 py-2 text-right whitespace-nowrap">GST</th> : null}
+                <th className="px-3 py-2 text-right whitespace-nowrap">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -57,12 +57,12 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
                 <tr key={item.id} className="border-t border-slate-100">
                   <td className="px-3 py-2 font-medium">{item.description}</td>
                   <td className="px-3 py-2 text-center">{item.hsnSac}</td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-right whitespace-nowrap">
                     {item.quantity} {item.unit}
                   </td>
-                  <td className="px-3 py-2 text-right">{money(item.rate, meta.currency)}</td>
-                  {gst ? <td className="px-3 py-2 text-right">{item.gstSlab}%</td> : null}
-                  <td className="px-3 py-2 text-right">{money(summary.lines[i]?.lineTotal ?? 0, meta.currency)}</td>
+                  <td className="px-3 py-2 text-right whitespace-nowrap">{formatCurrency(item.rate, meta.currency)}</td>
+                  {gst ? <td className="px-3 py-2 text-right whitespace-nowrap">{item.gstSlab}%</td> : null}
+                  <td className="px-3 py-2 text-right whitespace-nowrap">{formatCurrency(summary.lines[i]?.lineTotal ?? 0, meta.currency)}</td>
                 </tr>
               ))}
             </tbody>
@@ -82,38 +82,42 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             </div>
           ) : null}
         </div>
-        <div className="w-52 rounded-2xl p-3 text-[11px] text-white" style={{ backgroundColor: color }}>
-          <div className="flex justify-between opacity-90">
+        <div className="w-64 min-w-[240px] rounded-2xl p-3 text-[11px] text-white" style={{ backgroundColor: color }}>
+          <div className="flex justify-between opacity-90 whitespace-nowrap">
             <span>Taxable</span>
-            <span>{money(summary.taxableValue, meta.currency)}</span>
+            <span>{formatCurrency(summary.taxableValue, meta.currency)}</span>
           </div>
           {gst && summary.supplyType === "intra" ? (
             <>
-              <div className="flex justify-between opacity-90">
+              <div className="flex justify-between opacity-90 whitespace-nowrap">
                 <span>CGST</span>
-                <span>{money(summary.cgst, meta.currency)}</span>
+                <span>{formatCurrency(summary.cgst, meta.currency)}</span>
               </div>
-              <div className="flex justify-between opacity-90">
+              <div className="flex justify-between opacity-90 whitespace-nowrap">
                 <span>SGST</span>
-                <span>{money(summary.sgst, meta.currency)}</span>
+                <span>{formatCurrency(summary.sgst, meta.currency)}</span>
               </div>
             </>
           ) : null}
           {gst && summary.supplyType === "inter" ? (
-            <div className="flex justify-between opacity-90">
+            <div className="flex justify-between opacity-90 whitespace-nowrap">
               <span>IGST</span>
-              <span>{money(summary.igst, meta.currency)}</span>
+              <span>{formatCurrency(summary.igst, meta.currency)}</span>
             </div>
           ) : null}
-          <div className="mt-2 flex justify-between border-t border-white/30 pt-2 text-sm font-semibold">
+          <div className="flex justify-between opacity-90 whitespace-nowrap">
+            <span>Round off</span>
+            <span>{formatCurrency(summary.roundOff, meta.currency)}</span>
+          </div>
+          <div className="mt-2 flex justify-between border-t border-white/30 pt-2 text-sm font-semibold whitespace-nowrap">
             <span>Total</span>
-            <span>{money(summary.grandTotal, meta.currency)}</span>
+            <span>{formatCurrency(summary.grandTotal, meta.currency)}</span>
           </div>
         </div>
       </section>
 
       <footer className="mt-auto flex items-end justify-between px-5 py-6 text-[10px]">
-        <pre className="max-w-xs whitespace-pre-wrap font-sans text-slate-500">{meta.terms}</pre>
+        <pre className="max-w-xs whitespace-pre-wrap font-sans text-slate-500">{cleanTerms(meta.terms)}</pre>
         <div className="text-right">
           {seller.signatureImage ? (
             // eslint-disable-next-line @next/next/no-img-element

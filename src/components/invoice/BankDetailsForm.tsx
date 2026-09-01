@@ -18,15 +18,27 @@ export function BankDetailsForm({
   const [qr, setQr] = useState("");
 
   useEffect(() => {
+    let cancelled = false;
     const upi = bank.upiId.trim();
     if (!upi) {
-      setQr("");
-      return;
+      Promise.resolve().then(() => {
+        if (!cancelled) setQr("");
+      });
+      return () => {
+        cancelled = true;
+      };
     }
     const uri = `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(payeeName)}&am=${amount.toFixed(2)}&cu=INR`;
     QRCode.toDataURL(uri, { margin: 1, width: 220, color: { dark: "#0f172a", light: "#ffffff" } })
-      .then(setQr)
-      .catch(() => setQr(""));
+      .then((url) => {
+        if (!cancelled) setQr(url);
+      })
+      .catch(() => {
+        if (!cancelled) setQr("");
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [bank.upiId, amount, payeeName]);
 
   return (

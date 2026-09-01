@@ -1,5 +1,5 @@
 import { formatDateIN } from "@/lib/format";
-import { clientBlock, money, sellerBlock, type TemplateProps } from "./shared";
+import { clientBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
 
 export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
   const { seller, client, items, meta, config } = draft;
@@ -60,10 +60,10 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
               <th className="border-b border-r px-2 py-2">S.No</th>
               <th className="border-b border-r px-2 py-2 text-left">Description of Goods / Services</th>
               <th className="border-b border-r px-2 py-2">HSN/SAC</th>
-              <th className="border-b border-r px-2 py-2">Qty</th>
-              <th className="border-b border-r px-2 py-2">Rate</th>
-              {gst ? <th className="border-b border-r px-2 py-2">Tax %</th> : null}
-              <th className="border-b px-2 py-2">Amount</th>
+              <th className="border-b border-r px-2 py-2 whitespace-nowrap">Qty</th>
+              <th className="border-b border-r px-2 py-2 text-right whitespace-nowrap">Rate</th>
+              {gst ? <th className="border-b border-r px-2 py-2 whitespace-nowrap">Tax %</th> : null}
+              <th className="border-b px-2 py-2 text-right whitespace-nowrap">Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -72,15 +72,15 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
                 <td className="border-b border-r px-2 py-2 text-center">{i + 1}</td>
                 <td className="border-b border-r px-2 py-2">{item.description}</td>
                 <td className="border-b border-r px-2 py-2 text-center">{item.hsnSac}</td>
-                <td className="border-b border-r px-2 py-2 text-center">
+                <td className="border-b border-r px-2 py-2 text-center whitespace-nowrap">
                   {item.quantity} {item.unit}
                 </td>
-                <td className="border-b border-r px-2 py-2 text-right">{money(item.rate, meta.currency)}</td>
+                <td className="border-b border-r px-2 py-2 text-right whitespace-nowrap">{formatCurrency(item.rate, meta.currency)}</td>
                 {gst ? (
-                  <td className="border-b border-r px-2 py-2 text-center">{item.gstSlab}%</td>
+                  <td className="border-b border-r px-2 py-2 text-center whitespace-nowrap">{item.gstSlab}%</td>
                 ) : null}
-                <td className="border-b px-2 py-2 text-right">
-                  {money(summary.lines[i]?.lineTotal ?? 0, meta.currency)}
+                <td className="border-b px-2 py-2 text-right whitespace-nowrap">
+                  {formatCurrency(summary.lines[i]?.lineTotal ?? 0, meta.currency)}
                 </td>
               </tr>
             ))}
@@ -100,20 +100,20 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             ) : null}
           </div>
           <div className="border-l px-4 py-3">
-            <Line k="Taxable" v={money(summary.taxableValue, meta.currency)} />
+            <Line k="Taxable" v={formatCurrency(summary.taxableValue, meta.currency)} />
             {gst && summary.supplyType === "intra" ? (
               <>
-                <Line k="CGST" v={money(summary.cgst, meta.currency)} />
-                <Line k="SGST" v={money(summary.sgst, meta.currency)} />
+                <Line k="CGST" v={formatCurrency(summary.cgst, meta.currency)} />
+                <Line k="SGST" v={formatCurrency(summary.sgst, meta.currency)} />
               </>
             ) : null}
             {gst && summary.supplyType === "inter" ? (
-              <Line k="IGST" v={money(summary.igst, meta.currency)} />
+              <Line k="IGST" v={formatCurrency(summary.igst, meta.currency)} />
             ) : null}
-            <Line k="Round off" v={money(summary.roundOff, meta.currency)} />
-            <div className="mt-2 flex justify-between border-t-2 pt-2 font-bold" style={{ borderColor: color }}>
+            <Line k="Round off" v={formatCurrency(summary.roundOff, meta.currency)} />
+            <div className="mt-2 flex justify-between border-t-2 pt-2 font-bold whitespace-nowrap" style={{ borderColor: color }}>
               <span>Grand Total</span>
-              <span>{money(summary.grandTotal, meta.currency)}</span>
+              <span>{formatCurrency(summary.grandTotal, meta.currency)}</span>
             </div>
             <div className="mt-8 text-right">
               <p>For {seller.businessName}</p>
@@ -128,7 +128,7 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             </div>
           </div>
         </div>
-        <div className="border-t px-4 py-2 text-[10px] whitespace-pre-wrap">{meta.terms}</div>
+        <div className="border-t px-4 py-2 text-[10px] whitespace-pre-wrap">{cleanTerms(meta.terms)}</div>
       </div>
     </div>
   );

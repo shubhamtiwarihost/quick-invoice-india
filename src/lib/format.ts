@@ -11,19 +11,37 @@ export function currencySymbol(code: CurrencyCode): string {
 }
 
 export function formatIndianNumber(value: number, decimals = 2): string {
-  const safe = Number.isFinite(value) ? value : 0;
-  const [intPart, frac = ""] = Math.abs(safe).toFixed(decimals).split(".");
+  const safe = Number.isFinite(value) ? Math.abs(value) : 0;
+  const [intPart, frac = ""] = safe.toFixed(decimals).split(".");
   const lastThree = intPart.slice(-3);
   const other = intPart.slice(0, -3);
   const grouped = other
     ? `${other.replace(/\B(?=(\d{2})+(?!\d))/g, ",")},${lastThree}`
     : lastThree;
-  const sign = safe < 0 ? "-" : "";
-  return decimals > 0 ? `${sign}${grouped}.${frac}` : `${sign}${grouped}`;
+  return decimals > 0 ? `${grouped}.${frac}` : grouped;
 }
 
-export function formatMoney(value: number, currency: CurrencyCode): string {
-  return `${currencySymbol(currency)}${formatIndianNumber(value)}`;
+export function formatCurrency(
+  value: number,
+  currency: CurrencyCode = "INR",
+  decimals = 2,
+): string {
+  const safe = Number.isFinite(value) ? value : 0;
+  const sign = safe < 0 ? "-" : "";
+  const symbol = currencySymbol(currency) || "₹";
+  return `${sign}${symbol}${formatIndianNumber(safe, decimals)}`;
+}
+
+export const formatMoney = formatCurrency;
+
+export function cleanTerms(text: string): string {
+  if (!text) return "";
+  return text
+    .split("\n")
+    .map((line) => line.trim().replace(/\.{2,}$/, "."))
+    .join("\n")
+    .trim()
+    .replace(/\.{2,}$/, ".");
 }
 
 export function todayISO(): string {

@@ -1,5 +1,4 @@
 import type {
-  InvoiceConfig,
   InvoiceDraft,
   InvoiceSummary,
   LineComputation,
@@ -121,6 +120,6 @@ export function nextInvoiceNumber(counter: number): string {
   return `QI/${year}/${String(counter).padStart(4, "0")}`;
 }
 
-export function emptyLineHint(_config: InvoiceConfig): string {
+export function emptyLineHint(): string {
   return "Add at least one item to generate a tax invoice.";
 }

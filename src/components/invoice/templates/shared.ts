@@ -1,5 +1,5 @@
 import type { InvoiceDraft, InvoiceSummary } from "@/types/invoice";
-import { currencySymbol, formatDateIN, formatIndianNumber } from "@/lib/format";
+import { cleanTerms, formatDateIN, formatCurrency } from "@/lib/format";
 
 export interface TemplateProps {
   draft: InvoiceDraft;
@@ -7,9 +7,8 @@ export interface TemplateProps {
   qrDataUrl: string;
 }
 
-export function money(n: number, currency: InvoiceDraft["meta"]["currency"]) {
-  return `${currencySymbol(currency)}${formatIndianNumber(n)}`;
-}
+export const money = formatCurrency;
+export { formatCurrency, cleanTerms };
 
 export function sellerBlock(draft: InvoiceDraft) {
   const { seller } = draft;
