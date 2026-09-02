@@ -8,6 +8,7 @@ import { useInvoiceStore } from "@/lib/store";
 import type { CurrencyCode, InvoiceTemplate } from "@/types/invoice";
 import { BankDetailsForm } from "./BankDetailsForm";
 import { LineItemsTable } from "./LineItemsTable";
+import { SignatureDrawPad } from "./SignatureDrawPad";
 
 const ACCENTS = ["#0f766e", "#1d4ed8", "#b45309", "#be123c", "#5b21b6", "#0f172a"];
 
@@ -138,11 +139,9 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
             hasValue={Boolean(seller.logo)}
             onClear={() => setSeller({ logo: "" })}
           />
-          <FileField
-            label="Signature"
-            onData={(data) => setSeller({ signatureImage: data })}
-            hasValue={Boolean(seller.signatureImage)}
-            onClear={() => setSeller({ signatureImage: "" })}
+          <SignatureDrawPad
+            value={seller.signatureImage}
+            onChange={(data) => setSeller({ signatureImage: data })}
           />
           <Field
             label="GSTIN"
@@ -265,6 +264,7 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
           onChange={setBank}
           amount={grandTotal}
           payeeName={seller.bank.accountHolder || seller.businessName}
+          invoiceNo={meta.invoiceNo}
         />
       </Section>
 

@@ -19,16 +19,17 @@ export function InvoicePreview({
   const payee = draft.seller.bank.accountHolder || draft.seller.businessName;
   const upi = draft.seller.bank.upiId;
   const total = summary.grandTotal;
+  const invoiceNo = draft.meta.invoiceNo;
 
   useEffect(() => {
     let cancelled = false;
-    upiQrDataUrl(upi, payee, total).then((url) => {
+    upiQrDataUrl(upi, payee, total, invoiceNo).then((url) => {
       if (!cancelled) setQr(url);
     });
     return () => {
       cancelled = true;
     };
-  }, [upi, payee, total]);
+  }, [upi, payee, total, invoiceNo]);
 
   const Template = useMemo(() => {
     if (draft.config.template === "classic") return ClassicTemplate;

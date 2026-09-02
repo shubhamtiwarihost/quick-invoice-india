@@ -112,3 +112,17 @@ export interface InvoiceDraft {
   meta: InvoiceMeta;
   config: InvoiceConfig;
 }
+
+export type InvoiceStatus = "Draft" | "Pending" | "Paid";
+
+export interface SavedInvoice {
+  id: string;
+  savedAt: string;
+  invoiceNo: string;
+  clientName: string;
+  date: string;
+  amount: number;
+  currency: CurrencyCode;
+  status: InvoiceStatus;
+  draft: InvoiceDraft;
+}

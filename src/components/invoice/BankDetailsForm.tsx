@@ -9,11 +9,13 @@ export function BankDetailsForm({
   onChange,
   amount,
   payeeName,
+  invoiceNo,
 }: {
   bank: BankDetails;
   onChange: (patch: Partial<BankDetails>) => void;
   amount: number;
   payeeName: string;
+  invoiceNo?: string;
 }) {
   const [qr, setQr] = useState("");
 
@@ -28,7 +30,12 @@ export function BankDetailsForm({
         cancelled = true;
       };
     }
-    const uri = `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(payeeName)}&am=${amount.toFixed(2)}&cu=INR`;
+    const uri = buildUpiUri({
+      upiId: bank.upiId,
+      payeeName,
+      amount,
+      invoiceNo,
+    });
     QRCode.toDataURL(uri, { margin: 1, width: 220, color: { dark: "#0f172a", light: "#ffffff" } })
       .then((url) => {
         if (!cancelled) setQr(url);
@@ -39,7 +46,7 @@ export function BankDetailsForm({
     return () => {
       cancelled = true;
     };
-  }, [bank.upiId, amount, payeeName]);
+  }, [bank.upiId, amount, payeeName, invoiceNo]);
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -93,12 +100,42 @@ function Field({
   );
 }
 
+export function buildUpiUri({
+  upiId,
+  payeeName,
+  amount,
+  invoiceNo,
+}: {
+  upiId: string;
+  payeeName: string;
+  amount: number;
+  invoiceNo?: string;
+}): string {
+  const upi = upiId.trim();
+  if (!upi) return "";
+  const pn = encodeURIComponent(payeeName.trim() || "Merchant");
+  const cu = "INR";
+  let uri = `upi://pay?pa=${encodeURIComponent(upi)}&pn=${pn}&cu=${cu}`;
+  if (amount > 0) {
+    uri += `&am=${amount.toFixed(2)}`;
+  }
+  if (invoiceNo && invoiceNo.trim()) {
+    uri += `&tn=${encodeURIComponent(`Invoice ${invoiceNo.trim()}`)}`;
+  }
+  return uri;
+}
+
 export async function upiQrDataUrl(
   upiId: string,
   payeeName: string,
   amount: number,
+  invoiceNo?: string,
 ): Promise<string> {
-  if (!upiId.trim()) return "";
-  const uri = `upi://pay?pa=${encodeURIComponent(upiId.trim())}&pn=${encodeURIComponent(payeeName)}&am=${amount.toFixed(2)}&cu=INR`;
-  return QRCode.toDataURL(uri, { margin: 1, width: 240 });
+  const uri = buildUpiUri({ upiId, payeeName, amount, invoiceNo });
+  if (!uri) return "";
+  return QRCode.toDataURL(uri, {
+    margin: 1,
+    width: 240,
+    color: { dark: "#0f172a", light: "#ffffff" },
+  });
 }

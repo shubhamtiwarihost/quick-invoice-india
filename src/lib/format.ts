@@ -38,10 +38,10 @@ export function cleanTerms(text: string): string {
   if (!text) return "";
   return text
     .split("\n")
-    .map((line) => line.trim().replace(/\.{2,}$/, "."))
+    .map((line) => line.trim().replace(/\.{2,}/g, "."))
     .join("\n")
     .trim()
-    .replace(/\.{2,}$/, ".");
+    .replace(/\.{2,}/g, ".");
 }
 
 export function todayISO(): string {

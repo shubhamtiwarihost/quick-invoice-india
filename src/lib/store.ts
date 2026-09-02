@@ -133,6 +133,7 @@ type InvoiceStore = InvoiceDraft & {
   removeItem: (id: string) => void;
   resetDraft: () => void;
   newInvoice: () => void;
+  loadDraft: (draft: InvoiceDraft) => void;
 };
 
 export const useInvoiceStore = create<InvoiceStore>()(
@@ -185,6 +186,14 @@ export const useInvoiceStore = create<InvoiceStore>()(
       removeItem: (id) =>
         set({ items: get().items.filter((item) => item.id !== id) }),
       resetDraft: () => set({ ...defaultDraft }),
+      loadDraft: (draft: InvoiceDraft) =>
+        set({
+          seller: draft.seller,
+          client: draft.client,
+          items: draft.items,
+          meta: draft.meta,
+          config: draft.config,
+        }),
       newInvoice: () => {
         const counter = get().meta.invoiceCounter + 1;
         set({
