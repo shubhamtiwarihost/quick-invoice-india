@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#grad)" />
+  <path d="M160 128h128l80 80v176c0 17.673-14.327 32-32 32H160c-17.673 0-32-14.327-32-32V160c0-17.673 14.327-32 32-32z" fill="#ffffff" opacity="0.95" />
+  <path d="M288 128v80h80" fill="none" stroke="#0f766e" stroke-width="16" stroke-linejoin="round" stroke-linecap="round" />
+  <text x="246" y="325" font-family="-apple-system, system-ui, sans-serif" font-size="110" font-weight="bold" fill="#0f766e" text-anchor="middle">₹</text>
+  <line x1="180" y1="370" x2="310" y2="370" stroke="#0f766e" stroke-width="14" stroke-linecap="round" />
+</svg>
