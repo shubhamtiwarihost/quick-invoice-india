@@ -37,13 +37,15 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
-      # Deploy static build directly to Hostinger public_html via FTP
-      - name: Deploy to Hostinger via FTP
+      # Deploy static build directly to Hostinger public_html via SCP
+      - name: Deploy Build to Hostinger via SCP
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: appleboy/scp-action@master
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_TARGET_DIR || 'public_html/' }}
-          local-dir: ./out/
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          password: ${{ secrets.HOSTINGER_PASSWORD }}
+          port: ${{ secrets.HOSTINGER_PORT }}
+          source: "out/*"
+          target: "public_html"
+          strip_components: 1
