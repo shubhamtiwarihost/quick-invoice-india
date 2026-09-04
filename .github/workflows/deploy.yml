@@ -47,4 +47,14 @@ jobs:
           PORT: ${{ secrets.HOSTINGER_PORT || '65002' }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
-          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=20 -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"
+          for i in 1 2 3; do
+            echo "Deployment attempt $i/3..."
+            if sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ConnectionAttempts=3 -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"; then
+              echo "Deployment succeeded!"
+              exit 0
+            fi
+            echo "Attempt $i failed. Retrying in 5 seconds..."
+            sleep 5
+          done
+          echo "Deployment failed after 3 attempts."
+          exit 1
