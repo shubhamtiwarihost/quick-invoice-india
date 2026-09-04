@@ -2,10 +2,13 @@ export async function downloadInvoicePdf(
   element: HTMLElement,
   fileName: string,
 ): Promise<void> {
-  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-    import("html2canvas"),
+  const [html2canvasMod, jsPdfMod] = await Promise.all([
+    import("html2canvas-pro"),
     import("jspdf"),
   ]);
+
+  const html2canvas = html2canvasMod.default || html2canvasMod;
+  const jsPDF = jsPdfMod.jsPDF || jsPdfMod.default;
 
   const canvas = await html2canvas(element, {
     scale: 2,
@@ -15,14 +18,25 @@ export async function downloadInvoicePdf(
     onclone: (clonedDoc) => {
       const clonedEl = clonedDoc.getElementById(element.id || "invoice-a4");
       if (clonedEl) {
+        clonedEl.style.transform = "none";
+        clonedEl.style.boxShadow = "none";
+        clonedEl.style.margin = "0";
         let parent = clonedEl.parentElement;
         while (parent) {
           parent.style.transform = "none";
+          if (parent.style.display === "none") {
+            parent.style.display = "block";
+          }
+          parent.classList?.remove("hidden");
           parent = parent.parentElement;
         }
       }
     },
   });
+
+  if (!canvas || !canvas.width || !canvas.height) {
+    throw new Error("Unable to capture invoice canvas (empty or invalid dimensions).");
+  }
 
   const imgData = canvas.toDataURL("image/jpeg", 0.95);
   const pdf = new jsPDF({

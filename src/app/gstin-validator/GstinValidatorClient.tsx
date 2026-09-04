@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   CheckCircle2,
   XCircle,
@@ -16,7 +16,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
-import { parseAndValidateGstin } from "@/lib/gstin";
+import { parseAndValidateGstin, generateValidSampleGstin } from "@/lib/gstin";
 import { useInvoiceStore } from "@/lib/store";
 
 const SAMPLES = [
@@ -27,7 +27,16 @@ const SAMPLES = [
 ];
 
 export default function GstinValidatorClient() {
-  const [input, setInput] = useState("27AAPCA1234A1Z5");
+  const searchParams = useSearchParams();
+  const initialValue = useMemo(() => {
+    const paramGstin = searchParams.get("gstin");
+    const paramCode = searchParams.get("code") || searchParams.get("stateCode");
+    if (paramGstin) return paramGstin.toUpperCase();
+    if (paramCode) return generateValidSampleGstin(paramCode);
+    return "27AAPCA1234A1Z5";
+  }, [searchParams]);
+
+  const [input, setInput] = useState(initialValue);
   const [copied, setCopied] = useState(false);
   const router = useRouter();
 

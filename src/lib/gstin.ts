@@ -83,6 +83,13 @@ export function computeGstinCheckDigit(gstin14: string): string | null {
   return CHARS[checkCode];
 }
 
+export function generateValidSampleGstin(stateCode: string, pan = "AAPCA1234A"): string {
+  const code = stateCode.trim().padStart(2, "0");
+  const base14 = `${code}${pan}1Z`;
+  const check = computeGstinCheckDigit(base14) || "5";
+  return `${base14}${check}`;
+}
+
 export interface GstinBreakdown {
   raw: string;
   formatted: string;

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import GstinValidatorClient from "./GstinValidatorClient";
 
@@ -16,5 +17,15 @@ export const metadata: Metadata = {
 };
 
 export default function GstinValidatorPage() {
-  return <GstinValidatorClient />;
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto flex w-full max-w-4xl flex-1 items-center justify-center p-12 text-sm text-slate-500">
+          Loading GSTIN validator…
+        </div>
+      }
+    >
+      <GstinValidatorClient />
+    </Suspense>
+  );
 }

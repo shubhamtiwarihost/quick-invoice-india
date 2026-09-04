@@ -14,6 +14,8 @@ import {
   ChevronDown,
   Menu,
   X,
+  FileCheck2,
+  MapPin,
 } from "lucide-react";
 
 export const ALL_TOOLS = [
@@ -25,11 +27,25 @@ export const ALL_TOOLS = [
     icon: FileText,
   },
   {
+    href: "/quotation-maker",
+    label: "Estimate & Quotation Maker",
+    shortLabel: "Quotation",
+    desc: "Create formal price quotes with validity dates; convert to invoice in 1 click.",
+    icon: FileCheck2,
+  },
+  {
     href: "/gst-calculator",
     label: "GST Calculator",
     shortLabel: "GST Calc",
     desc: "Inclusive and exclusive GST breakdown for 5%, 12%, 18%, 28% slabs.",
     icon: Calculator,
+  },
+  {
+    href: "/gst-state-codes",
+    label: "GST State Codes Directory",
+    shortLabel: "State Codes",
+    desc: "Directory of all 37 Indian States & UTs with 2-digit GST codes and 1-click copy.",
+    icon: MapPin,
   },
   {
     href: "/hsn-finder",
@@ -259,6 +275,16 @@ export function Footer() {
               <li>
                 <Link href="/" className="hover:text-teal-700">
                   GST Invoice Generator
+                </Link>
+              </li>
+              <li>
+                <Link href="/quotation-maker" className="hover:text-teal-700 font-medium text-slate-700">
+                  Estimate & Quotation Maker
+                </Link>
+              </li>
+              <li>
+                <Link href="/gst-state-codes" className="hover:text-teal-700 font-medium text-slate-700">
+                  GST State Codes Directory
                 </Link>
               </li>
               <li>

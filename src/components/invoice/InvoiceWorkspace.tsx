@@ -43,6 +43,16 @@ export function InvoiceWorkspace() {
       setSavedCount(getSavedInvoices().length);
     }
     window.addEventListener(SAVED_INVOICES_EVENT, handleUpdate);
+
+    // Check if redirected from Quotation Maker
+    if (typeof window !== "undefined") {
+      const convertedQuote = sessionStorage.getItem("qi_converted_from");
+      if (convertedQuote) {
+        sessionStorage.removeItem("qi_converted_from");
+        showToast(`Quotation ${convertedQuote} converted to Tax Invoice!`);
+      }
+    }
+
     return () => {
       window.removeEventListener(SAVED_INVOICES_EVENT, handleUpdate);
     };
@@ -81,13 +91,20 @@ export function InvoiceWorkspace() {
 
   async function onPdf() {
     const el = document.getElementById("invoice-a4");
-    if (!el) return;
+    if (!el) {
+      showToast("Invoice preview could not be found.");
+      return;
+    }
     setBusy(true);
     try {
       // Auto-save to history on PDF download
       saveInvoiceToHistory(draft, summary.grandTotal);
-      await downloadInvoicePdf(el, `${draft.meta.invoiceNo.replaceAll("/", "-")}.pdf`);
+      const safeInvoiceNo = draft.meta.invoiceNo.trim().replace(/[\\/:*?"<>|]/g, "-") || "invoice";
+      await downloadInvoicePdf(el, `${safeInvoiceNo}.pdf`);
       showToast(`Downloaded PDF and saved ${draft.meta.invoiceNo} to history!`);
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+      showToast("Failed to generate PDF. Please try again or use Print.");
     } finally {
       setBusy(false);
     }
