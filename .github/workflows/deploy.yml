@@ -37,7 +37,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
-      # Deploy static build directly to Hostinger public_html using standard OpenSSH SCP
+      # Deploy static build directly to swiftgst.in on Hostinger
       - name: Deploy Build to Hostinger via SCP
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
@@ -47,15 +47,4 @@ jobs:
           PORT: ${{ secrets.HOSTINGER_PORT || '65002' }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
-          
-          # Remove Hostinger default placeholder files if present
-          sshpass -e ssh -p "$PORT" -o StrictHostKeyChecking=no "$USER@$HOST" "
-            mkdir -p public_html domains/swiftgst.in/public_html
-            rm -f public_html/default.php public_html/default.html domains/swiftgst.in/public_html/default.php domains/swiftgst.in/public_html/default.html
-          " || true
-
-          # Upload to domains/swiftgst.in/public_html (Hostinger domain directory)
-          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/" || true
-
-          # Also upload to root public_html
-          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -r out/* "$USER@$HOST:public_html/"
+          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=20 -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"
