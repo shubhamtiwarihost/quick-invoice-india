@@ -62,12 +62,19 @@ export function BankDetailsForm({
         hint="QR is generated from upi://pay automatically"
       />
       {qr ? (
-        <div className="sm:col-span-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+        <div className="sm:col-span-2 flex items-center gap-3.5 rounded-xl border border-slate-200 bg-slate-50 p-3.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={qr} alt="UPI QR" className="h-20 w-20 rounded bg-white" />
-          <p className="text-sm text-slate-600">
-            Scan to pay <span className="font-medium text-slate-900">{bank.upiId}</span>
-          </p>
+          <img
+            src={qr}
+            alt="UPI QR Code"
+            className="h-20 w-20 rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs shrink-0"
+          />
+          <div>
+            <p className="text-xs font-semibold text-slate-800">Dynamic Payment QR</p>
+            <p className="mt-0.5 text-xs text-slate-600">
+              Scan to pay <span className="font-mono font-medium text-teal-800">{bank.upiId}</span>
+            </p>
+          </div>
         </div>
       ) : null}
     </div>

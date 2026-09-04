@@ -54,15 +54,23 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             </thead>
             <tbody>
               {items.map((item, i) => (
-                <tr key={item.id} className="border-t border-slate-100">
-                  <td className="px-3 py-2 font-medium">{item.description}</td>
-                  <td className="px-3 py-2 text-center">{item.hsnSac}</td>
-                  <td className="px-3 py-2 text-right whitespace-nowrap">
+                <tr key={item.id} className="border-t border-slate-200 text-slate-900">
+                  <td className="px-3 py-2.5 font-semibold text-slate-900">{item.description}</td>
+                  <td className="px-3 py-2.5 text-center font-mono text-slate-800">{item.hsnSac || "—"}</td>
+                  <td className="px-3 py-2.5 text-right font-medium text-slate-900 whitespace-nowrap">
                     {item.quantity} {item.unit}
                   </td>
-                  <td className="px-3 py-2 text-right whitespace-nowrap">{formatCurrency(item.rate, meta.currency)}</td>
-                  {gst ? <td className="px-3 py-2 text-right whitespace-nowrap">{item.gstSlab}%</td> : null}
-                  <td className="px-3 py-2 text-right whitespace-nowrap">{formatCurrency(summary.lines[i]?.lineTotal ?? 0, meta.currency)}</td>
+                  <td className="px-3 py-2.5 text-right font-mono font-medium text-slate-900 whitespace-nowrap">
+                    {formatCurrency(item.rate, meta.currency)}
+                  </td>
+                  {gst ? (
+                    <td className="px-3 py-2.5 text-right font-medium text-slate-800 whitespace-nowrap">
+                      {item.gstSlab}%
+                    </td>
+                  ) : null}
+                  <td className="px-3 py-2.5 text-right font-mono font-bold text-slate-900 whitespace-nowrap">
+                    {formatCurrency(summary.lines[i]?.lineTotal ?? 0, meta.currency)}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -71,14 +79,25 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
       </div>
 
       <section className="mt-5 flex items-start justify-between gap-4 px-5">
-        <div className="max-w-[55%] text-[10px] text-slate-500">
-          <p className="font-semibold text-slate-800">In words</p>
-          <p className="italic">{summary.amountInWords}</p>
+        <div className="max-w-[55%] text-[10px] text-slate-700">
+          <div className="rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-2 text-[10px] text-slate-800">
+            <span className="font-bold text-slate-900">Amount in Words: </span>
+            <span className="font-medium italic text-slate-800">{summary.amountInWords}</span>
+          </div>
+
           {qrDataUrl ? (
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-3.5 flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={qrDataUrl} alt="UPI QR" className="h-20 w-20 rounded-lg border" />
-              <span>Pay via UPI {seller.bank.upiId}</span>
+              <img
+                src={qrDataUrl}
+                alt="UPI QR Code"
+                className="h-20 w-20 rounded-xl border border-slate-200 bg-white p-[2px] shadow-2xs shrink-0"
+              />
+              <div className="space-y-0.5">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Scan & Pay via UPI</p>
+                <p className="font-mono text-[11px] font-bold text-teal-900">{seller.bank.upiId}</p>
+                <p className="text-[10px] text-slate-500">{seller.bank.bankName}</p>
+              </div>
             </div>
           ) : null}
         </div>

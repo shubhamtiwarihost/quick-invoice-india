@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Plus, Trash2, Calendar, Check } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Trash2, Calendar, Check } from "lucide-react";
 import { INDIAN_STATES } from "@/lib/indianStates";
 import { gstinHint } from "@/lib/gstin";
+import { formatCurrency } from "@/lib/format";
 import { useQuotationStore } from "@/lib/quotationStore";
 import type { CurrencyCode, GstSlab, ItemUnit } from "@/types/invoice";
 import { BankDetailsForm } from "@/components/invoice/BankDetailsForm";
@@ -47,6 +48,16 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
   const addItem = useQuotationStore((s) => s.addItem);
   const updateItem = useQuotationStore((s) => s.updateItem);
   const removeItem = useQuotationStore((s) => s.removeItem);
+
+  function moveItem(index: number, direction: "up" | "down") {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+    const newItems = [...items];
+    const temp = newItems[index];
+    newItems[index] = newItems[targetIndex];
+    newItems[targetIndex] = temp;
+    useQuotationStore.setState({ items: newItems });
+  }
 
   return (
     <div className="space-y-3 pb-8 text-slate-800">
@@ -383,102 +394,156 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
         </div>
 
         <div className="space-y-3">
-          {items.map((item, index) => (
-            <div
-              key={item.id}
-              className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-2xs transition hover:border-slate-300"
-            >
-              <div className="flex items-center justify-between gap-2 pb-2">
-                <span className="text-xs font-bold text-slate-400">#{index + 1}</span>
-                {items.length > 1 ? (
-                  <button
-                    type="button"
-                    onClick={() => removeItem(item.id)}
-                    className="rounded-lg p-1 text-slate-400 hover:bg-red-50 hover:text-red-600"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                ) : null}
-              </div>
+          {items.map((item, index) => {
+            const lineGross = item.quantity * item.rate;
+            const lineDisc =
+              item.discountType === "percent"
+                ? (lineGross * item.discountValue) / 100
+                : item.discountValue;
+            const lineTaxableVal = Math.max(0, lineGross - lineDisc);
+            const lineGstVal =
+              config.gstMode === "gst" ? (lineTaxableVal * (item.gstSlab || 0)) / 100 : 0;
+            const lineGrand = lineTaxableVal + lineGstVal;
 
-              <div className="space-y-2">
-                <div>
-                  <label className="text-[11px] font-medium text-slate-500">
-                    Deliverable / Task Description
-                  </label>
-                  <input
-                    type="text"
-                    value={item.description}
-                    onChange={(e) => updateItem(item.id, { description: e.target.value })}
-                    placeholder="e.g. UX wireframes and interactive prototypes"
-                    className="mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
-                  />
+            return (
+              <div
+                key={item.id}
+                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs transition hover:border-slate-300"
+              >
+                <div className="mb-3 flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                  <span className="inline-flex items-center justify-center rounded-lg bg-teal-50 border border-teal-200/80 px-2.5 py-1 text-xs font-bold text-teal-900 select-none whitespace-nowrap">
+                    Deliverable #{index + 1}
+                  </span>
+
+                  <div className="flex items-center gap-1">
+                    {items.length > 1 ? (
+                      <>
+                        <button
+                          type="button"
+                          disabled={index === 0}
+                          onClick={() => moveItem(index, "up")}
+                          title="Move item up"
+                          className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-20 active:scale-95 transition"
+                        >
+                          <ChevronUp className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={index === items.length - 1}
+                          onClick={() => moveItem(index, "down")}
+                          title="Move item down"
+                          className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-20 active:scale-95 transition"
+                        >
+                          <ChevronDown className="h-4 w-4" />
+                        </button>
+                      </>
+                    ) : null}
+
+                    {items.length > 1 ? (
+                      <button
+                        type="button"
+                        onClick={() => removeItem(item.id)}
+                        title="Delete deliverable"
+                        className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 active:scale-95 transition"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                <div className="space-y-2.5">
                   <div>
-                    <label className="text-[11px] font-medium text-slate-500">HSN/SAC</label>
+                    <label className="text-[11px] font-semibold text-slate-600">
+                      Deliverable / Task Description
+                    </label>
                     <input
                       type="text"
-                      value={item.hsnSac}
-                      onChange={(e) => updateItem(item.id, { hsnSac: e.target.value })}
-                      placeholder="998314"
-                      className="mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs font-mono text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
+                      value={item.description}
+                      onChange={(e) => updateItem(item.id, { description: e.target.value })}
+                      placeholder="e.g. UX wireframes and interactive prototypes"
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white focus:ring-1 focus:ring-teal-600/20"
                     />
                   </div>
-                  <div>
-                    <label className="text-[11px] font-medium text-slate-500">Qty</label>
-                    <input
-                      type="number"
-                      min={0.01}
-                      step="any"
-                      value={item.quantity}
-                      onChange={(e) => updateItem(item.id, { quantity: Number(e.target.value) })}
-                      className="mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-medium text-slate-500">Unit</label>
-                    <select
-                      value={item.unit}
-                      onChange={(e) => updateItem(item.id, { unit: e.target.value as ItemUnit })}
-                      className="mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
-                    >
-                      {UNITS.map((u) => (
-                        <option key={u} value={u}>{u}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-medium text-slate-500">Rate (₹)</label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={item.rate}
-                      onChange={(e) => updateItem(item.id, { rate: Number(e.target.value) })}
-                      className="mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs font-medium text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
-                    />
-                  </div>
-                  {config.gstMode === "gst" ? (
+
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
                     <div>
-                      <label className="text-[11px] font-medium text-slate-500">GST %</label>
+                      <label className="text-[11px] font-semibold text-slate-600">HSN/SAC</label>
+                      <input
+                        type="text"
+                        value={item.hsnSac}
+                        onChange={(e) => updateItem(item.id, { hsnSac: e.target.value })}
+                        placeholder="998314"
+                        className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-mono text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600">Qty</label>
+                      <input
+                        type="number"
+                        min={0.01}
+                        step="any"
+                        value={item.quantity}
+                        onChange={(e) => updateItem(item.id, { quantity: Number(e.target.value) })}
+                        className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600">Unit</label>
                       <select
-                        value={item.gstSlab}
-                        onChange={(e) =>
-                          updateItem(item.id, { gstSlab: Number(e.target.value) as GstSlab })
-                        }
-                        className="mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
+                        value={item.unit}
+                        onChange={(e) => updateItem(item.id, { unit: e.target.value as ItemUnit })}
+                        className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white"
                       >
-                        {SLABS.map((s) => (
-                          <option key={s} value={s}>{s}%</option>
+                        {UNITS.map((u) => (
+                          <option key={u} value={u}>{u}</option>
                         ))}
                       </select>
                     </div>
-                  ) : null}
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-600">Rate (₹)</label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={item.rate}
+                        onChange={(e) => updateItem(item.id, { rate: Number(e.target.value) })}
+                        className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white"
+                      />
+                    </div>
+                    {config.gstMode === "gst" ? (
+                      <div>
+                        <label className="text-[11px] font-semibold text-slate-600">GST %</label>
+                        <select
+                          value={item.gstSlab}
+                          onChange={(e) =>
+                            updateItem(item.id, { gstSlab: Number(e.target.value) as GstSlab })
+                          }
+                          className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white"
+                        >
+                          {SLABS.map((s) => (
+                            <option key={s} value={s}>{s}%</option>
+                          ))}
+                        </select>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+
+                {/* Bottom Row Total Bar */}
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 border border-slate-100 text-xs">
+                  <span className="inline-flex items-center rounded-md bg-white border border-slate-200 px-2 py-0.5 text-[11px] font-semibold text-slate-700 whitespace-nowrap select-none">
+                    Row #{index + 1}
+                  </span>
+                  <span className="text-[11px] text-slate-500 whitespace-nowrap select-none">
+                    Row Total:{" "}
+                    <strong className="font-mono text-slate-900 font-bold">
+                      {formatCurrency(lineGrand, meta.currency)}
+                    </strong>
+                  </span>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Section>
 

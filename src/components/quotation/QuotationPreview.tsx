@@ -190,22 +190,22 @@ export function QuotationPreview({
                 return (
                   <tr
                     key={item.id}
-                    className="border-t border-slate-200 odd:bg-white even:bg-slate-50/60"
+                    className="border-t border-slate-200 odd:bg-white even:bg-slate-50/60 text-slate-900"
                   >
-                    <td className="px-3 py-2 text-slate-400 font-mono">{index + 1}</td>
-                    <td className="px-3 py-2 font-medium text-slate-900">
+                    <td className="px-3 py-2.5 text-slate-800 font-mono">{index + 1}</td>
+                    <td className="px-3 py-2.5 font-semibold text-slate-900">
                       {item.description || "Scope item description"}
                     </td>
-                    <td className="px-3 py-2 text-center text-slate-500 font-mono">
+                    <td className="px-3 py-2.5 text-center text-slate-800 font-mono">
                       {item.hsnSac || "—"}
                     </td>
-                    <td className="px-3 py-2 text-right whitespace-nowrap text-slate-700">
+                    <td className="px-3 py-2.5 text-right whitespace-nowrap text-slate-900 font-medium">
                       {item.quantity} {item.unit}
                     </td>
-                    <td className="px-3 py-2 text-right whitespace-nowrap text-slate-700">
+                    <td className="px-3 py-2.5 text-right whitespace-nowrap text-slate-900 font-mono font-medium">
                       {formatCurrency(item.rate, meta.currency)}
                     </td>
-                    <td className="px-3 py-2 text-right whitespace-nowrap text-slate-500">
+                    <td className="px-3 py-2.5 text-right whitespace-nowrap text-slate-800 font-mono">
                       {item.discountValue > 0
                         ? item.discountType === "percent"
                           ? `${item.discountValue}%`
@@ -213,11 +213,11 @@ export function QuotationPreview({
                         : "—"}
                     </td>
                     {gst ? (
-                      <td className="px-3 py-2 text-right whitespace-nowrap text-slate-700">
+                      <td className="px-3 py-2.5 text-right whitespace-nowrap text-slate-800 font-medium">
                         {item.gstSlab}%
                       </td>
                     ) : null}
-                    <td className="px-3 py-2 text-right font-semibold whitespace-nowrap text-slate-900">
+                    <td className="px-3 py-2.5 text-right font-bold whitespace-nowrap text-slate-900 font-mono">
                       {formatCurrency(line ? line.lineTotal : 0, meta.currency)}
                     </td>
                   </tr>
@@ -232,48 +232,48 @@ export function QuotationPreview({
           {/* Left Column: Bank & UPI QR for Advance */}
           <div className="space-y-3">
             {seller.bank.bankName || seller.bank.upiId ? (
-              <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3">
+              <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Payment Details for Advance / Confirmation
                 </p>
-                <div className="mt-2 flex items-start gap-3">
+                <div className="mt-2.5 flex items-start gap-3.5">
                   {qr ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={qr}
                       alt="UPI QR Code"
-                      className="h-20 w-20 rounded-lg border border-slate-200 bg-white p-1"
+                      className="h-20 w-20 rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs shrink-0"
                     />
                   ) : null}
-                  <div className="space-y-0.5 text-[10px] text-slate-600">
+                  <div className="space-y-0.5 text-[10px] text-slate-700">
                     {seller.bank.bankName ? (
                       <p>
-                        <span className="text-slate-400">Bank:</span> {seller.bank.bankName}
+                        <span className="text-slate-400">Bank:</span>{" "}
+                        <strong className="text-slate-900">{seller.bank.bankName}</strong>
                       </p>
                     ) : null}
                     {seller.bank.accountNumber ? (
                       <p>
                         <span className="text-slate-400">A/C:</span>{" "}
-                        <span className="font-mono">{seller.bank.accountNumber}</span>
+                        <strong className="font-mono text-slate-900">{seller.bank.accountNumber}</strong>
                       </p>
                     ) : null}
                     {seller.bank.ifsc ? (
                       <p>
                         <span className="text-slate-400">IFSC:</span>{" "}
-                        <span className="font-mono">{seller.bank.ifsc}</span>
+                        <strong className="font-mono text-slate-900">{seller.bank.ifsc}</strong>
                       </p>
                     ) : null}
                     {seller.bank.accountHolder ? (
                       <p>
-                        <span className="text-slate-400">Holder:</span> {seller.bank.accountHolder}
+                        <span className="text-slate-400">Holder:</span>{" "}
+                        <strong className="text-slate-900">{seller.bank.accountHolder}</strong>
                       </p>
                     ) : null}
                     {seller.bank.upiId ? (
                       <p>
                         <span className="text-slate-400">UPI ID:</span>{" "}
-                        <span className="font-mono font-semibold text-teal-800">
-                          {seller.bank.upiId}
-                        </span>
+                        <strong className="font-mono text-teal-800">{seller.bank.upiId}</strong>
                       </p>
                     ) : null}
                   </div>
@@ -336,11 +336,11 @@ export function QuotationPreview({
               </div>
             </div>
 
-            {/* In Words */}
-            <p className="mt-2 text-[10px] italic text-slate-500">
-              <span className="font-semibold not-italic text-slate-700">In words:</span>{" "}
-              {summary.amountInWords}
-            </p>
+            {/* Amount in Words clean bar */}
+            <div className="mt-2.5 rounded-lg border border-slate-200 bg-slate-50/90 px-3 py-2 text-[10px] text-slate-800">
+              <span className="font-bold text-slate-900">Amount in Words: </span>
+              <span className="font-medium italic text-slate-800">{summary.amountInWords}</span>
+            </div>
           </div>
         </div>
 

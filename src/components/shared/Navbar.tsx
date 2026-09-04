@@ -115,11 +115,14 @@ export function Navbar() {
     <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-2.5">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 font-bold text-slate-900">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs">
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0"
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs select-none">
             <FileText className="h-4 w-4" />
           </span>
-          <span className="text-base tracking-tight">QuickInvoice India</span>
+          <span className="text-base tracking-tight select-none">QuickInvoice India</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -251,11 +254,14 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {/* Brand Col */}
           <div className="space-y-3 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 font-bold text-slate-900">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-700 text-white">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0"
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-700 text-white select-none">
                 <FileText className="h-3.5 w-3.5" />
               </span>
-              QuickInvoice India
+              <span className="select-none">QuickInvoice India</span>
             </Link>
             <p className="text-xs text-slate-500 leading-relaxed">
               100% free, browser-based GST invoice generator and Indian tax utility tools. Zero sign-up required.

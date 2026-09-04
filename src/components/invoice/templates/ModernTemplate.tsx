@@ -58,31 +58,37 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
       <table className="mt-5 w-full border-collapse text-[10px]">
         <thead>
           <tr style={{ backgroundColor: color }} className="text-white">
-            <th className="px-2 py-2 text-left font-medium">#</th>
-            <th className="px-2 py-2 text-left font-medium">Item</th>
-            <th className="px-2 py-2 text-left font-medium">HSN/SAC</th>
-            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Qty</th>
-            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Rate</th>
-            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Disc.</th>
-            {gst ? <th className="px-2 py-2 text-right font-medium whitespace-nowrap">GST</th> : null}
-            <th className="px-2 py-2 text-right font-medium whitespace-nowrap">Amount</th>
+            <th className="px-2.5 py-2 text-left font-semibold">#</th>
+            <th className="px-2.5 py-2 text-left font-semibold">Item</th>
+            <th className="px-2.5 py-2 text-left font-semibold">HSN/SAC</th>
+            <th className="px-2.5 py-2 text-right font-semibold whitespace-nowrap">Qty</th>
+            <th className="px-2.5 py-2 text-right font-semibold whitespace-nowrap">Rate</th>
+            <th className="px-2.5 py-2 text-right font-semibold whitespace-nowrap">Disc.</th>
+            {gst ? <th className="px-2.5 py-2 text-right font-semibold whitespace-nowrap">GST</th> : null}
+            <th className="px-2.5 py-2 text-right font-semibold whitespace-nowrap">Amount</th>
           </tr>
         </thead>
         <tbody>
           {items.map((item, i) => {
             const line = summary.lines[i];
             return (
-              <tr key={item.id} className="border-b border-slate-100">
-                <td className="px-2 py-2">{i + 1}</td>
-                <td className="px-2 py-2 font-medium">{item.description || "—"}</td>
-                <td className="px-2 py-2">{item.hsnSac}</td>
-                <td className="px-2 py-2 text-right whitespace-nowrap">
+              <tr key={item.id} className="border-b border-slate-200 text-slate-900">
+                <td className="px-2.5 py-2 font-mono text-slate-800">{i + 1}</td>
+                <td className="px-2.5 py-2 font-semibold text-slate-900">{item.description || "—"}</td>
+                <td className="px-2.5 py-2 font-mono text-slate-800">{item.hsnSac || "—"}</td>
+                <td className="px-2.5 py-2 text-right font-medium text-slate-900 whitespace-nowrap">
                   {item.quantity} {item.unit}
                 </td>
-                <td className="px-2 py-2 text-right whitespace-nowrap">{formatCurrency(item.rate, meta.currency)}</td>
-                <td className="px-2 py-2 text-right whitespace-nowrap">{formatCurrency(line?.discountAmount ?? 0, meta.currency)}</td>
-                {gst ? <td className="px-2 py-2 text-right whitespace-nowrap">{item.gstSlab}%</td> : null}
-                <td className="px-2 py-2 text-right font-medium whitespace-nowrap">{formatCurrency(line?.lineTotal ?? 0, meta.currency)}</td>
+                <td className="px-2.5 py-2 text-right font-mono font-medium text-slate-900 whitespace-nowrap">
+                  {formatCurrency(item.rate, meta.currency)}
+                </td>
+                <td className="px-2.5 py-2 text-right font-mono text-slate-800 whitespace-nowrap">
+                  {line?.discountAmount ? formatCurrency(line.discountAmount, meta.currency) : "—"}
+                </td>
+                {gst ? <td className="px-2.5 py-2 text-right font-medium text-slate-800 whitespace-nowrap">{item.gstSlab}%</td> : null}
+                <td className="px-2.5 py-2 text-right font-mono font-bold text-slate-900 whitespace-nowrap">
+                  {formatCurrency(line?.lineTotal ?? 0, meta.currency)}
+                </td>
               </tr>
             );
           })}
@@ -102,31 +108,45 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
         ) : null}
         <Row label="Round off" value={formatCurrency(summary.roundOff, meta.currency)} />
         <div
-          className="mt-2 flex items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-white whitespace-nowrap"
+          className="mt-2 flex items-center justify-between rounded-lg px-3 py-2 text-sm font-bold text-white whitespace-nowrap shadow-xs"
           style={{ backgroundColor: color }}
         >
           <span>Total</span>
-          <span>{formatCurrency(summary.grandTotal, meta.currency)}</span>
+          <span className="font-mono">{formatCurrency(summary.grandTotal, meta.currency)}</span>
         </div>
       </section>
 
-      <p className="mt-3 text-[11px] italic text-slate-600">{summary.amountInWords}</p>
+      {/* Amount in Words clean bar */}
+      <div className="my-3.5 rounded-lg border border-slate-200 bg-slate-50/80 px-3.5 py-2 text-[11px] text-slate-800">
+        <span className="font-bold text-slate-900">Amount in Words: </span>
+        <span className="font-medium italic text-slate-800">{summary.amountInWords}</span>
+      </div>
+
       {config.reverseCharge ? (
         <p className="mt-1 text-[10px] text-slate-500">
           Tax payable under reverse charge: the recipient is liable to pay GST as applicable.
         </p>
       ) : null}
 
-      <section className="mt-6 grid grid-cols-2 gap-4 text-[10px]">
-        <div className="rounded-xl border border-slate-200 p-3">
-          <p className="font-semibold">Bank / UPI</p>
-          <p className="mt-1">{seller.bank.bankName}</p>
-          <p>A/C: {seller.bank.accountNumber}</p>
-          <p>IFSC: {seller.bank.ifsc}</p>
-          <p>UPI: {seller.bank.upiId}</p>
+      <section className="mt-5 grid grid-cols-2 gap-4 text-[10px]">
+        <div className="rounded-xl border border-slate-200 p-3.5">
+          <p className="font-bold text-slate-900 text-[11px]">Bank / Payment Details</p>
+          <div className="mt-2 space-y-0.5 text-[10px] text-slate-700">
+            <p><span className="text-slate-500">Bank:</span> <strong className="text-slate-900">{seller.bank.bankName}</strong></p>
+            <p><span className="text-slate-500">A/C:</span> <strong className="font-mono text-slate-900">{seller.bank.accountNumber}</strong></p>
+            <p><span className="text-slate-500">IFSC:</span> <strong className="font-mono text-slate-900">{seller.bank.ifsc}</strong></p>
+            <p><span className="text-slate-500">UPI:</span> <strong className="font-mono text-teal-800">{seller.bank.upiId}</strong></p>
+          </div>
           {qrDataUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={qrDataUrl} alt="UPI QR" className="mt-2 h-24 w-24" />
+            <div className="mt-3 pt-2.5 border-t border-slate-100">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Scan & Pay via UPI</p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={qrDataUrl}
+                alt="UPI QR Code"
+                className="h-24 w-24 rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs"
+              />
+            </div>
           ) : null}
         </div>
         <div className="rounded-xl border border-slate-200 p-3">

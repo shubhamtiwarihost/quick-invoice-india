@@ -64,18 +64,22 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           </thead>
           <tbody>
             {items.map((item, i) => (
-              <tr key={item.id}>
-                <td className="border-b border-r px-2 py-2 text-center">{i + 1}</td>
-                <td className="border-b border-r px-2 py-2">{item.description}</td>
-                <td className="border-b border-r px-2 py-2 text-center">{item.hsnSac}</td>
-                <td className="border-b border-r px-2 py-2 text-center whitespace-nowrap">
+              <tr key={item.id} className="text-slate-900">
+                <td className="border-b border-r border-slate-300 px-2.5 py-2 text-center font-mono text-slate-800">{i + 1}</td>
+                <td className="border-b border-r border-slate-300 px-2.5 py-2 font-semibold text-slate-900">{item.description}</td>
+                <td className="border-b border-r border-slate-300 px-2.5 py-2 text-center font-mono text-slate-800">{item.hsnSac || "—"}</td>
+                <td className="border-b border-r border-slate-300 px-2.5 py-2 text-center font-medium text-slate-900 whitespace-nowrap">
                   {item.quantity} {item.unit}
                 </td>
-                <td className="border-b border-r px-2 py-2 text-right whitespace-nowrap">{formatCurrency(item.rate, meta.currency)}</td>
+                <td className="border-b border-r border-slate-300 px-2.5 py-2 text-right font-mono font-medium text-slate-900 whitespace-nowrap">
+                  {formatCurrency(item.rate, meta.currency)}
+                </td>
                 {gst ? (
-                  <td className="border-b border-r px-2 py-2 text-center whitespace-nowrap">{item.gstSlab}%</td>
+                  <td className="border-b border-r border-slate-300 px-2.5 py-2 text-center font-medium text-slate-800 whitespace-nowrap">
+                    {item.gstSlab}%
+                  </td>
                 ) : null}
-                <td className="border-b px-2 py-2 text-right whitespace-nowrap">
+                <td className="border-b border-slate-300 px-2.5 py-2 text-right font-mono font-bold text-slate-900 whitespace-nowrap">
                   {formatCurrency(summary.lines[i]?.lineTotal ?? 0, meta.currency)}
                 </td>
               </tr>
@@ -83,16 +87,31 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           </tbody>
         </table>
 
+        {/* Amount in words bar */}
+        <div className="border-b border-slate-200 bg-slate-50/90 px-4 py-2 text-[11px] text-slate-800">
+          <span className="font-bold text-slate-900">Amount in Words: </span>
+          <span className="font-medium italic text-slate-800">{summary.amountInWords}</span>
+        </div>
+
         <div className="grid grid-cols-2 text-[11px]">
           <div className="px-4 py-3">
-            <p className="font-bold">Amount in words</p>
-            <p className="mt-1 italic">{summary.amountInWords}</p>
-            <p className="mt-3 font-bold">Bank details</p>
-            <p>{seller.bank.bankName} · A/C {seller.bank.accountNumber}</p>
-            <p>IFSC {seller.bank.ifsc} · UPI {seller.bank.upiId}</p>
+            <p className="font-bold text-slate-900">Bank Details</p>
+            <div className="mt-1 space-y-0.5 text-slate-700 text-[10px]">
+              <p><span className="text-slate-500">Bank:</span> {seller.bank.bankName}</p>
+              <p><span className="text-slate-500">A/C No:</span> <strong className="font-mono text-slate-900">{seller.bank.accountNumber}</strong></p>
+              <p><span className="text-slate-500">IFSC:</span> <strong className="font-mono text-slate-900">{seller.bank.ifsc}</strong></p>
+              <p><span className="text-slate-500">UPI ID:</span> <strong className="font-mono text-teal-800">{seller.bank.upiId}</strong></p>
+            </div>
             {qrDataUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={qrDataUrl} alt="UPI QR" className="mt-2 h-20 w-20" />
+              <div className="mt-3 pt-2 border-t border-slate-200">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1">Scan & Pay via UPI</p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={qrDataUrl}
+                  alt="UPI QR Code"
+                  className="h-20 w-20 rounded-md border border-slate-300 bg-white p-[2px] shadow-2xs"
+                />
+              </div>
             ) : null}
           </div>
           <div className="border-l px-4 py-3">
