@@ -37,15 +37,14 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
-      # Deploy static build directly to Hostinger public_html via SCP
+      # Deploy static build directly to Hostinger public_html using standard OpenSSH SCP
       - name: Deploy Build to Hostinger via SCP
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOSTINGER_HOST }}
-          username: ${{ secrets.HOSTINGER_USER }}
-          password: ${{ secrets.HOSTINGER_PASSWORD }}
-          port: ${{ secrets.HOSTINGER_PORT }}
-          source: "out/*"
-          target: "public_html"
-          strip_components: 1
+        env:
+          SSHPASS: ${{ secrets.HOSTINGER_PASSWORD }}
+          HOST: ${{ secrets.HOSTINGER_HOST || '82.25.125.141' }}
+          USER: ${{ secrets.HOSTINGER_USER || 'u932835494' }}
+          PORT: ${{ secrets.HOSTINGER_PORT || '65002' }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=15 -r out/* "$USER@$HOST:public_html/"
