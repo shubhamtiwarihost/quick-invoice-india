@@ -117,7 +117,7 @@ export function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0"
+          className="flex items-center gap-2.5 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs select-none">
             <FileText className="h-4 w-4" />
@@ -256,7 +256,7 @@ export function Footer() {
           <div className="space-y-3 md:col-span-1">
             <Link
               href="/"
-              className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0"
+              className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0"
             >
               <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-700 text-white select-none">
                 <FileText className="h-3.5 w-3.5" />
