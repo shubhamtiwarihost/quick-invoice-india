@@ -20,8 +20,8 @@ export const defaultQuotationSeller: Seller = {
   email: "hello@aaravcrafts.in",
   bank: {
     bankName: "HDFC Bank",
-    accountNumber: "50100123456789",
-    ifsc: "HDFC0001234",
+    accountNumber: "123456789012",
+    ifsc: "HDFC0000000",
     accountHolder: "Aarav Crafts & Design Studio",
     upiId: "aaravcrafts@okhdfcbank",
   },

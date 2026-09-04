@@ -50,16 +50,37 @@ export function BankDetailsForm({
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
-      <Field label="Bank name" value={bank.bankName} onChange={(v) => onChange({ bankName: v })} />
-      <Field label="Account holder" value={bank.accountHolder} onChange={(v) => onChange({ accountHolder: v })} />
-      <Field label="Account number" value={bank.accountNumber} onChange={(v) => onChange({ accountNumber: v })} />
-      <Field label="IFSC" value={bank.ifsc.toUpperCase()} onChange={(v) => onChange({ ifsc: v.toUpperCase() })} />
+      <Field
+        label="Bank name"
+        value={bank.bankName}
+        onChange={(v) => onChange({ bankName: v })}
+        placeholder="e.g. HDFC Bank"
+      />
+      <Field
+        label="Account holder"
+        value={bank.accountHolder}
+        onChange={(v) => onChange({ accountHolder: v })}
+        placeholder="e.g. Business / Name"
+      />
+      <Field
+        label="Account number"
+        value={bank.accountNumber}
+        onChange={(v) => onChange({ accountNumber: v })}
+        placeholder="e.g. 123456789012"
+      />
+      <Field
+        label="IFSC"
+        value={bank.ifsc.toUpperCase()}
+        onChange={(v) => onChange({ ifsc: v.toUpperCase() })}
+        placeholder="e.g. HDFC0000000"
+      />
       <Field
         label="UPI ID"
         value={bank.upiId}
         onChange={(v) => onChange({ upiId: v })}
         className="sm:col-span-2"
         hint="QR is generated from upi://pay automatically"
+        placeholder="e.g. business@okhdfcbank"
       />
       {qr ? (
         <div className="sm:col-span-2 flex items-center gap-3.5 rounded-xl border border-slate-200 bg-slate-50 p-3.5">
@@ -87,12 +108,14 @@ function Field({
   onChange,
   className = "",
   hint,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   className?: string;
   hint?: string;
+  placeholder?: string;
 }) {
   return (
     <label className={`block ${className}`}>
@@ -100,6 +123,7 @@ function Field({
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
         className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-teal-600/20 focus:border-teal-600 focus:ring-2"
       />
       {hint ? <span className="mt-1 block text-[11px] text-slate-400">{hint}</span> : null}
