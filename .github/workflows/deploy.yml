@@ -37,15 +37,13 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
-      - name: Deploy Build to Hostinger via SCP
+      # Deploy static build directly to Hostinger public_html via FTP
+      - name: Deploy to Hostinger via FTP
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: appleboy/scp-action@master
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.HOSTINGER_HOST || '82.25.125.141' }}
-          username: ${{ secrets.HOSTINGER_USER || 'u932835494' }}
-          password: ${{ secrets.HOSTINGER_PASSWORD }}
-          port: ${{ secrets.HOSTINGER_PORT || 65002 }}
-          # Next.js static production build folder is 'out/*'
-          source: "out/*"
-          target: ${{ secrets.HOSTINGER_TARGET || 'public_html' }}
-          strip_components: 1
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_TARGET_DIR || 'public_html/' }}
+          local-dir: ./out/
