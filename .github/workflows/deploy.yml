@@ -47,4 +47,15 @@ jobs:
           PORT: ${{ secrets.HOSTINGER_PORT || '65002' }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
-          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=15 -r out/* "$USER@$HOST:public_html/"
+          
+          # Remove Hostinger default placeholder files if present
+          sshpass -e ssh -p "$PORT" -o StrictHostKeyChecking=no "$USER@$HOST" "
+            mkdir -p public_html domains/swiftgst.in/public_html
+            rm -f public_html/default.php public_html/default.html domains/swiftgst.in/public_html/default.php domains/swiftgst.in/public_html/default.html
+          " || true
+
+          # Upload to domains/swiftgst.in/public_html (Hostinger domain directory)
+          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/" || true
+
+          # Also upload to root public_html
+          sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -r out/* "$USER@$HOST:public_html/"
