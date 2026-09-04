@@ -79,6 +79,6 @@ Bill To: ${params.buyer}
 Amount: ${params.total}
 Due: ${params.dueDate}
 
-Generated with QuickInvoice India.`;
+Generated with SwiftGST (swiftgst.in).`;
   return `https://wa.me/?text=${encodeURIComponent(message)}`;
 }

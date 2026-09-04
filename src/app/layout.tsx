@@ -20,14 +20,24 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "QuickInvoice India — GST & Tax Invoice Generator",
+  metadataBase: new URL("https://swiftgst.in"),
+  title: "SwiftGST - Fast & Easy GST Invoicing",
   description:
     "Create GST and non-GST invoices for Indian businesses in under a minute. Live A4 preview, CGST/SGST/IGST, and PDF download — no account needed.",
   manifest: "/manifest.json",
+  openGraph: {
+    title: "SwiftGST - Fast & Easy GST Invoicing",
+    description:
+      "Create GST and non-GST invoices for Indian businesses in under a minute. Live A4 preview, CGST/SGST/IGST, and PDF download — no account needed.",
+    url: "https://swiftgst.in",
+    siteName: "SwiftGST",
+    locale: "en_IN",
+    type: "website",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "QuickInvoice",
+    title: "SwiftGST",
   },
   icons: {
     icon: "/icon.svg",

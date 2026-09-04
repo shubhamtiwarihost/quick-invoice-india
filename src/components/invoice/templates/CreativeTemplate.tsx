@@ -11,7 +11,7 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
       <header className="relative px-5 py-6 text-white" style={{ backgroundColor: color }}>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">QuickInvoice India</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] opacity-80">SwiftGST</p>
             <h1 className="mt-1 text-2xl font-semibold">{seller.businessName}</h1>
             <p className="mt-1 max-w-sm text-[11px] opacity-90">{sellerBlock(draft)}</p>
           </div>

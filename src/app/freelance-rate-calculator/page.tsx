@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import FreelanceRateClient from "./FreelanceRateClient";
 
 export const metadata: Metadata = {
-  title: "Freelance Rate & Hourly Income Calculator — QuickInvoice India",
+  title: "Freelance Rate & Hourly Income Calculator — SwiftGST",
   description:
     "Calculate your ideal freelance hourly rate, daily retainer, and project costs based on your target income, working hours, business expenses, and taxes.",
   keywords: [

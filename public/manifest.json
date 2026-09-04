@@ -1,7 +1,7 @@
 {
-  "name": "QuickInvoice India",
-  "short_name": "QuickInvoice",
-  "description": "Instant Indian GST & Tax Invoice Generator with Live A4 Preview & WhatsApp Sharing",
+  "name": "SwiftGST - Fast & Easy GST Invoicing",
+  "short_name": "SwiftGST",
+  "description": "Fast & Easy GST Invoicing with Live A4 Preview, Instant PDF & WhatsApp Sharing",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

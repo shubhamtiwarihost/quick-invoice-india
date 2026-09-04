@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import EwayBillClient from "./EwayBillClient";
 
 export const metadata: Metadata = {
-  title: "GST E-Way Bill Rule & Exemption Checker — QuickInvoice India",
+  title: "GST E-Way Bill Rule & Exemption Checker — SwiftGST",
   description:
     "Check if your consignment requires a GST E-Way bill based on state thresholds (₹50k vs ₹1 Lakh), inter-state rules, and service exemptions under GST Rule 138.",
   keywords: [

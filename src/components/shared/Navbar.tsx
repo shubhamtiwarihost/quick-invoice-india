@@ -122,7 +122,7 @@ export function Navbar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs select-none">
             <FileText className="h-4 w-4" />
           </span>
-          <span className="text-base tracking-tight select-none">QuickInvoice India</span>
+          <span className="text-base tracking-tight select-none">SwiftGST</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -261,7 +261,7 @@ export function Footer() {
               <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-700 text-white select-none">
                 <FileText className="h-3.5 w-3.5" />
               </span>
-              <span className="select-none">QuickInvoice India</span>
+              <span className="select-none">SwiftGST</span>
             </Link>
             <p className="text-xs text-slate-500 leading-relaxed">
               100% free, browser-based GST invoice generator and Indian tax utility tools. Zero sign-up required.
@@ -347,7 +347,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-slate-100 pt-5 text-center text-xs text-slate-400">
-          © {new Date().getFullYear()} QuickInvoice India · Free open invoicing tool for Indian businesses, creators & freelancers.
+          © {new Date().getFullYear()} SwiftGST · Free open invoicing tool for Indian businesses, creators & freelancers.
         </div>
       </div>
     </footer>

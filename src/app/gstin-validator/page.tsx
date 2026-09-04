@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import GstinValidatorClient from "./GstinValidatorClient";
 
 export const metadata: Metadata = {
-  title: "GSTIN Validator & Checksum Checker — QuickInvoice India",
+  title: "GSTIN Validator & Checksum Checker — SwiftGST",
   description:
     "Verify 15-digit Indian GSTIN format and official MOD 36 check digit. Get instant breakdown of State Code, PAN number, Entity Type, and validity status.",
   keywords: [
