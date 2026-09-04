@@ -285,9 +285,16 @@ export function Navbar() {
               Privacy Policy
             </Link>
             <Link
-              href="/disclaimer"
+              href="/terms"
               onClick={closeAllMenus}
               className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+            >
+              Terms & Conditions
+            </Link>
+            <Link
+              href="/disclaimer"
+              onClick={closeAllMenus}
+              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium col-span-2 sm:col-span-1"
             >
               Legal Disclaimer
             </Link>
@@ -408,6 +415,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/terms" className="hover:text-teal-700">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
                 <Link href="/disclaimer" className="hover:text-teal-700">
                   Legal Disclaimer
                 </Link>
@@ -431,7 +443,10 @@ export function Footer() {
               Contact
             </Link>
             <Link href="/privacy-policy" className="hover:text-teal-700">
-              Privacy Policy
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-teal-700">
+              Terms
             </Link>
             <Link href="/disclaimer" className="hover:text-teal-700">
               Disclaimer
