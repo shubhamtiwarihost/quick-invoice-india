@@ -1,12 +1,10 @@
-name: Deploy & CI
+name: Build and Deploy to Hostinger
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 concurrency:
@@ -14,27 +12,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build & Test
+  build-and-deploy:
+    name: Lint, Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
 
-      - name: Run lint
+      - name: Run ESLint
         run: npm run lint
 
-      - name: Build Next.js project
+      - name: Build Project
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
+
+      # Ye step sirf tab chalega jab branch 'main' hogi aur pull request nahi hogi
+      - name: Deploy Build to Hostinger via SCP
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          password: ${{ secrets.HOSTINGER_PASSWORD }}
+          port: ${{ secrets.HOSTINGER_PORT }}
+          # Next.js static production build folder is 'out/*'
+          source: "out/*"
+          target: "public_html"
+          strip_components: 1
