@@ -1,21 +1,125 @@
+# ==============================================================================
+# SwiftGST (swiftgst.in) - Production Hardened Apache / LiteSpeed Configuration
+# Optimized for Hostinger Cloud / Shared Web Hosting & Next.js Static Export
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. CORE ROUTING & CANONICAL DIRECTIVES
+# ------------------------------------------------------------------------------
 DirectoryIndex index.html index.php
+
+# Disable Directory Browsing / Indexing
+Options -Indexes -MultiViews
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # Handle 404 errors
+  # Block hidden files and directories (dotfiles like .git, .env) except ACME /.well-known/
+  RewriteRule ^\.(?!well-known/) - [F,NC]
+
+  # Enforce Canonical Non-WWW Domain (Redirect www.swiftgst.in -> swiftgst.in)
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+  # Enforce HTTPS (Supporting Direct SSL and Reverse Proxy / CDN Headers)
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP:X-Forwarded-Proto} =http
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Clean Next.js route fallback
   ErrorDocument 404 /404.html
 </IfModule>
 
-# Cache static assets
+# ------------------------------------------------------------------------------
+# 2. SENSITIVE FILE ACCESS RESTRICTIONS
+# ------------------------------------------------------------------------------
+# Block public HTTP access to source files, dependencies, lock files, logs, and configs
+<FilesMatch "(^\.(env|git|svn|hg)|package\.json|package-lock\.json|tsconfig\.json|composer\.(json|lock)|yarn\.lock|pnpm-lock\.yaml|\.(log|sql|sh|bak|conf|ini|md|ts|tsx))$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Whitelist public web discovery files
+<FilesMatch "^(manifest\.json|robots\.txt|sitemap\.xml)$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+</FilesMatch>
+
+# ------------------------------------------------------------------------------
+# 3. HTTP SECURITY HEADERS (OWASP Recommended)
+# ------------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  # 1. HTTP Strict Transport Security (HSTS) - 2 Years with subdomains and preload eligibility
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+
+  # 2. Clickjacking Defense - Only allow embedding within same origin
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # 3. MIME-Type Sniffing Protection
+  Header always set X-Content-Type-Options "nosniff"
+
+  # 4. XSS Filtering Protection for legacy user-agents
+  Header always set X-XSS-Protection "1; mode=block"
+
+  # 5. Referrer Policy - Protect user privacy across external navigation
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # 6. Permissions Policy - Disable hardware device access
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), display-capture=()"
+
+  # 7. Content Security Policy (CSP) tailored for Next.js static app with live PDF generation
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' mailto:; frame-ancestors 'self';"
+
+  # 8. Hide Server / Framework Signature Headers
+  Header unset X-Powered-By
+  Header always unset X-Powered-By
+  Header unset Server
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 4. PERFORMANCE & GZIP COMPRESSION
+# ------------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json application/xml image/svg+xml
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 5. BROWSER CACHING FOR STATIC ASSETS
+# ------------------------------------------------------------------------------
 <IfModule mod_expires.c>
   ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+
+  # HTML documents - fresh verification
+  ExpiresByType text/html "access plus 0 seconds"
+
+  # Next.js static JavaScript and CSS (fingerprinted with content hashes)
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+
+  # Web Images & Vector Icons
   ExpiresByType image/jpg "access plus 1 year"
   ExpiresByType image/jpeg "access plus 1 year"
   ExpiresByType image/gif "access plus 1 year"
   ExpiresByType image/png "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
-  ExpiresByType text/css "access plus 1 month"
-  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+
+  # Web Fonts
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType application/font-woff "access plus 1 year"
+  ExpiresByType application/font-woff2 "access plus 1 year"
 </IfModule>

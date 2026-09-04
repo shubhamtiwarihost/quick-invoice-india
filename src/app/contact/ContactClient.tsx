@@ -1,24 +1,94 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Clock, MapPin, Send, CheckCircle2, Copy, Check } from "lucide-react";
+import {
+  Mail,
+  Clock,
+  MapPin,
+  Send,
+  CheckCircle2,
+  Copy,
+  Check,
+  AlertCircle,
+  ShieldCheck,
+} from "lucide-react";
+import {
+  sanitizeInput,
+  validateEmail,
+  checkRateLimit,
+  recordActionTimestamp,
+  HONEYPOT_FIELD_NAME,
+} from "@/lib/security";
 
 export function ContactClient() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Pre-fill mailto link so user can send easily from their email client if preferred
+    setErrorMessage(null);
+
+    // 1. Bot Honeypot Check: If filled, silently mock success
+    if (honeypot.trim()) {
+      setSubmitted(true);
+      return;
+    }
+
+    // 2. Client-Side Rate Limit Check (Cooldown 30s, max 5/hr)
+    const rateCheck = checkRateLimit("contact_form", {
+      minIntervalSeconds: 30,
+      maxPerHour: 5,
+    });
+    if (!rateCheck.allowed) {
+      setErrorMessage(
+        rateCheck.error || "Please wait a moment before sending another message."
+      );
+      return;
+    }
+
+    // 3. Sanitize inputs to neutralize any XSS / injection payloads
+    const cleanName = sanitizeInput(name, 100);
+    const cleanEmail = email.trim();
+    const cleanSubject = sanitizeInput(subject, 150);
+    const cleanMessage = sanitizeInput(message, 3000, true);
+
+    // 4. Validate fields
+    if (!cleanName || cleanName.length < 2) {
+      setErrorMessage("Please enter a valid name (at least 2 characters).");
+      return;
+    }
+
+    if (!validateEmail(cleanEmail)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
+    if (!cleanSubject || cleanSubject.length < 3) {
+      setErrorMessage("Please enter a subject (at least 3 characters).");
+      return;
+    }
+
+    if (!cleanMessage || cleanMessage.length < 10) {
+      setErrorMessage("Please write a message with at least 10 characters.");
+      return;
+    }
+
+    // 5. Record submission timestamp for client-side rate limiting
+    recordActionTimestamp("contact_form");
+
+    // 6. Construct safe mailto URI
     const mailtoUrl = `mailto:support@swiftgst.in?subject=${encodeURIComponent(
-      `[SwiftGST Inquiry] ${subject}`
+      `[SwiftGST Inquiry] ${cleanSubject}`
     )}&body=${encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+      `Name: ${cleanName}\nEmail: ${cleanEmail}\n\nMessage:\n${cleanMessage}`
     )}`;
+
     window.open(mailtoUrl, "_blank");
     setSubmitted(true);
   };
@@ -94,17 +164,13 @@ export function ContactClient() {
         </div>
 
         <div className="rounded-xl border border-teal-100 bg-teal-50/70 p-5">
-          <p className="text-xs font-semibold text-teal-900">Need Immediate Help?</p>
+          <div className="flex items-center gap-2 text-teal-900 font-semibold text-xs">
+            <ShieldCheck className="h-4 w-4 text-teal-700" />
+            <span>Encrypted & Privacy Protected</span>
+          </div>
           <p className="mt-1 text-xs text-teal-800/90 leading-relaxed">
-            Check out our instant compliance utilities such as the{" "}
-            <a href="/gst-state-codes" className="underline font-semibold">
-              State Codes Directory
-            </a>{" "}
-            or{" "}
-            <a href="/gstin-validator" className="underline font-semibold">
-              GSTIN Checksum Validator
-            </a>
-            .
+            All messages are sanitized and processed client-side. We never sell or
+            store your email address in third-party marketing databases.
           </p>
         </div>
       </div>
@@ -116,6 +182,13 @@ export function ContactClient() {
           <p className="mt-1 text-xs md:text-sm text-slate-500">
             Have questions, feedback, or need technical support? Fill out the form below.
           </p>
+
+          {errorMessage ? (
+            <div className="mt-4 flex items-center gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+              <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
+              <span>{errorMessage}</span>
+            </div>
+          ) : null}
 
           {submitted ? (
             <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 p-6 text-center">
@@ -135,6 +208,7 @@ export function ContactClient() {
                   setEmail("");
                   setSubject("");
                   setMessage("");
+                  setErrorMessage(null);
                 }}
                 className="mt-4 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-medium text-white hover:bg-emerald-800"
               >
@@ -143,6 +217,32 @@ export function ContactClient() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              {/* Anti-Spam Honeypot Field (hidden from human visitors) */}
+              <div
+                aria-hidden="true"
+                style={{
+                  opacity: 0,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  height: 0,
+                  width: 0,
+                  zIndex: -1,
+                  pointerEvents: "none",
+                }}
+              >
+                <label htmlFor={HONEYPOT_FIELD_NAME}>Leave this field blank</label>
+                <input
+                  type="text"
+                  id={HONEYPOT_FIELD_NAME}
+                  name={HONEYPOT_FIELD_NAME}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
+
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-medium text-slate-700">
@@ -151,6 +251,7 @@ export function ContactClient() {
                   <input
                     type="text"
                     required
+                    maxLength={100}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Enter your name"
@@ -165,6 +266,7 @@ export function ContactClient() {
                   <input
                     type="email"
                     required
+                    maxLength={254}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
@@ -180,6 +282,7 @@ export function ContactClient() {
                 <input
                   type="text"
                   required
+                  maxLength={150}
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="How can we help?"
@@ -194,6 +297,7 @@ export function ContactClient() {
                 <textarea
                   required
                   rows={5}
+                  maxLength={3000}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Write your message here..."
