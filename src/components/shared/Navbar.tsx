@@ -205,6 +205,27 @@ export function Navbar() {
               </div>
             ) : null}
           </div>
+
+          <Link
+            href="/about"
+            className={`rounded-xl px-3 py-2 transition ${
+              pathname === "/about"
+                ? "bg-teal-700 text-white shadow-xs font-semibold"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            }`}
+          >
+            About
+          </Link>
+          <Link
+            href="/contact"
+            className={`rounded-xl px-3 py-2 transition ${
+              pathname === "/contact"
+                ? "bg-teal-700 text-white shadow-xs font-semibold"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            }`}
+          >
+            Contact
+          </Link>
         </nav>
 
         {/* Mobile Menu Trigger */}
@@ -240,6 +261,36 @@ export function Navbar() {
                 </Link>
               );
             })}
+          </div>
+          <div className="mt-3 border-t border-slate-100 pt-3 grid grid-cols-2 gap-2 text-xs">
+            <Link
+              href="/about"
+              onClick={closeAllMenus}
+              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+            >
+              About SwiftGST
+            </Link>
+            <Link
+              href="/contact"
+              onClick={closeAllMenus}
+              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+            >
+              Contact Us
+            </Link>
+            <Link
+              href="/privacy-policy"
+              onClick={closeAllMenus}
+              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/disclaimer"
+              onClick={closeAllMenus}
+              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+            >
+              Legal Disclaimer
+            </Link>
           </div>
         </div>
       ) : null}
@@ -335,19 +386,57 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Compliance Info */}
+          {/* Company & Legal */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
-              Indian GST Standards
+              Company & Legal
             </h4>
-            <p className="mt-3 text-xs text-slate-500 leading-relaxed">
-              Designed according to CBIC GST invoice rules, Rule 138 E-Way Bill mandates, Section 10 Composition norms, and standard Indian currency notations.
+            <ul className="mt-3 space-y-2 text-xs text-slate-500">
+              <li>
+                <Link href="/about" className="hover:text-teal-700">
+                  About SwiftGST
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-teal-700">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:text-teal-700">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/disclaimer" className="hover:text-teal-700">
+                  Legal Disclaimer
+                </Link>
+              </li>
+            </ul>
+            <p className="mt-4 text-[11px] text-slate-400 leading-relaxed">
+              Designed in compliance with CBIC GST rules, Rule 138 E-Way thresholds & Section 10 norms.
             </p>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-slate-100 pt-5 text-center text-xs text-slate-400">
-          © {new Date().getFullYear()} SwiftGST · Free open invoicing tool for Indian businesses, creators & freelancers.
+        <div className="mt-8 border-t border-slate-100 pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+          <div>
+            © {new Date().getFullYear()} SwiftGST · Free open invoicing tool for Indian businesses, creators & freelancers.
+          </div>
+          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+            <Link href="/about" className="hover:text-teal-700">
+              About
+            </Link>
+            <Link href="/contact" className="hover:text-teal-700">
+              Contact
+            </Link>
+            <Link href="/privacy-policy" className="hover:text-teal-700">
+              Privacy Policy
+            </Link>
+            <Link href="/disclaimer" className="hover:text-teal-700">
+              Disclaimer
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
