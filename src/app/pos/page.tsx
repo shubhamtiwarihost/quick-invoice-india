@@ -29,6 +29,12 @@ import {
   Gift,
   AlertCircle,
   UserPlus,
+  Pause,
+  Clock,
+  Wallet,
+  FileClock,
+  RotateCcw,
+  Check,
 } from "lucide-react";
 import {
   getAllProducts,
@@ -40,14 +46,24 @@ import {
   getAllCustomers,
   saveCustomer,
   seedInitialCustomersIfEmpty,
+  getActiveShift,
+  startShift,
+  closeShift,
+  getShiftSalesSummary,
+  getHeldTickets,
+  saveHeldTicket,
+  deleteHeldTicket,
   type Product,
   type Sale,
   type SaleItem,
   type PaymentMode,
   type Customer,
+  type Shift,
+  type HeldTicket,
 } from "@/lib/db/posDb";
 import { PosComplianceGuide } from "@/components/pos/PosComplianceGuide";
 import { ThermalReceipt, type BusinessInfo } from "@/components/pos/ThermalReceipt";
+import { ZReportReceipt } from "@/components/pos/ZReportReceipt";
 
 const DEFAULT_STORE: BusinessInfo = {
   businessName: "Swift Retail Store",
@@ -97,6 +113,32 @@ export default function PosCounterPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
+  // Shift Management State
+  const [activeShift, setActiveShift] = useState<Shift | null>(null);
+  const [isStartShiftModalOpen, setIsStartShiftModalOpen] = useState(false);
+  const [openingFloatInput, setOpeningFloatInput] = useState("1000");
+  const [shiftNotesInput, setShiftNotesInput] = useState("");
+  const [isEndShiftModalOpen, setIsEndShiftModalOpen] = useState(false);
+  const [actualPhysicalCash, setActualPhysicalCash] = useState("");
+  const [closeShiftNotes, setCloseShiftNotes] = useState("");
+  const [currentShiftSummary, setCurrentShiftSummary] = useState({
+    cashSales: 0,
+    upiSales: 0,
+    cardSales: 0,
+    splitSales: 0,
+    totalSales: 0,
+    transactionCount: 0,
+  });
+  const [isZReportModalOpen, setIsZReportModalOpen] = useState(false);
+  const [shiftForZReport, setShiftForZReport] = useState<Shift | null>(null);
+
+  // Hold Bill & Open Tickets State
+  const [heldTickets, setHeldTickets] = useState<HeldTicket[]>([]);
+  const [isHoldModalOpen, setIsHoldModalOpen] = useState(false);
+  const [holdTicketName, setHoldTicketName] = useState("");
+  const [holdTicketNote, setHoldTicketNote] = useState("");
+  const [isOpenTicketsDrawerOpen, setIsOpenTicketsDrawerOpen] = useState(false);
+
   const barcodeInputRef = useRef<HTMLInputElement | null>(null);
 
   function showToast(msg: string) {
@@ -112,14 +154,18 @@ export default function PosCounterPage() {
     try {
       await seedInitialInventoryIfEmpty();
       await seedInitialCustomersIfEmpty();
-      const [productList, customerList, salesList] = await Promise.all([
+      const [productList, customerList, salesList, currentShift, openTickets] = await Promise.all([
         getAllProducts(),
         getAllCustomers(),
         getAllSales(),
+        getActiveShift(),
+        getHeldTickets(),
       ]);
       setProducts(productList);
       setCustomers(customerList);
       setRecentSales(salesList.slice(0, 25));
+      setActiveShift(currentShift);
+      setHeldTickets(openTickets);
     } catch (err) {
       console.error("Failed to load POS data:", err);
       showToast("Unable to load POS catalog.");
@@ -370,6 +416,131 @@ export default function PosCounterPage() {
     setCashTendered("");
     setSplitCash("");
     setSplitOnline("");
+  }
+
+  // --- Shift Management Handlers ---
+  async function handleStartShift(e: React.FormEvent) {
+    e.preventDefault();
+    const floatNum = parseFloat(openingFloatInput) || 0;
+    try {
+      const s = await startShift(floatNum, shiftNotesInput.trim());
+      setActiveShift(s);
+      setIsStartShiftModalOpen(false);
+      setOpeningFloatInput("1000");
+      setShiftNotesInput("");
+      showToast(`Shift started with ₹${floatNum.toFixed(2)} opening cash float!`);
+    } catch (err) {
+      console.error("Failed to start shift:", err);
+      showToast("Failed to start shift.");
+    }
+  }
+
+  async function openEndShiftModal() {
+    if (!activeShift) return;
+    try {
+      const summary = await getShiftSalesSummary(activeShift.startTime);
+      setCurrentShiftSummary(summary);
+      const expected = (activeShift.openingCash || 0) + summary.cashSales;
+      setActualPhysicalCash(String(expected));
+      setCloseShiftNotes("");
+      setIsEndShiftModalOpen(true);
+    } catch (err) {
+      console.error("Failed to calculate shift summary:", err);
+      showToast("Unable to tally shift sales.");
+    }
+  }
+
+  async function handleCloseShift(printZReportAfter = true) {
+    if (!activeShift) return;
+    const counted = parseFloat(actualPhysicalCash) || 0;
+    try {
+      const closed = await closeShift(activeShift.id, counted, closeShiftNotes.trim());
+      setActiveShift(null);
+      setIsEndShiftModalOpen(false);
+      setShiftForZReport(closed);
+      if (printZReportAfter) {
+        setIsZReportModalOpen(true);
+      }
+      showToast(`Shift closed! Expected: ₹${(closed.expectedCash || 0).toFixed(2)}, Actual: ₹${counted.toFixed(2)}`);
+    } catch (err) {
+      console.error("Failed to close shift:", err);
+      showToast("Failed to close shift.");
+    }
+  }
+
+  // --- Hold Bill & Open Tickets Handlers ---
+  function openHoldModal() {
+    if (cart.length === 0) {
+      showToast("Cart is empty! Add products first.");
+      return;
+    }
+    const defaultName = selectedCustomer?.name
+      ? selectedCustomer.name
+      : `Ticket #${heldTickets.length + 1}`;
+    setHoldTicketName(defaultName);
+    setHoldTicketNote("");
+    setIsHoldModalOpen(true);
+  }
+
+  async function handleConfirmHold(e: React.FormEvent) {
+    e.preventDefault();
+    if (!holdTicketName.trim()) return;
+    try {
+      await saveHeldTicket({
+        name: holdTicketName.trim(),
+        items: [...cart],
+        customerId: selectedCustomerId || undefined,
+        customerName: selectedCustomer ? selectedCustomer.name : customerName.trim() || undefined,
+        customerPhone: selectedCustomer ? selectedCustomer.phone : customerPhone.trim() || undefined,
+        note: holdTicketNote.trim() || undefined,
+      });
+      const updated = await getHeldTickets();
+      setHeldTickets(updated);
+      clearCart();
+      setIsHoldModalOpen(false);
+      showToast(`Bill held as "${holdTicketName.trim()}"!`);
+    } catch (err) {
+      console.error("Failed to hold bill:", err);
+      showToast("Failed to hold bill.");
+    }
+  }
+
+  async function handleRestoreTicket(ticket: HeldTicket) {
+    if (cart.length > 0) {
+      if (!window.confirm("Restoring this ticket will overwrite current cart. Continue?")) {
+        return;
+      }
+    }
+    try {
+      setCart([...ticket.items]);
+      if (ticket.customerId) {
+        handleSelectCustomer(ticket.customerId);
+      } else {
+        setSelectedCustomerId("");
+        setCustomerName(ticket.customerName || "");
+        setCustomerPhone(ticket.customerPhone || "");
+      }
+      await deleteHeldTicket(ticket.id);
+      const updated = await getHeldTickets();
+      setHeldTickets(updated);
+      setIsOpenTicketsDrawerOpen(false);
+      showToast(`Restored "${ticket.name}" to cart!`);
+    } catch (err) {
+      console.error("Failed to restore ticket:", err);
+      showToast("Failed to restore ticket.");
+    }
+  }
+
+  async function handleDeleteHeldTicket(ticketId: string, ticketName: string) {
+    try {
+      await deleteHeldTicket(ticketId);
+      const updated = await getHeldTickets();
+      setHeldTickets(updated);
+      showToast(`Discarded ticket "${ticketName}".`);
+    } catch (err) {
+      console.error("Failed to delete held ticket:", err);
+      showToast("Failed to discard ticket.");
+    }
   }
 
   // Process barcode input
@@ -634,6 +805,57 @@ export default function PosCounterPage() {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
+              {/* Shift / Cash Drawer Status */}
+              {activeShift ? (
+                <button
+                  type="button"
+                  onClick={openEndShiftModal}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-900 hover:bg-emerald-100 shadow-2xs transition active:scale-95"
+                  title="Shift is Active · Click to Close Shift / Print Z-Report"
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                  </span>
+                  <span>Shift: Open</span>
+                  <span className="hidden xl:inline text-emerald-700 font-normal">
+                    (₹{activeShift.openingCash})
+                  </span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsStartShiftModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-100 shadow-2xs transition active:scale-95"
+                  title="Start Cash Drawer Shift & Set Float"
+                >
+                  <Clock className="h-3.5 w-3.5 text-amber-700" />
+                  <span>Start Shift</span>
+                </button>
+              )}
+
+              {/* Saved Bills / Open Tickets Badge Button */}
+              <button
+                type="button"
+                onClick={() => setIsOpenTicketsDrawerOpen(true)}
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1.5 text-xs font-bold transition active:scale-95 shadow-2xs ${
+                  heldTickets.length > 0
+                    ? "border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100"
+                    : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+                title="View Held Bills / Open Tickets"
+              >
+                <FileClock className={`h-3.5 w-3.5 ${heldTickets.length > 0 ? "text-amber-700" : "text-slate-500"}`} />
+                <span>Open Bills</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+                    heldTickets.length > 0 ? "bg-amber-200 text-amber-900" : "bg-slate-100 text-slate-600"
+                  }`}
+                >
+                  {heldTickets.length}
+                </span>
+              </button>
+
               <Link
                 href="/customers"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-bold text-teal-800 hover:bg-teal-100 shadow-2xs transition"
@@ -829,13 +1051,24 @@ export default function PosCounterPage() {
                   </h2>
                 </div>
                 {cart.length > 0 ? (
-                  <button
-                    type="button"
-                    onClick={clearCart}
-                    className="text-[11px] font-bold text-red-600 hover:text-red-700 transition"
-                  >
-                    Clear Cart
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={openHoldModal}
+                      className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-900 transition active:scale-95 shadow-2xs"
+                      title="Park active cart as an open ticket"
+                    >
+                      <Pause className="h-3 w-3 text-amber-700" />
+                      <span>Hold Bill</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={clearCart}
+                      className="text-[11px] font-bold text-red-600 hover:text-red-700 transition px-1.5 py-0.5"
+                    >
+                      Clear
+                    </button>
+                  </div>
                 ) : null}
               </div>
 
@@ -1027,16 +1260,29 @@ export default function PosCounterPage() {
                   </span>
                 </div>
 
-                {/* Open Fast Checkout Modal Button */}
-                <button
-                  type="button"
-                  onClick={openCheckout}
-                  disabled={cart.length === 0}
-                  className="w-full mt-3 flex items-center justify-center gap-2 rounded-xl bg-teal-700 hover:bg-teal-800 py-3 text-sm font-bold text-white shadow-md active:scale-95 transition disabled:opacity-40 ring-2 ring-teal-600/20"
-                >
-                  <Receipt className="h-4 w-4 stroke-[2.5]" />
-                  <span>Checkout (₹{grandTotal.toFixed(2)})</span>
-                </button>
+                {/* Actions: Hold Bill & Checkout */}
+                <div className="mt-3 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={openHoldModal}
+                    disabled={cart.length === 0}
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 py-3 text-xs font-bold text-amber-900 transition active:scale-95 disabled:opacity-40"
+                    title="Park active cart items as open ticket"
+                  >
+                    <Pause className="h-3.5 w-3.5 text-amber-700" />
+                    <span>Hold Bill</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={openCheckout}
+                    disabled={cart.length === 0}
+                    className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-teal-700 hover:bg-teal-800 py-3 text-sm font-bold text-white shadow-md active:scale-95 transition disabled:opacity-40 ring-2 ring-teal-600/20"
+                  >
+                    <Receipt className="h-4 w-4 stroke-[2.5]" />
+                    <span>Checkout (₹{grandTotal.toFixed(2)})</span>
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -1661,6 +1907,436 @@ export default function PosCounterPage() {
             </form>
           </div>
         </div>
+      ) : null}
+
+      {/* 1. HOLD BILL MODAL */}
+      {isHoldModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-700 border border-amber-200">
+                  <Pause className="h-4 w-4" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">Hold Active Bill</h3>
+                  <p className="text-[11px] text-slate-500">Park current cart items to serve next customer</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsHoldModalOpen(false)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleConfirmHold} className="space-y-3.5 text-xs">
+              <div className="rounded-xl bg-amber-50/60 border border-amber-200/80 p-3 space-y-1">
+                <div className="flex justify-between font-bold text-slate-900">
+                  <span>Cart Items ({totalUnits}):</span>
+                  <span className="font-mono text-teal-800">₹{grandTotal.toFixed(2)}</span>
+                </div>
+                {selectedCustomer ? (
+                  <p className="text-[11px] text-amber-900">
+                    Customer: <strong>{selectedCustomer.name}</strong> ({selectedCustomer.phone})
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">
+                  Ticket Reference / Table Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={holdTicketName}
+                  onChange={(e) => setHoldTicketName(e.target.value)}
+                  placeholder="e.g. Table 4, Ramesh Bhai, Blue Shirt Customer"
+                  className="w-full rounded-xl border border-slate-300 p-2.5 font-medium text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">
+                  Optional Note
+                </label>
+                <input
+                  type="text"
+                  value={holdTicketNote}
+                  onChange={(e) => setHoldTicketNote(e.target.value)}
+                  placeholder="e.g. Customer stepped out to fetch cash from ATM"
+                  className="w-full rounded-xl border border-slate-300 p-2 font-medium text-slate-900 focus:border-teal-600 focus:outline-none"
+                />
+              </div>
+
+              <div className="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setIsHoldModalOpen(false)}
+                  className="rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2 font-semibold text-slate-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-amber-600 hover:bg-amber-700 px-5 py-2 font-bold text-white shadow-xs"
+                >
+                  Hold Bill
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
+      {/* 2. OPEN TICKETS / SAVED BILLS MODAL */}
+      {isOpenTicketsDrawerOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+              <div className="flex items-center gap-2">
+                <FileClock className="h-5 w-5 text-amber-600" />
+                <h3 className="text-sm font-bold text-slate-900">
+                  Open Bills / Parked Tickets ({heldTickets.length})
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsOpenTicketsDrawerOpen(false)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
+              {heldTickets.length === 0 ? (
+                <div className="py-12 text-center text-slate-400 space-y-2">
+                  <FileClock className="h-10 w-10 mx-auto text-slate-300" />
+                  <p className="text-xs font-semibold text-slate-600">No open bills on hold</p>
+                  <p className="text-[11px] text-slate-400">
+                    Use the &quot;Hold Bill&quot; button in the cart panel to temporarily save an ongoing order.
+                  </p>
+                </div>
+              ) : (
+                heldTickets.map((t) => {
+                  const total = t.items.reduce((sum, it) => sum + (it.total || 0), 0);
+                  const itemCount = t.items.reduce((sum, it) => sum + (it.qty || 0), 0);
+                  const timeStr = new Date(t.createdAt).toLocaleTimeString("en-IN", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+
+                  return (
+                    <div
+                      key={t.id}
+                      className="rounded-xl border border-amber-200/80 bg-amber-50/40 p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition hover:border-amber-300 hover:bg-amber-50/70 shadow-2xs"
+                    >
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm text-slate-900 truncate">{t.name}</span>
+                          <span className="rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold px-2 py-0.2">
+                            {timeStr}
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-slate-600 font-medium">
+                          {itemCount} {itemCount === 1 ? "item" : "items"} ·{" "}
+                          <span className="font-mono font-bold text-teal-800">₹{total.toFixed(2)}</span>
+                          {t.customerName ? ` · 👤 ${t.customerName}` : ""}
+                        </p>
+
+                        {t.note ? (
+                          <p className="text-[11px] text-slate-500 italic truncate">
+                            Note: {t.note}
+                          </p>
+                        ) : null}
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleRestoreTicket(t)}
+                          className="inline-flex items-center gap-1 rounded-xl bg-teal-700 hover:bg-teal-800 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs active:scale-95 transition"
+                        >
+                          <RotateCcw className="h-3 w-3" />
+                          <span>Restore</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteHeldTicket(t.id, t.name)}
+                          className="rounded-xl border border-slate-200 bg-white hover:bg-red-50 hover:text-red-700 hover:border-red-200 p-2 text-slate-400 transition"
+                          title="Discard Ticket"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* 3. START SHIFT MODAL */}
+      {isStartShiftModalOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 text-teal-700 border border-teal-200">
+                  <Clock className="h-4 w-4" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">Start Cash Drawer Shift</h3>
+                  <p className="text-[11px] text-slate-500">Record opening cash float in the till</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsStartShiftModalOpen(false)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleStartShift} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">
+                  Opening Cash Float in Drawer (INR) *
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">
+                    ₹
+                  </span>
+                  <input
+                    type="number"
+                    step="any"
+                    required
+                    min="0"
+                    value={openingFloatInput}
+                    onChange={(e) => setOpeningFloatInput(e.target.value)}
+                    placeholder="1000"
+                    className="w-full rounded-xl border border-slate-300 pl-7 pr-3 py-2.5 font-mono text-base font-bold text-teal-900 focus:border-teal-600 focus:outline-none"
+                  />
+                </div>
+
+                {/* Quick denomination buttons */}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {[500, 1000, 2000, 5000].map((amt) => (
+                    <button
+                      key={amt}
+                      type="button"
+                      onClick={() => setOpeningFloatInput(String(amt))}
+                      className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-900 hover:border-teal-200 transition"
+                    >
+                      ₹{amt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">
+                  Shift Notes / Cashier Name
+                </label>
+                <input
+                  type="text"
+                  value={shiftNotesInput}
+                  onChange={(e) => setShiftNotesInput(e.target.value)}
+                  placeholder="e.g. Morning Shift - Cashier Ramesh"
+                  className="w-full rounded-xl border border-slate-300 p-2 font-medium text-slate-900 focus:border-teal-600 focus:outline-none"
+                />
+              </div>
+
+              <p className="text-[11px] text-slate-500 leading-relaxed rounded-xl bg-slate-50 border border-slate-100 p-2.5">
+                💡 <strong>Drawer Accounting:</strong> This opening float is retained as baseline cash. During shift closure, your expected drawer balance will equal <em>Opening Float + Cash Sales</em>.
+              </p>
+
+              <div className="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setIsStartShiftModalOpen(false)}
+                  className="rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2 font-semibold text-slate-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-teal-700 hover:bg-teal-800 px-5 py-2 font-bold text-white shadow-xs"
+                >
+                  Start Shift
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null}
+
+      {/* 4. END SHIFT / Z-REPORT MODAL */}
+      {isEndShiftModalOpen && activeShift ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[92vh] overflow-y-auto space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <Wallet className="h-4 w-4" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">Close Shift &amp; Cash Drawer Reconciliation</h3>
+                  <p className="text-[11px] text-slate-500">
+                    Shift started at {new Date(activeShift.startTime).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEndShiftModalOpen(false)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Cash Drawer Calculation Breakdown */}
+            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 space-y-2 text-xs">
+              <div className="flex justify-between text-slate-600">
+                <span>(+) Opening Cash Float:</span>
+                <span className="font-mono font-semibold">₹{(activeShift.openingCash || 0).toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>(+) Cash Sales in Shift:</span>
+                <span className="font-mono font-semibold text-emerald-700">₹{currentShiftSummary.cashSales.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-2 text-sm">
+                <span>(=) Expected Cash in Drawer:</span>
+                <span className="font-mono text-teal-800">
+                  ₹{((activeShift.openingCash || 0) + currentShiftSummary.cashSales).toFixed(2)}
+                </span>
+              </div>
+            </div>
+
+            {/* Other Payment Tender Summary */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-2.5">
+                <span className="text-[11px] text-teal-700 block">UPI Collections</span>
+                <span className="text-sm font-bold font-mono text-teal-900">
+                  ₹{currentShiftSummary.upiSales.toFixed(2)}
+                </span>
+              </div>
+              <div className="rounded-xl border border-blue-200 bg-blue-50/60 p-2.5">
+                <span className="text-[11px] text-blue-700 block">Card / EDC</span>
+                <span className="text-sm font-bold font-mono text-blue-900">
+                  ₹{currentShiftSummary.cardSales.toFixed(2)}
+                </span>
+              </div>
+            </div>
+
+            {/* Actual Cash Input & Difference calculation */}
+            <div className="space-y-2 text-xs">
+              <label className="block font-bold text-slate-900">
+                Actual Physical Cash Counted in Till (INR) *
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">
+                  ₹
+                </span>
+                <input
+                  type="number"
+                  step="any"
+                  required
+                  value={actualPhysicalCash}
+                  onChange={(e) => setActualPhysicalCash(e.target.value)}
+                  placeholder="0.00"
+                  className="w-full rounded-xl border border-slate-300 pl-7 pr-3 py-2 font-mono text-base font-bold text-slate-900 focus:border-teal-600 focus:outline-none"
+                />
+              </div>
+
+              {/* Shortage / Surplus Indicator */}
+              {(() => {
+                const expected = (activeShift.openingCash || 0) + currentShiftSummary.cashSales;
+                const counted = parseFloat(actualPhysicalCash) || 0;
+                const diff = counted - expected;
+
+                if (Math.abs(diff) < 0.01) {
+                  return (
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-2.5 text-xs text-emerald-800 font-semibold flex items-center gap-2">
+                      <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <span>Cash drawer is perfectly balanced! Zero discrepancy.</span>
+                    </div>
+                  );
+                } else if (diff > 0) {
+                  return (
+                    <div className="rounded-xl border border-blue-200 bg-blue-50 p-2.5 text-xs text-blue-800 font-semibold flex items-center gap-2">
+                      <span className="font-bold font-mono">+₹{diff.toFixed(2)}</span>
+                      <span>Cash Surplus (Extra physical cash in drawer).</span>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-800 font-semibold flex items-center gap-2">
+                      <span className="font-bold font-mono">-₹{Math.abs(diff).toFixed(2)}</span>
+                      <span>Cash Shortage (Physical cash is less than expected).</span>
+                    </div>
+                  );
+                }
+              })()}
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1 text-xs">
+                Handover Notes / Discrepancy Reason (Optional)
+              </label>
+              <input
+                type="text"
+                value={closeShiftNotes}
+                onChange={(e) => setCloseShiftNotes(e.target.value)}
+                placeholder="e.g. Handed over till to Evening Cashier"
+                className="w-full rounded-xl border border-slate-300 p-2 text-xs font-medium text-slate-900 focus:border-teal-600 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-2 border-t border-slate-100 pt-4">
+              <button
+                type="button"
+                onClick={() => setIsEndShiftModalOpen(false)}
+                className="w-full sm:w-auto rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCloseShift(false)}
+                className="w-full sm:w-auto rounded-xl border border-slate-300 bg-white hover:bg-slate-50 px-4 py-2 text-xs font-bold text-slate-800"
+              >
+                Close (No Print)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleCloseShift(true)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 px-5 py-2 text-xs font-bold text-white shadow-md active:scale-95 transition"
+              >
+                <Printer className="h-3.5 w-3.5" />
+                <span>Print Z-Report &amp; Close</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* 5. PRINTABLE Z-REPORT MODAL */}
+      {isZReportModalOpen && shiftForZReport ? (
+        <ZReportReceipt
+          shift={shiftForZReport}
+          business={storeSettings}
+          onClose={() => setIsZReportModalOpen(false)}
+        />
       ) : null}
 
       {/* Educational & E-E-A-T Compliance Guide */}

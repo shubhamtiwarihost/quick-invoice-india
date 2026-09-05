@@ -68,6 +68,32 @@ export interface LedgerEntry {
   timestamp: number;
 }
 
+export interface Shift {
+  id: string;
+  startTime: number;
+  endTime?: number;
+  openingCash: number;
+  closingCash?: number;
+  expectedCash?: number;
+  cashSales: number;
+  upiSales: number;
+  cardSales: number;
+  totalSales: number;
+  status: "open" | "closed";
+  notes?: string;
+}
+
+export interface HeldTicket {
+  id: string;
+  name: string;
+  items: SaleItem[];
+  customerId?: string;
+  customerName?: string;
+  customerPhone?: string;
+  note?: string;
+  createdAt: number;
+}
+
 export interface PosDBSchema extends DBSchema {
   products: {
     key: string;
@@ -103,10 +129,25 @@ export interface PosDBSchema extends DBSchema {
       by_timestamp: number;
     };
   };
+  shifts: {
+    key: string;
+    value: Shift;
+    indexes: {
+      by_status: string;
+      by_startTime: number;
+    };
+  };
+  held_tickets: {
+    key: string;
+    value: HeldTicket;
+    indexes: {
+      by_createdAt: number;
+    };
+  };
 }
 
 const DB_NAME = "swiftgst_pos_db";
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 let dbPromise: Promise<IDBPDatabase<PosDBSchema>> | null = null;
 
@@ -146,6 +187,19 @@ export function getDb(): Promise<IDBPDatabase<PosDBSchema>> {
           const ledgerStore = db.createObjectStore("ledger", { keyPath: "id" });
           ledgerStore.createIndex("by_customerId", "customerId");
           ledgerStore.createIndex("by_timestamp", "timestamp");
+        }
+
+        // 5. Shifts Store
+        if (!db.objectStoreNames.contains("shifts")) {
+          const shiftStore = db.createObjectStore("shifts", { keyPath: "id" });
+          shiftStore.createIndex("by_status", "status");
+          shiftStore.createIndex("by_startTime", "startTime");
+        }
+
+        // 6. Held Tickets Store
+        if (!db.objectStoreNames.contains("held_tickets")) {
+          const heldStore = db.createObjectStore("held_tickets", { keyPath: "id" });
+          heldStore.createIndex("by_createdAt", "createdAt");
         }
       },
     });
@@ -773,4 +827,157 @@ export async function recordCustomerPayment(
   });
 
   await tx.done;
+}
+
+// ----------------------------------------------------------------------
+// Shift Management & Cash Drawer Functions
+// ----------------------------------------------------------------------
+export async function getActiveShift(): Promise<Shift | null> {
+  if (typeof window === "undefined") return null;
+  const db = await getDb();
+  const openShifts = await db.getAllFromIndex("shifts", "by_status", "open");
+  if (!openShifts || openShifts.length === 0) return null;
+  // Sort descending by startTime to get latest
+  openShifts.sort((a, b) => b.startTime - a.startTime);
+  return openShifts[0];
+}
+
+export async function startShift(openingCash: number, notes?: string): Promise<Shift> {
+  const db = await getDb();
+  const existing = await getActiveShift();
+  if (existing) {
+    return existing;
+  }
+
+  const newShift: Shift = {
+    id: "sft_" + Math.random().toString(36).substring(2, 9),
+    startTime: Date.now(),
+    openingCash: Number(openingCash) || 0,
+    cashSales: 0,
+    upiSales: 0,
+    cardSales: 0,
+    totalSales: 0,
+    status: "open",
+    notes,
+  };
+
+  await db.put("shifts", newShift);
+  return newShift;
+}
+
+export async function getShiftSalesSummary(shiftStartTime: number): Promise<{
+  cashSales: number;
+  upiSales: number;
+  cardSales: number;
+  splitSales: number;
+  totalSales: number;
+  transactionCount: number;
+}> {
+  if (typeof window === "undefined") {
+    return { cashSales: 0, upiSales: 0, cardSales: 0, splitSales: 0, totalSales: 0, transactionCount: 0 };
+  }
+  const db = await getDb();
+  // Fetch all sales and filter by shiftStartTime
+  const allSales = await db.getAll("sales");
+  const sales = allSales.filter((s) => s.timestamp >= shiftStartTime);
+
+  let cashSales = 0;
+  let upiSales = 0;
+  let cardSales = 0;
+  let splitSales = 0;
+  let totalSales = 0;
+
+  for (const s of sales) {
+    totalSales += s.grandTotal || 0;
+    if (s.paymentMode === "cash") {
+      cashSales += s.grandTotal || 0;
+    } else if (s.paymentMode === "upi") {
+      upiSales += s.grandTotal || 0;
+    } else if (s.paymentMode === "card") {
+      cardSales += s.grandTotal || 0;
+    } else if (s.paymentMode === "split") {
+      // split: half cash, half online
+      cashSales += (s.grandTotal || 0) / 2;
+      upiSales += (s.grandTotal || 0) / 2;
+      splitSales += s.grandTotal || 0;
+    }
+  }
+
+  return {
+    cashSales,
+    upiSales,
+    cardSales,
+    splitSales,
+    totalSales,
+    transactionCount: sales.length,
+  };
+}
+
+export async function closeShift(
+  shiftId: string,
+  closingPhysicalCash: number,
+  notes?: string
+): Promise<Shift> {
+  const db = await getDb();
+  const shift = await db.get("shifts", shiftId);
+  if (!shift) {
+    throw new Error(`Shift ${shiftId} not found.`);
+  }
+
+  const now = Date.now();
+  const salesSummary = await getShiftSalesSummary(shift.startTime);
+  const expectedCash = (shift.openingCash || 0) + salesSummary.cashSales;
+
+  const closedShift: Shift = {
+    ...shift,
+    endTime: now,
+    closingCash: Number(closingPhysicalCash) || 0,
+    expectedCash,
+    cashSales: salesSummary.cashSales,
+    upiSales: salesSummary.upiSales,
+    cardSales: salesSummary.cardSales,
+    totalSales: salesSummary.totalSales,
+    status: "closed",
+    notes: notes || shift.notes,
+  };
+
+  await db.put("shifts", closedShift);
+  return closedShift;
+}
+
+export async function getAllShifts(): Promise<Shift[]> {
+  if (typeof window === "undefined") return [];
+  const db = await getDb();
+  const shifts = await db.getAll("shifts");
+  return shifts.sort((a, b) => b.startTime - a.startTime);
+}
+
+// ----------------------------------------------------------------------
+// Held Tickets / Open Bills Functions
+// ----------------------------------------------------------------------
+export async function getHeldTickets(): Promise<HeldTicket[]> {
+  if (typeof window === "undefined") return [];
+  const db = await getDb();
+  const tickets = await db.getAll("held_tickets");
+  return tickets.sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function saveHeldTicket(
+  ticket: Omit<HeldTicket, "id" | "createdAt"> & { id?: string }
+): Promise<string> {
+  const db = await getDb();
+  const id = ticket.id || "tkt_" + Math.random().toString(36).substring(2, 9);
+  const now = Date.now();
+  const toSave: HeldTicket = {
+    ...ticket,
+    id,
+    createdAt: now,
+  };
+  await db.put("held_tickets", toSave);
+  return id;
+}
+
+export async function deleteHeldTicket(ticketId: string): Promise<void> {
+  const db = await getDb();
+  await db.delete("held_tickets", ticketId);
 }
