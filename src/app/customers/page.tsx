@@ -36,6 +36,7 @@ import {
   type PaymentMode,
 } from "@/lib/db/posDb";
 import { type BusinessInfo } from "@/components/pos/ThermalReceipt";
+import { CustomersComplianceGuide } from "@/components/customers/CustomersComplianceGuide";
 
 const DEFAULT_STORE: BusinessInfo = {
   businessName: "Swift Retail Store",
@@ -856,6 +857,9 @@ export default function CustomersKhataPage() {
           </div>
         </div>
       ) : null}
+
+      {/* Educational & E-E-A-T Compliance Guide */}
+      <CustomersComplianceGuide />
     </div>
   );
 }

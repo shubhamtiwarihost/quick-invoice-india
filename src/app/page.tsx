@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
 import { ToolsHub } from "@/components/shared/ToolsHub";
 import { HomeComplianceGuide, HOME_FAQS } from "@/components/home/HomeComplianceGuide";
+import { RetailSuiteShowcase } from "@/components/home/RetailSuiteShowcase";
 
 export const metadata: Metadata = {
   title: "SwiftGST — Free GST Invoice Generator India (PDF, UPI QR, GSTR-1)",
@@ -99,6 +100,7 @@ export default function HomePage() {
       <InvoiceWorkspace
         childrenBelowWorkspace={
           <>
+            <RetailSuiteShowcase />
             <ToolsHub />
             <HomeComplianceGuide />
           </>

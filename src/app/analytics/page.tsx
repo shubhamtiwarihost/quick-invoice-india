@@ -34,6 +34,7 @@ import {
   type Product,
   type Customer,
 } from "@/lib/db/posDb";
+import { AnalyticsComplianceGuide } from "@/components/analytics/AnalyticsComplianceGuide";
 
 type DateRange = "today" | "7days" | "month" | "all";
 
@@ -828,6 +829,9 @@ export default function AnalyticsPage() {
           </div>
         </div>
       </main>
+
+      {/* Educational & E-E-A-T Compliance Guide */}
+      <AnalyticsComplianceGuide />
     </div>
   );
 }

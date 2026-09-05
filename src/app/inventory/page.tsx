@@ -30,6 +30,7 @@ import {
   seedInitialInventoryIfEmpty,
   type Product,
 } from "@/lib/db/posDb";
+import { InventoryComplianceGuide } from "@/components/inventory/InventoryComplianceGuide";
 
 const GST_SLABS = [0, 5, 12, 18, 28];
 
@@ -894,6 +895,9 @@ export default function InventoryPage() {
           </div>
         </div>
       ) : null}
+
+      {/* Educational & E-E-A-T Compliance Guide */}
+      <InventoryComplianceGuide />
     </div>
   );
 }

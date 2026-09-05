@@ -46,6 +46,7 @@ import {
   type PaymentMode,
   type Customer,
 } from "@/lib/db/posDb";
+import { PosComplianceGuide } from "@/components/pos/PosComplianceGuide";
 import { ThermalReceipt, type BusinessInfo } from "@/components/pos/ThermalReceipt";
 
 const DEFAULT_STORE: BusinessInfo = {
@@ -1661,6 +1662,9 @@ export default function PosCounterPage() {
           </div>
         </div>
       ) : null}
+
+      {/* Educational & E-E-A-T Compliance Guide */}
+      <PosComplianceGuide />
     </div>
   );
 }
