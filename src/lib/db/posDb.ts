@@ -44,6 +44,8 @@ export interface Sale {
   loyaltyDiscount?: number;
   loyaltyPointsAwarded?: number;
   notes?: string;
+  status?: "completed" | "voided";
+  voidReason?: string;
 }
 
 export interface Customer {
@@ -746,6 +748,82 @@ export async function recordSale(sale: Sale, deductStock = true): Promise<string
   return saleId;
 }
 
+export async function voidSale(saleId: string, reason = "Customer return / void"): Promise<Sale> {
+  const db = await getDb();
+  const tx = db.transaction(["sales", "products", "customers", "ledger"], "readwrite");
+  const saleStore = tx.objectStore("sales");
+  const productStore = tx.objectStore("products");
+  const customerStore = tx.objectStore("customers");
+  const ledgerStore = tx.objectStore("ledger");
+
+  const sale = await saleStore.get(saleId);
+  if (!sale) {
+    throw new Error(`Sale ${saleId} not found.`);
+  }
+  if (sale.status === "voided") {
+    throw new Error(`Sale #${sale.billNo} is already voided.`);
+  }
+
+  const now = Date.now();
+
+  // 1. Restore product inventory stock atomically
+  if (sale.items && sale.items.length > 0) {
+    for (const item of sale.items) {
+      if (!item.productId) continue;
+      const product = await productStore.get(item.productId);
+      if (product) {
+        product.stock = (product.stock || 0) + (item.qty || 1);
+        product.updatedAt = now;
+        await productStore.put(product);
+      }
+    }
+  }
+
+  // 2. Reverse Khata debt if paymentMode was khata
+  if (sale.customerId) {
+    const customer = await customerStore.get(sale.customerId);
+    if (customer) {
+      if (sale.paymentMode === "khata") {
+        customer.creditBalance = Math.max(0, (customer.creditBalance || 0) - sale.grandTotal);
+        await ledgerStore.put({
+          id: "ldg_" + Math.random().toString(36).substring(2, 9),
+          customerId: customer.id,
+          type: "payment",
+          billNo: sale.billNo,
+          amount: sale.grandTotal,
+          paymentMode: "khata",
+          notes: `Void Bill #${sale.billNo}: ${reason}`,
+          timestamp: now,
+        });
+      }
+
+      // Reverse loyalty points awarded
+      if (sale.loyaltyPointsAwarded && sale.loyaltyPointsAwarded > 0) {
+        customer.loyaltyPoints = Math.max(0, (customer.loyaltyPoints || 0) - sale.loyaltyPointsAwarded);
+      }
+
+      // Restore loyalty points redeemed
+      if (sale.loyaltyPointsRedeemed && sale.loyaltyPointsRedeemed > 0) {
+        customer.loyaltyPoints = (customer.loyaltyPoints || 0) + sale.loyaltyPointsRedeemed;
+      }
+
+      customer.updatedAt = now;
+      await customerStore.put(customer);
+    }
+  }
+
+  // 3. Mark sale as voided
+  const voidedSale: Sale = {
+    ...sale,
+    status: "voided",
+    voidReason: reason,
+  };
+  await saleStore.put(voidedSale);
+
+  await tx.done;
+  return voidedSale;
+}
+
 // ----------------------------------------------------------------------
 // Customer Operations & Khata Ledger
 // ----------------------------------------------------------------------
@@ -879,7 +957,7 @@ export async function getShiftSalesSummary(shiftStartTime: number): Promise<{
   const db = await getDb();
   // Fetch all sales and filter by shiftStartTime
   const allSales = await db.getAll("sales");
-  const sales = allSales.filter((s) => s.timestamp >= shiftStartTime);
+  const sales = allSales.filter((s) => s.timestamp >= shiftStartTime && s.status !== "voided");
 
   let cashSales = 0;
   let upiSales = 0;

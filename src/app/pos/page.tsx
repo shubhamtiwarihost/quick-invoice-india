@@ -53,6 +53,7 @@ import {
   getHeldTickets,
   saveHeldTicket,
   deleteHeldTicket,
+  voidSale,
   type Product,
   type Sale,
   type SaleItem,
@@ -540,6 +541,24 @@ export default function PosCounterPage() {
     } catch (err) {
       console.error("Failed to delete held ticket:", err);
       showToast("Failed to discard ticket.");
+    }
+  }
+
+  async function handleVoidSale(sale: Sale) {
+    if (
+      !window.confirm(
+        `Are you sure you want to void Bill #${sale.billNo}? This will restore all product stock and reverse customer Khata balance.`
+      )
+    ) {
+      return;
+    }
+    try {
+      await voidSale(sale.id, "Customer returned / voided at counter");
+      await loadData();
+      showToast(`Bill #${sale.billNo} voided! Stock restored.`);
+    } catch (err) {
+      console.error("Failed to void sale:", err);
+      showToast("Failed to void sale.");
     }
   }
 
@@ -1774,15 +1793,21 @@ export default function PosCounterPage() {
                         >
                           {s.paymentMode}
                         </span>
+                        {s.status === "voided" ? (
+                          <span className="rounded bg-red-600 text-white px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider">
+                            Voided
+                          </span>
+                        ) : null}
                       </div>
                       <p className="text-[11px] text-slate-500">
                         {new Date(s.timestamp).toLocaleString("en-IN")} · {s.items.length} items
                         {s.customerName ? ` · Cust: ${s.customerName}` : ""}
+                        {s.voidReason ? ` · Note: ${s.voidReason}` : ""}
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-sm font-mono text-slate-900">
+                    <div className="flex items-center gap-2">
+                      <span className={`font-bold text-sm font-mono ${s.status === "voided" ? "line-through text-slate-400" : "text-slate-900"}`}>
                         ₹{s.grandTotal.toFixed(2)}
                       </span>
                       <button
@@ -1792,10 +1817,20 @@ export default function PosCounterPage() {
                           setIsHistoryOpen(false);
                           setIsReceiptModalOpen(true);
                         }}
-                        className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                        className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100"
                       >
                         Receipt
                       </button>
+                      {s.status !== "voided" ? (
+                        <button
+                          type="button"
+                          onClick={() => handleVoidSale(s)}
+                          className="rounded-lg border border-red-200 bg-red-50 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-100 transition"
+                          title="Void bill & restore inventory"
+                        >
+                          Void
+                        </button>
+                      ) : null}
                     </div>
                   </div>
                 ))}

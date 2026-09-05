@@ -98,6 +98,7 @@ export default function AnalyticsPage() {
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
 
     return sales.filter((s) => {
+      if (s.status === "voided") return false;
       if (dateRange === "today") return s.timestamp >= startOfToday;
       if (dateRange === "7days") return s.timestamp >= sevenDaysAgo;
       if (dateRange === "month") return s.timestamp >= startOfMonth;
@@ -109,7 +110,7 @@ export default function AnalyticsPage() {
   const todaySales = useMemo(() => {
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-    return sales.filter((s) => s.timestamp >= startOfToday);
+    return sales.filter((s) => s.timestamp >= startOfToday && s.status !== "voided");
   }, [sales]);
 
   // Today's Overview Metrics
