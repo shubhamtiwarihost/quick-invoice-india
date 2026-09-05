@@ -177,10 +177,10 @@ export function QuotationWorkspace({
       ) : null}
 
       {/* Top Action Bar */}
-      <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 lg:px-8 py-2.5 sm:py-3">
+      <div className="no-print flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 py-2 sm:py-3">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-amber-900">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-900">
               <FileCheck2 className="h-3 w-3" />
               Estimate & Quotation Maker
             </span>
@@ -188,14 +188,14 @@ export function QuotationWorkspace({
               Valid until {formatDateIN(draft.meta.validUntil)} ({draft.meta.validityDays} Days)
             </p>
           </div>
-          <p className="mt-0.5 text-xs text-slate-500">
+          <p className="mt-0.5 text-[11px] sm:text-xs text-slate-500">
             {summary.supplyType === "intra"
               ? "Intra-state: CGST + SGST"
               : summary.supplyType === "inter"
                 ? "Inter-state: IGST"
                 : "Non-GST Estimate"}{" "}
             · Estimated Total:{" "}
-            <strong className="text-slate-800">
+            <strong className="text-slate-800 font-sans tabular-nums">
               {formatCurrency(summary.grandTotal, draft.meta.currency)}
             </strong>
           </p>
@@ -273,10 +273,10 @@ export function QuotationWorkspace({
       </div>
 
       {/* Workspace Grid */}
-      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-4 lg:px-8 py-6 flex flex-col lg:flex-row items-start gap-6 lg:gap-8 flex-1">
+      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1">
         {/* Left Editor Panel (46%) */}
         <aside
-          className={`no-print w-full lg:w-[46%] shrink-0 pb-24 lg:pb-0 ${
+          className={`no-print w-full lg:w-[46%] shrink-0 pb-28 lg:pb-0 ${
             tab === "form" ? "block" : "hidden"
           } lg:block`}
         >
@@ -285,7 +285,7 @@ export function QuotationWorkspace({
 
         {/* Right Preview Panel (54%) */}
         <section
-          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-4 lg:p-6 pb-28 lg:pb-6 flex justify-center ${
+          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center ${
             tab === "preview" ? "block" : "hidden"
           } lg:block`}
         >
@@ -305,7 +305,7 @@ export function QuotationWorkspace({
       ) : null}
 
       {/* Mobile Floating Actions */}
-      <div className="no-print fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between border-t border-slate-200 bg-white/95 px-3 py-2.5 backdrop-blur-md md:hidden">
+      <div className="no-print fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between border-t border-slate-200 bg-white/95 px-3 py-2 backdrop-blur-md md:hidden pb-[calc(env(safe-area-inset-bottom)+8px)]">
         <div className="flex gap-1.5">
           <button
             type="button"

@@ -168,25 +168,25 @@ export function InvoiceWorkspace({
       ) : null}
 
       {/* Top Action Bar (Desktop / Tablet) */}
-      <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 lg:px-8 py-2.5 sm:py-3">
+      <div className="no-print flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 py-2 sm:py-3">
         <div>
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-slate-900">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <p className="text-xs sm:text-sm font-semibold text-slate-900 truncate max-w-[200px] sm:max-w-none">
               {pageTitle || "GST / Tax invoice generator"}
             </p>
             {badgeText && (
-              <span className="inline-flex items-center rounded-md bg-teal-50 px-2 py-0.5 text-[11px] font-semibold text-teal-800 border border-teal-200">
+              <span className="inline-flex items-center rounded-md bg-teal-50 px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-[11px] font-semibold text-teal-800 border border-teal-200">
                 {badgeText}
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
             {summary.supplyType === "intra"
               ? "Intra-state: CGST + SGST"
               : summary.supplyType === "inter"
                 ? "Inter-state: IGST"
                 : "Bill of supply (no GST columns)"}{" "}
-            · Total {formatCurrency(summary.grandTotal, draft.meta.currency)}
+            · Total <strong className="text-slate-800 font-sans tabular-nums">{formatCurrency(summary.grandTotal, draft.meta.currency)}</strong>
           </p>
         </div>
         {/* Mobile Quick Action Buttons */}
@@ -289,35 +289,50 @@ export function InvoiceWorkspace({
       </div>
 
       {/* Trust & Privacy Banner */}
-      <div className="no-print border-b border-emerald-200/70 bg-emerald-50/90 px-4 lg:px-8 py-2 text-xs text-emerald-950 flex flex-wrap items-center justify-between gap-2 shadow-2xs">
-        <div className="flex items-center gap-2">
-          <span className="text-sm select-none">🔒</span>
-          <span className="font-bold text-emerald-900">100% Private &amp; No Spam:</span>
-          <span className="text-emerald-800">
-            No phone number or login needed. All calculations happen locally in your browser.
+      <div className="no-print border-b border-emerald-200/70 bg-emerald-50/90 px-3.5 sm:px-4 lg:px-8 py-1 sm:py-2 text-xs text-emerald-950 shadow-2xs">
+        {/* Mobile 1-line sleek chip */}
+        <div className="flex sm:hidden items-center justify-between gap-1.5 text-[11px] py-0.5">
+          <div className="flex items-center gap-1.5 truncate">
+            <span className="text-xs select-none">🔒</span>
+            <span className="font-bold text-emerald-900 whitespace-nowrap">100% Private:</span>
+            <span className="text-emerald-800 truncate">No phone or login · Browser local only</span>
+          </div>
+          <span className="shrink-0 rounded-full bg-emerald-100 border border-emerald-300/80 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+            No Spam
           </span>
         </div>
-        <div className="hidden sm:flex items-center gap-2 text-[11px] font-semibold text-emerald-700">
-          <span>Zero Tele-calling</span>
-          <span>·</span>
-          <span>Zero Watermarks</span>
-          <span>·</span>
-          <span>Private &amp; Client-Side</span>
+
+        {/* Desktop Banner */}
+        <div className="hidden sm:flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm select-none">🔒</span>
+            <span className="font-bold text-emerald-900">100% Private &amp; No Spam:</span>
+            <span className="text-emerald-800">
+              No phone number or login needed. All calculations happen locally in your browser.
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px] font-semibold text-emerald-700">
+            <span>Zero Tele-calling</span>
+            <span>·</span>
+            <span>Zero Watermarks</span>
+            <span>·</span>
+            <span>Private &amp; Client-Side</span>
+          </div>
         </div>
       </div>
 
       {/* Workspace Grid */}
-      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-4 lg:px-8 py-6 flex flex-col lg:flex-row items-start gap-6 lg:gap-8 flex-1">
+      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1">
         {/* Left Editor Panel (46%) */}
         <aside
-          className={`no-print w-full lg:w-[46%] shrink-0 pb-24 lg:pb-0 ${tab === "form" ? "block" : "hidden"} lg:block`}
+          className={`no-print w-full lg:w-[46%] shrink-0 pb-28 lg:pb-0 ${tab === "form" ? "block" : "hidden"} lg:block`}
         >
           <InvoiceForm grandTotal={summary.grandTotal} />
         </aside>
 
         {/* Right Preview Panel (54%) */}
         <section
-          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-4 lg:p-6 pb-28 lg:pb-6 flex justify-center ${tab === "preview" ? "block" : "hidden"} lg:block`}
+          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center ${tab === "preview" ? "block" : "hidden"} lg:block`}
         >
           <div className="sticky top-6 flex justify-center w-full print:static">
             <div className="invoice-scale w-full flex justify-center">
