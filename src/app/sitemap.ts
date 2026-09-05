@@ -32,6 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/analytics/`,
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/freelancer-invoice-generator/`,
       lastModified,
       changeFrequency: "weekly",

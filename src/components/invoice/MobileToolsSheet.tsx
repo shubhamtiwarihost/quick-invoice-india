@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { X, ChevronRight, Sparkles, Package, Store } from "lucide-react";
+import { X, ChevronRight, Sparkles, Package, Store, Users, BarChart3 } from "lucide-react";
 import { ALL_TOOLS } from "@/components/shared/Navbar";
 
 export function MobileToolsSheet({
@@ -70,6 +70,34 @@ export function MobileToolsSheet({
             <div className="min-w-0">
               <p className="text-xs font-bold text-teal-950 truncate">POS Counter</p>
               <p className="text-[10px] text-teal-700 font-medium truncate">Thermal Bill</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/customers"
+            onClick={onClose}
+            className="flex items-center gap-2.5 rounded-2xl border border-teal-200 bg-teal-50/80 p-3 transition active:scale-95 hover:bg-teal-100 shadow-2xs"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs shrink-0">
+              <Users className="h-4.5 w-4.5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-teal-950 truncate">Khata CRM</p>
+              <p className="text-[10px] text-teal-700 font-medium truncate">Udhaar Ledger</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/analytics"
+            onClick={onClose}
+            className="flex items-center gap-2.5 rounded-2xl border border-teal-200 bg-teal-50/80 p-3 transition active:scale-95 hover:bg-teal-100 shadow-2xs"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs shrink-0">
+              <BarChart3 className="h-4.5 w-4.5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-teal-950 truncate">Analytics</p>
+              <p className="text-[10px] text-teal-700 font-medium truncate">GSTR-1 & Profit</p>
             </div>
           </Link>
         </div>

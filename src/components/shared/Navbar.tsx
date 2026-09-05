@@ -22,6 +22,7 @@ import {
   LayoutGrid,
   Package,
   Users,
+  BarChart3,
 } from "lucide-react";
 
 export const ALL_TOOLS = [
@@ -52,6 +53,13 @@ export const ALL_TOOLS = [
     shortLabel: "Khata CRM",
     desc: "Customer credit ledger, Udhaar tracking, loyalty points, and WhatsApp reminders.",
     icon: Users,
+  },
+  {
+    href: "/analytics",
+    label: "Business Analytics & GSTR-1",
+    shortLabel: "Analytics",
+    desc: "Sales pulse, profit margin tracking, top sellers, and CA tax reports.",
+    icon: BarChart3,
   },
   {
     href: "/quotation-maker",
@@ -163,8 +171,8 @@ export function Navbar() {
     setMobileMenuOpen(false);
   }
 
-  const primaryLinks = ALL_TOOLS.slice(0, 4);
-  const secondaryLinks = ALL_TOOLS.slice(4);
+  const primaryLinks = ALL_TOOLS.slice(0, 5);
+  const secondaryLinks = ALL_TOOLS.slice(5);
 
   return (
     <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md">
@@ -338,7 +346,7 @@ export function Navbar() {
             <span className="text-[10px] rounded-full bg-teal-100 text-teal-800 px-2 py-0.5 font-semibold">13+ Tools</span>
           </Link>
 
-          {/* Quick POS & Inventory Mobile Bar */}
+          {/* Quick POS & Retail Mobile Bar */}
           <div className="grid grid-cols-2 gap-2 mb-3">
             <Link
               href="/inventory"
@@ -363,6 +371,30 @@ export function Navbar() {
             >
               <Store className="h-4 w-4" />
               <span>POS Counter</span>
+            </Link>
+            <Link
+              href="/customers"
+              onClick={closeAllMenus}
+              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
+                pathname === "/customers"
+                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
+              }`}
+            >
+              <Users className="h-4 w-4" />
+              <span>Khata CRM</span>
+            </Link>
+            <Link
+              href="/analytics"
+              onClick={closeAllMenus}
+              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
+                pathname === "/analytics"
+                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
+              }`}
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span>Analytics</span>
             </Link>
           </div>
 
@@ -484,6 +516,11 @@ export function Footer() {
               <li>
                 <Link href="/customers" className="hover:text-teal-700 font-semibold text-teal-800">
                   Customer Khata &amp; Loyalty CRM
+                </Link>
+              </li>
+              <li>
+                <Link href="/analytics" className="hover:text-teal-700 font-semibold text-teal-800">
+                  Business Analytics &amp; GSTR-1 Report
                 </Link>
               </li>
               <li>

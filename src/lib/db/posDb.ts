@@ -328,6 +328,179 @@ export async function seedInitialCustomersIfEmpty(): Promise<boolean> {
   }
 }
 
+export async function seedInitialSalesIfEmpty(): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  try {
+    const db = await getDb();
+    const count = await db.count("sales");
+    if (count > 0) return false;
+
+    const products = await db.getAll("products");
+    if (products.length === 0) return false;
+
+    const customers = await db.getAll("customers");
+    const now = Date.now();
+    const oneDay = 86400000;
+
+    const demoSales: Sale[] = [
+      {
+        id: "sal_demo_1",
+        billNo: "POS-1001",
+        items: [
+          {
+            productId: products[0]?.id || "",
+            name: products[0]?.name || "Tata Salt 1kg",
+            price: 28,
+            gstRate: 0,
+            qty: 2,
+            taxAmount: 0,
+            total: 56,
+          },
+          {
+            productId: products[1]?.id || "",
+            name: products[1]?.name || "Fortune Sunflower Oil 1L",
+            price: 145,
+            gstRate: 5,
+            qty: 1,
+            taxAmount: 6.9,
+            total: 145,
+          },
+        ],
+        subtotal: 194.1,
+        taxTotal: 6.9,
+        grandTotal: 201,
+        paymentMode: "cash",
+        timestamp: now - 3600000 * 2, // 2 hours ago (Today)
+        customerName: "Walk-in Cash",
+      },
+      {
+        id: "sal_demo_2",
+        billNo: "POS-1002",
+        items: [
+          {
+            productId: products[2]?.id || "",
+            name: products[2]?.name || "Amul Butter 500g",
+            price: 275,
+            gstRate: 12,
+            qty: 2,
+            taxAmount: 58.9,
+            total: 550,
+          },
+          {
+            productId: products[4]?.id || "",
+            name: products[4]?.name || "Maggi Noodles 280g",
+            price: 60,
+            gstRate: 18,
+            qty: 3,
+            taxAmount: 27.45,
+            total: 180,
+          },
+        ],
+        subtotal: 643.65,
+        taxTotal: 86.35,
+        grandTotal: 730,
+        paymentMode: "upi",
+        timestamp: now - 3600000 * 4, // 4 hours ago (Today)
+        customerName: customers[1]?.name || "Priya Verma",
+        customerPhone: customers[1]?.phone || "9820067890",
+      },
+      {
+        id: "sal_demo_3",
+        billNo: "POS-1003",
+        items: [
+          {
+            productId: products[3]?.id || "",
+            name: products[3]?.name || "Aashirvaad Atta 5kg",
+            price: 255,
+            gstRate: 0,
+            qty: 1,
+            taxAmount: 0,
+            total: 255,
+          },
+          {
+            productId: products[6]?.id || "",
+            name: products[6]?.name || "Red Bull 250ml",
+            price: 125,
+            gstRate: 28,
+            qty: 2,
+            taxAmount: 54.68,
+            total: 250,
+          },
+        ],
+        subtotal: 450.32,
+        taxTotal: 54.68,
+        grandTotal: 505,
+        paymentMode: "card",
+        timestamp: now - oneDay * 1.5, // Yesterday
+        customerName: "Card Customer",
+      },
+      {
+        id: "sal_demo_4",
+        billNo: "POS-1004",
+        items: [
+          {
+            productId: products[5]?.id || "",
+            name: products[5]?.name || "Dettol Soap 125g",
+            price: 52,
+            gstRate: 18,
+            qty: 4,
+            taxAmount: 31.73,
+            total: 208,
+          },
+          {
+            productId: products[1]?.id || "",
+            name: products[1]?.name || "Fortune Sunflower Oil 1L",
+            price: 145,
+            gstRate: 5,
+            qty: 2,
+            taxAmount: 13.8,
+            total: 290,
+          },
+        ],
+        subtotal: 452.47,
+        taxTotal: 45.53,
+        grandTotal: 498,
+        paymentMode: "khata",
+        timestamp: now - oneDay * 3, // 3 days ago
+        customerId: customers[0]?.id || "",
+        customerName: customers[0]?.name || "Ramesh Sharma",
+        customerPhone: customers[0]?.phone || "9810012345",
+      },
+      {
+        id: "sal_demo_5",
+        billNo: "POS-1005",
+        items: [
+          {
+            productId: products[4]?.id || "",
+            name: products[4]?.name || "Maggi Noodles 280g",
+            price: 60,
+            gstRate: 18,
+            qty: 6,
+            taxAmount: 54.9,
+            total: 360,
+          },
+        ],
+        subtotal: 305.1,
+        taxTotal: 54.9,
+        grandTotal: 360,
+        paymentMode: "upi",
+        timestamp: now - oneDay * 5, // 5 days ago
+        customerName: "UPI Customer",
+      },
+    ];
+
+    const tx = db.transaction("sales", "readwrite");
+    for (const sale of demoSales) {
+      await tx.store.put(sale);
+    }
+    await tx.done;
+    return true;
+  } catch (err) {
+    console.error("Failed to seed demo sales:", err);
+    return false;
+  }
+}
+
 // ----------------------------------------------------------------------
 // Product CRUD & Inventory Transactions
 // ----------------------------------------------------------------------

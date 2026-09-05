@@ -19,6 +19,9 @@ import {
   ArrowUp,
   CheckCircle2,
   HelpCircle,
+  Package,
+  Users,
+  BarChart3,
 } from "lucide-react";
 
 interface ToolItem {
@@ -73,6 +76,53 @@ const TOOL_CATEGORIES: ToolCategory[] = [
           "Issue pre-shipment commercial proforma invoices to collect advance payments or satisfy purchase order criteria.",
         icon: FileText,
         features: ["Advance Payment QR", "Custom Terms", "Proforma Format"],
+      },
+    ],
+  },
+  {
+    category: "Retail POS, Stock & Khata Suite",
+    tagline: "High-speed retail counter checkout, live stock alerts, customer credit ledgers, and profit pulse",
+    icon: Store,
+    tools: [
+      {
+        title: "POS Billing Counter",
+        href: "/pos",
+        badge: "Thermal 58/80mm",
+        badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
+        description:
+          "Ergonomic retail checkout counter with barcode scanner support, instant payment modes, UPI QR, and thermal slip printing.",
+        icon: Store,
+        features: ["Barcode Scanner Ready", "Cash Drawer / Split Pay", "Thermal Print"],
+      },
+      {
+        title: "Inventory & Stock Master",
+        href: "/inventory",
+        badge: "IndexedDB Local",
+        badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
+        description:
+          "Manage products, cost/selling prices, low-stock warnings, barcode lookups, and bulk CSV catalog imports.",
+        icon: Package,
+        features: ["Low-Stock Badges", "Bulk CSV Import/Export", "Inline Stock Adjust"],
+      },
+      {
+        title: "Customer Khata & Loyalty CRM",
+        href: "/customers",
+        badge: "Udhaar & Points",
+        badgeColor: "bg-amber-50 text-amber-800 border-amber-200",
+        description:
+          "Track customer credit (Udhaar), record payment settlements, issue loyalty rewards, and send WhatsApp balance reminders.",
+        icon: Users,
+        features: ["Khata Balance Ledger", "1-Click WhatsApp Reminder", "Loyalty Points"],
+      },
+      {
+        title: "Business Analytics & GSTR-1",
+        href: "/analytics",
+        badge: "Real-Time Pulse",
+        badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
+        description:
+          "Track daily sales, drawer cash, estimated gross profit margins, top selling items, and export GSTR-1 compliant CSV reports.",
+        icon: BarChart3,
+        features: ["Gross Profit Estimation", "Top 5 Movers Leaderboard", "GSTR-1 Tax CSV"],
       },
     ],
   },
