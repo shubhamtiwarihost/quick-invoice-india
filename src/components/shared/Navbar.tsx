@@ -20,6 +20,8 @@ import {
   Scissors,
   Store,
   LayoutGrid,
+  Package,
+  Users,
 } from "lucide-react";
 
 export const ALL_TOOLS = [
@@ -29,6 +31,27 @@ export const ALL_TOOLS = [
     shortLabel: "Invoice",
     desc: "Create GST compliant Tax Invoices, Bills of Supply, and export to PDF.",
     icon: FileText,
+  },
+  {
+    href: "/pos",
+    label: "POS Billing Counter",
+    shortLabel: "POS Counter",
+    desc: "Fast retail checkout, barcode scan, thermal roll receipts, and UPI QR.",
+    icon: Store,
+  },
+  {
+    href: "/inventory",
+    label: "Inventory & Stock Master",
+    shortLabel: "Inventory",
+    desc: "Manage product stock, barcodes, low-stock alerts, and CSV catalogs.",
+    icon: Package,
+  },
+  {
+    href: "/customers",
+    label: "Customer Khata & Loyalty CRM",
+    shortLabel: "Khata CRM",
+    desc: "Customer credit ledger, Udhaar tracking, loyalty points, and WhatsApp reminders.",
+    icon: Users,
   },
   {
     href: "/quotation-maker",
@@ -140,8 +163,8 @@ export function Navbar() {
     setMobileMenuOpen(false);
   }
 
-  const primaryLinks = ALL_TOOLS.slice(0, 3);
-  const secondaryLinks = ALL_TOOLS.slice(3);
+  const primaryLinks = ALL_TOOLS.slice(0, 4);
+  const secondaryLinks = ALL_TOOLS.slice(4);
 
   return (
     <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md">
@@ -315,6 +338,34 @@ export function Navbar() {
             <span className="text-[10px] rounded-full bg-teal-100 text-teal-800 px-2 py-0.5 font-semibold">13+ Tools</span>
           </Link>
 
+          {/* Quick POS & Inventory Mobile Bar */}
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <Link
+              href="/inventory"
+              onClick={closeAllMenus}
+              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
+                pathname === "/inventory"
+                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
+              }`}
+            >
+              <Package className="h-4 w-4" />
+              <span>Inventory</span>
+            </Link>
+            <Link
+              href="/pos"
+              onClick={closeAllMenus}
+              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
+                pathname === "/pos"
+                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
+              }`}
+            >
+              <Store className="h-4 w-4" />
+              <span>POS Counter</span>
+            </Link>
+          </div>
+
           <div className="space-y-1">
             {ALL_TOOLS.map((item) => {
               const Icon = item.icon;
@@ -418,6 +469,21 @@ export function Footer() {
               <li>
                 <Link href="/gst-invoice-templates" className="hover:text-teal-700 font-semibold text-teal-800">
                   GST Invoice Templates (Excel/Word/PDF)
+                </Link>
+              </li>
+              <li>
+                <Link href="/inventory" className="hover:text-teal-700 font-semibold text-teal-800">
+                  Inventory &amp; Stock Master
+                </Link>
+              </li>
+              <li>
+                <Link href="/pos" className="hover:text-teal-700 font-semibold text-teal-800">
+                  POS Billing Counter (58mm/80mm)
+                </Link>
+              </li>
+              <li>
+                <Link href="/customers" className="hover:text-teal-700 font-semibold text-teal-800">
+                  Customer Khata &amp; Loyalty CRM
                 </Link>
               </li>
               <li>

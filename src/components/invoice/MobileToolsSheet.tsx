@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { X, ChevronRight, Sparkles } from "lucide-react";
+import { X, ChevronRight, Sparkles, Package, Store } from "lucide-react";
 import { ALL_TOOLS } from "@/components/shared/Navbar";
 
 export function MobileToolsSheet({
@@ -32,7 +32,7 @@ export function MobileToolsSheet({
               <Sparkles className="h-3.5 w-3.5" />
               <span>FREE UTILITY SUITE</span>
             </div>
-            <h3 className="text-lg font-bold text-slate-900">GST & Business Tools</h3>
+            <h3 className="text-lg font-bold text-slate-900">GST &amp; Business Tools</h3>
           </div>
           <button
             type="button"
@@ -41,6 +41,37 @@ export function MobileToolsSheet({
           >
             <X className="h-5 w-5" />
           </button>
+        </div>
+
+        {/* Quick POS & Inventory Mobile Launchers */}
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <Link
+            href="/inventory"
+            onClick={onClose}
+            className="flex items-center gap-2.5 rounded-2xl border border-teal-200 bg-teal-50/80 p-3 transition active:scale-95 hover:bg-teal-100 shadow-2xs"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs shrink-0">
+              <Package className="h-4.5 w-4.5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-teal-950 truncate">Inventory</p>
+              <p className="text-[10px] text-teal-700 font-medium truncate">Stock Master</p>
+            </div>
+          </Link>
+
+          <Link
+            href="/pos"
+            onClick={onClose}
+            className="flex items-center gap-2.5 rounded-2xl border border-teal-200 bg-teal-50/80 p-3 transition active:scale-95 hover:bg-teal-100 shadow-2xs"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs shrink-0">
+              <Store className="h-4.5 w-4.5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-teal-950 truncate">POS Counter</p>
+              <p className="text-[10px] text-teal-700 font-medium truncate">Thermal Bill</p>
+            </div>
+          </Link>
         </div>
 
         {/* Tools List */}
