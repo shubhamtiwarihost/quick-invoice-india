@@ -11,6 +11,7 @@ import {
   Check,
   AlertCircle,
   ShieldCheck,
+  Loader2,
 } from "lucide-react";
 import {
   sanitizeInput,
@@ -28,9 +29,10 @@ export function ContactClient() {
   const [honeypot, setHoneypot] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
 
@@ -79,18 +81,60 @@ export function ContactClient() {
       return;
     }
 
-    // 5. Record submission timestamp for client-side rate limiting
-    recordActionTimestamp("contact_form");
+    setIsSubmitting(true);
 
-    // 6. Construct safe mailto URI
-    const mailtoUrl = `mailto:support@swiftgst.in?subject=${encodeURIComponent(
-      `[SwiftGST Inquiry] ${cleanSubject}`
-    )}&body=${encodeURIComponent(
-      `Name: ${cleanName}\nEmail: ${cleanEmail}\n\nMessage:\n${cleanMessage}`
-    )}`;
+    try {
+      // Attempt 1: Next.js API Route / Node.js handler
+      let response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: cleanName,
+          email: cleanEmail,
+          subject: cleanSubject,
+          message: cleanMessage,
+        }),
+      });
 
-    window.open(mailtoUrl, "_blank");
-    setSubmitted(true);
+      // Fallback: If running on Hostinger Apache static hosting where /api/contact is routed via PHP
+      if (response.status === 404) {
+        response = await fetch("/api/contact.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: cleanName,
+            email: cleanEmail,
+            subject: cleanSubject,
+            message: cleanMessage,
+          }),
+        });
+      }
+
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.success) {
+        const failureMsg =
+          result?.error ||
+          `Message delivery failed (Status ${response.status}). You can also email us directly at support@swiftgst.in.`;
+        setErrorMessage(failureMsg);
+        return;
+      }
+
+      // Record successful submission for rate limiting
+      recordActionTimestamp("contact_form");
+      setSubmitted(true);
+    } catch (err: unknown) {
+      console.error("[Contact Form Submission Error]", err);
+      setErrorMessage(
+        "Network connection error. Please check your connection or contact us directly at support@swiftgst.in."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const copyEmail = () => {
@@ -184,21 +228,35 @@ export function ContactClient() {
           </p>
 
           {errorMessage ? (
-            <div className="mt-4 flex items-center gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-800">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-600" />
-              <span>{errorMessage}</span>
+            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3.5 text-xs text-red-800 space-y-2">
+              <div className="flex items-start gap-2.5">
+                <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" />
+                <span>{errorMessage}</span>
+              </div>
+              <div className="pl-6.5">
+                <a
+                  href={`mailto:contact@swiftgst.in?subject=${encodeURIComponent(
+                    `[SwiftGST Inquiry] ${subject || "Helpdesk Inquiry"}`
+                  )}&body=${encodeURIComponent(
+                    `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+                  )}`}
+                  className="inline-flex items-center gap-1 font-semibold text-teal-800 hover:underline"
+                >
+                  <Mail className="h-3.5 w-3.5" />
+                  <span>Click here to send via your email client instead</span>
+                </a>
+              </div>
             </div>
           ) : null}
 
           {submitted ? (
-            <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 p-6 text-center">
-              <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-600" />
-              <h3 className="mt-2 text-base font-bold text-emerald-950">
-                Message Prepared!
+            <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 p-6 text-center animate-in fade-in zoom-in-95 duration-200">
+              <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-600" />
+              <h3 className="mt-3 text-lg font-bold text-emerald-950">
+                Message Sent Successfully!
               </h3>
-              <p className="mt-1 text-xs text-emerald-800">
-                We have also opened your default email client with your message pre-filled to{" "}
-                <strong>support@swiftgst.in</strong>. If it didn&apos;t open automatically, you can email us directly.
+              <p className="mt-2 text-xs sm:text-sm text-emerald-800 max-w-md mx-auto">
+                Thank you, <strong>{name}</strong>! Your inquiry has been delivered directly to our support desk at <strong>contact@swiftgst.in</strong>. We will review and reply within 24–48 business hours.
               </p>
               <button
                 type="button"
@@ -210,7 +268,7 @@ export function ContactClient() {
                   setMessage("");
                   setErrorMessage(null);
                 }}
-                className="mt-4 rounded-lg bg-emerald-700 px-4 py-2 text-xs font-medium text-white hover:bg-emerald-800"
+                className="mt-5 rounded-xl bg-teal-700 px-5 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-teal-800 transition active:scale-95"
               >
                 Send Another Message
               </button>
@@ -307,10 +365,20 @@ export function ContactClient() {
 
               <button
                 type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-6 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-teal-800"
+                disabled={isSubmitting}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-6 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-teal-800 disabled:opacity-70 disabled:cursor-not-allowed active:scale-95"
               >
-                <Send className="h-4 w-4" />
-                Send Message
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Sending Message…</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    <span>Send Message</span>
+                  </>
+                )}
               </button>
             </form>
           )}
