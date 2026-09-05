@@ -2,13 +2,8 @@
 
 import {
   Store,
-  CheckCircle2,
   BookOpen,
   Scale,
-  Receipt,
-  QrCode,
-  Printer,
-  ShieldCheck,
   AlertCircle,
   HelpCircle,
 } from "lucide-react";

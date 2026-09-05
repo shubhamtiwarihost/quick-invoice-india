@@ -3,9 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  TrendingUp,
   BarChart3,
-  IndianRupee,
   Wallet,
   QrCode,
   CreditCard,
@@ -14,13 +12,9 @@ import {
   Download,
   Package,
   Store,
-  Users,
   Award,
   ArrowUpRight,
-  Sparkles,
-  RefreshCw,
   CheckCircle2,
-  Receipt,
   FileSpreadsheet,
 } from "lucide-react";
 import {

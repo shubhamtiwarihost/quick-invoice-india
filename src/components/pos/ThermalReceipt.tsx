@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, forwardRef } from "react";
-import { Printer, QrCode } from "lucide-react";
+import { Printer } from "lucide-react";
 import type { Sale } from "@/lib/db/posDb";
 
 export interface BusinessInfo {

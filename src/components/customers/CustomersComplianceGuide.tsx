@@ -4,10 +4,6 @@ import {
   Users,
   BookOpen,
   Scale,
-  CheckCircle2,
-  Phone,
-  MessageCircle,
-  Coins,
   AlertCircle,
   HelpCircle,
 } from "lucide-react";

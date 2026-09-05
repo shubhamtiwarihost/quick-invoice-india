@@ -5,9 +5,6 @@ import {
   BookOpen,
   Scale,
   CheckCircle2,
-  FileSpreadsheet,
-  AlertTriangle,
-  Layers,
   HelpCircle,
 } from "lucide-react";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";

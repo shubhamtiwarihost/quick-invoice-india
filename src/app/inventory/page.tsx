@@ -17,9 +17,6 @@ import {
   Store,
   RefreshCw,
   Barcode,
-  Layers,
-  IndianRupee,
-  SlidersHorizontal,
 } from "lucide-react";
 import {
   getAllProducts,
