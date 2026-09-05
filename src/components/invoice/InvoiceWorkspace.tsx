@@ -334,7 +334,7 @@ export function InvoiceWorkspace({
         <section
           className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center ${tab === "preview" ? "block" : "hidden"} lg:block`}
         >
-          <div className="sticky top-6 flex justify-center w-full print:static">
+          <div className="sticky top-6 flex justify-center w-full print:static will-change-transform transform-gpu">
             <div className="invoice-scale w-full flex justify-center">
               <InvoicePreview draft={draft} summary={summary} />
             </div>

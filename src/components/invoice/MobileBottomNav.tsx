@@ -31,7 +31,7 @@ export function MobileBottomNav({
   return (
     <nav
       aria-label="Mobile Invoice Actions"
-      className="no-print fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/90 bg-white/95 px-3 py-2 backdrop-blur-md md:hidden select-none pb-[calc(env(safe-area-inset-bottom)+8px)] shadow-2xl"
+      className="no-print fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/90 bg-white/95 px-3 py-2 backdrop-blur-md md:hidden select-none pb-[calc(env(safe-area-inset-bottom)+8px)] shadow-2xl will-change-transform transform-gpu"
     >
       <div className="flex items-center gap-1.5 max-w-lg mx-auto">
         {/* 1. Toggle Tab Button (Preview A4 <-> Edit Form) */}

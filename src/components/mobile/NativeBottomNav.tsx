@@ -46,7 +46,7 @@ export function NativeBottomNav() {
       <div className="h-16 md:hidden pointer-events-none no-print" aria-hidden="true" />
       <nav
         aria-label="Native Mobile Navigation"
-        className="no-print fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-slate-200/90 bg-white/95 backdrop-blur-md px-2 py-1 pb-[calc(env(safe-area-inset-bottom)+6px)] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] select-none"
+        className="no-print fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-slate-200/90 bg-white/95 backdrop-blur-md px-2 py-1 pb-[calc(env(safe-area-inset-bottom)+6px)] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] select-none will-change-transform transform-gpu"
       >
       <div className="mx-auto flex max-w-md items-center justify-around">
         {TABS.map((tab) => {

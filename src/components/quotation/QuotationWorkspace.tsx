@@ -289,7 +289,7 @@ export function QuotationWorkspace({
             tab === "preview" ? "block" : "hidden"
           } lg:block`}
         >
-          <div className="sticky top-6 flex justify-center w-full print:static">
+          <div className="sticky top-6 flex justify-center w-full print:static will-change-transform transform-gpu">
             <div className="invoice-scale w-full flex justify-center">
               <QuotationPreview draft={draft} summary={summary} />
             </div>
@@ -305,7 +305,7 @@ export function QuotationWorkspace({
       ) : null}
 
       {/* Mobile Floating Actions */}
-      <div className="no-print fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between border-t border-slate-200 bg-white/95 px-3 py-2 backdrop-blur-md md:hidden pb-[calc(env(safe-area-inset-bottom)+8px)]">
+      <div className="no-print fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between border-t border-slate-200 bg-white/95 px-3 py-2 backdrop-blur-md md:hidden pb-[calc(env(safe-area-inset-bottom)+8px)] will-change-transform transform-gpu">
         <div className="flex gap-1.5">
           <button
             type="button"

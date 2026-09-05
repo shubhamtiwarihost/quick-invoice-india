@@ -870,7 +870,7 @@ function MobileSheetModal({
       className="fixed inset-0 z-50 flex flex-col bg-slate-50 overscroll-contain animate-in slide-in-from-bottom duration-200"
     >
       {/* Sticky Sheet Header */}
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-xs">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-xs will-change-transform transform-gpu">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -911,7 +911,7 @@ function MobileSheetModal({
       </div>
 
       {/* Sticky Bottom Bar */}
-      <div className="sticky bottom-0 z-10 border-t border-slate-200 bg-white/95 p-3 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg">
+      <div className="sticky bottom-0 z-10 border-t border-slate-200 bg-white/95 p-3 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-lg will-change-transform transform-gpu">
         <button
           type="button"
           onClick={onClose}

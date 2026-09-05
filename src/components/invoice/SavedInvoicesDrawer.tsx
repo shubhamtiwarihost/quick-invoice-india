@@ -107,7 +107,7 @@ export function SavedInvoicesDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 will-change-transform transform-gpu">
       <div className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
         {/* Drawer Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">

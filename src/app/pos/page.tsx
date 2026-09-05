@@ -780,7 +780,7 @@ export default function PosCounterPage() {
       ) : null}
 
       {/* POS Top Header */}
-      <header className="no-print sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-2xs">
+      <header className="no-print sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-2xs will-change-transform transform-gpu">
         <div className="mx-auto max-w-[1600px] px-4 py-2.5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Title & Brand */}
@@ -1059,7 +1059,7 @@ export default function PosCounterPage() {
           </section>
 
           {/* RIGHT 35%: Live Order Cart & Customer Selection */}
-          <section className="lg:col-span-4 sticky top-16 space-y-3">
+          <section className="lg:col-span-4 sticky top-16 space-y-3 will-change-transform transform-gpu">
             <div className="rounded-2xl border border-slate-200 bg-white shadow-2xs overflow-hidden flex flex-col">
               {/* Cart Header */}
               <div className="flex items-center justify-between border-b border-slate-100 p-3 bg-slate-50/70">

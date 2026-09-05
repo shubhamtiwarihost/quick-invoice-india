@@ -17,7 +17,7 @@ export function MobileToolsSheet({
   const tools = ALL_TOOLS.filter((t) => t.href !== "/");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 md:hidden">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 md:hidden will-change-transform transform-gpu">
       <div
         className="w-full max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white p-5 pb-8 shadow-2xl animate-in slide-in-from-bottom duration-200"
         style={{ touchAction: "pan-y" }}

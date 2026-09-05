@@ -84,7 +84,7 @@ export function InstallPromptBanner() {
   return (
     <aside
       aria-label="Install App Prompt"
-      className="no-print fixed bottom-20 left-3 right-3 z-50 mx-auto max-w-md rounded-2xl border border-emerald-200/80 bg-white/95 p-4 shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-5 duration-200 md:bottom-6 md:left-auto md:right-6 md:w-96 select-none"
+      className="no-print fixed bottom-20 left-3 right-3 z-50 mx-auto max-w-md rounded-2xl border border-emerald-200/80 bg-white/95 p-4 shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-5 duration-200 md:bottom-6 md:left-auto md:right-6 md:w-96 select-none will-change-transform transform-gpu"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">

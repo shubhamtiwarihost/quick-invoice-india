@@ -133,7 +133,7 @@ function WhatsAppModalContent({
   const recipient = getCleanedFullRecipient();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 will-change-transform transform-gpu">
       <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl border border-slate-200">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 pb-4">

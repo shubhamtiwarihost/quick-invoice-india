@@ -175,7 +175,7 @@ export function Navbar() {
   const secondaryLinks = ALL_TOOLS.slice(5);
 
   return (
-    <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md">
+    <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md will-change-transform transform-gpu">
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-2.5">
         {/* Logo */}
         <Link
