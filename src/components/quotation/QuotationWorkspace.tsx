@@ -177,7 +177,7 @@ export function QuotationWorkspace({
       ) : null}
 
       {/* Top Action Bar */}
-      <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-2.5 sm:py-3">
+      <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 lg:px-8 py-2.5 sm:py-3">
         <div>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-amber-900">
@@ -273,29 +273,33 @@ export function QuotationWorkspace({
       </div>
 
       {/* Workspace Grid */}
-      <div className="invoice-workspace-grid grid flex-1 lg:grid-cols-[minmax(340px,440px)_1fr]">
+      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-4 lg:px-8 py-6 flex flex-col lg:flex-row items-start gap-6 lg:gap-8 flex-1">
+        {/* Left Editor Panel (46%) */}
         <aside
-          className={`no-print overflow-y-auto bg-slate-50 p-3 pb-24 md:pb-3 ${
+          className={`no-print w-full lg:w-[46%] shrink-0 pb-24 lg:pb-0 ${
             tab === "form" ? "block" : "hidden"
           } lg:block`}
         >
           <QuotationForm grandTotal={summary.grandTotal} />
         </aside>
 
+        {/* Right Preview Panel (54%) */}
         <section
-          className={`invoice-preview-section overflow-auto bg-slate-200/70 p-4 pb-36 md:pb-4 ${
+          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-4 lg:p-6 pb-28 lg:pb-6 flex justify-center ${
             tab === "preview" ? "block" : "hidden"
           } lg:block`}
         >
-          <div className="invoice-scale mx-auto w-fit">
-            <QuotationPreview draft={draft} summary={summary} />
+          <div className="sticky top-6 flex justify-center w-full print:static">
+            <div className="invoice-scale w-full flex justify-center">
+              <QuotationPreview draft={draft} summary={summary} />
+            </div>
           </div>
         </section>
       </div>
 
       {/* Rich SEO & Editorial Content Below Workspace Fold */}
       {childrenBelowWorkspace ? (
-        <div className="no-print w-full bg-white border-t border-slate-200">
+        <div className="no-print w-full my-12 border-t border-slate-200 pt-10">
           {childrenBelowWorkspace}
         </div>
       ) : null}

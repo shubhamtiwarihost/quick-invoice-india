@@ -218,28 +218,30 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
               onChange={(v) => setSeller({ address: v })}
             />
           </div>
-          <Field
-            label="City"
-            value={seller.city}
-            onChange={(v) => setSeller({ city: v })}
-          />
-          <Field
-            label="Pincode"
-            value={seller.pincode}
-            onChange={(v) => setSeller({ pincode: v })}
-          />
-          <Select
-            label="State"
-            value={seller.state}
-            onChange={(v) => {
-              const s = INDIAN_STATES.find((x) => x.name === v);
-              setSeller({ state: v, stateCode: s?.code || "" });
-            }}
-            options={INDIAN_STATES.map((s) => ({
-              value: s.name,
-              label: `${s.name} (${s.code})`,
-            }))}
-          />
+          <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Field
+              label="City"
+              value={seller.city}
+              onChange={(v) => setSeller({ city: v })}
+            />
+            <Field
+              label="Pincode"
+              value={seller.pincode}
+              onChange={(v) => setSeller({ pincode: v })}
+            />
+            <Select
+              label="State"
+              value={seller.state}
+              onChange={(v) => {
+                const s = INDIAN_STATES.find((x) => x.name === v);
+                setSeller({ state: v, stateCode: s?.code || "" });
+              }}
+              options={INDIAN_STATES.map((s) => ({
+                value: s.name,
+                label: `${s.name} (${s.code})`,
+              }))}
+            />
+          </div>
           <Field
             label="Phone"
             value={seller.phone}
@@ -322,33 +324,35 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
               onChange={(v) => setClient({ billingAddress: v })}
             />
           </div>
-          <Field
-            label="City"
-            value={client.billingCity}
-            onChange={(v) => setClient({ billingCity: v })}
-          />
-          <Field
-            label="Pincode"
-            value={client.billingPincode}
-            onChange={(v) => setClient({ billingPincode: v })}
-          />
-          <Select
-            label="Client State"
-            value={client.billingState}
-            onChange={(v) => {
-              const s = INDIAN_STATES.find((x) => x.name === v);
-              setClient({
-                billingState: v,
-                billingStateCode: s?.code || "",
-                placeOfSupply: v,
-                placeOfSupplyCode: s?.code || "",
-              });
-            }}
-            options={INDIAN_STATES.map((s) => ({
-              value: s.name,
-              label: `${s.name} (${s.code})`,
-            }))}
-          />
+          <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Field
+              label="City"
+              value={client.billingCity}
+              onChange={(v) => setClient({ billingCity: v })}
+            />
+            <Field
+              label="Pincode"
+              value={client.billingPincode}
+              onChange={(v) => setClient({ billingPincode: v })}
+            />
+            <Select
+              label="Client State"
+              value={client.billingState}
+              onChange={(v) => {
+                const s = INDIAN_STATES.find((x) => x.name === v);
+                setClient({
+                  billingState: v,
+                  billingStateCode: s?.code || "",
+                  placeOfSupply: v,
+                  placeOfSupplyCode: s?.code || "",
+                });
+              }}
+              options={INDIAN_STATES.map((s) => ({
+                value: s.name,
+                label: `${s.name} (${s.code})`,
+              }))}
+            />
+          </div>
           <Select
             label="Place of Supply (POS)"
             value={client.placeOfSupply}
@@ -552,48 +556,50 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
 
       {/* 5. Client Terms & Conditions */}
       <Section title="Terms, Validity & Client Conditions" defaultOpen>
-        <div>
-          <div className="mb-2 flex items-center justify-between">
-            <label className="text-xs font-semibold text-slate-700">
-              Quotation Terms & Conditions
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-xs font-semibold text-slate-700">
+                Quotation Terms & Conditions
+              </label>
+            </div>
+
+            {/* Quick Preset Buttons */}
+            <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
+              <span className="text-[11px] text-slate-400">Load:</span>
+              {TERMS_PRESETS.map((p) => (
+                <button
+                  key={p.label}
+                  type="button"
+                  onClick={() => setMeta({ terms: p.terms })}
+                  className="rounded-lg bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700 hover:bg-slate-200 active:scale-95"
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              rows={4}
+              value={meta.terms}
+              onChange={(e) => setMeta({ terms: e.target.value })}
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
+              placeholder="1. Quotation Validity...\n2. Payment Milestones..."
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold text-slate-700 block mb-2">
+              Project Notes / Scope Summary
             </label>
+            <textarea
+              rows={5}
+              value={meta.notes}
+              onChange={(e) => setMeta({ notes: e.target.value })}
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
+              placeholder="Additional notes, client instructions, or deliverables summary..."
+            />
           </div>
-
-          {/* Quick Preset Buttons */}
-          <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
-            <span className="text-[11px] text-slate-400">Load Template:</span>
-            {TERMS_PRESETS.map((p) => (
-              <button
-                key={p.label}
-                type="button"
-                onClick={() => setMeta({ terms: p.terms })}
-                className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-200 active:scale-95"
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-
-          <textarea
-            rows={5}
-            value={meta.terms}
-            onChange={(e) => setMeta({ terms: e.target.value })}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
-            placeholder="1. Quotation Validity...\n2. Payment Milestones..."
-          />
-        </div>
-
-        <div className="mt-3">
-          <label className="text-xs font-semibold text-slate-700">
-            Project Notes / Scope Summary
-          </label>
-          <textarea
-            rows={2}
-            value={meta.notes}
-            onChange={(e) => setMeta({ notes: e.target.value })}
-            className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-800 outline-none focus:border-teal-600 focus:bg-white"
-            placeholder="Additional notes, client instructions, or deliverables summary..."
-          />
         </div>
       </Section>
     </div>

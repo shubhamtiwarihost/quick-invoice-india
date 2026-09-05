@@ -78,30 +78,30 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
 
   // 1. Settings Form Content
   const settingsContent = (
-    <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-sm font-medium">
+    <div className="space-y-3.5">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+        <label className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-xs font-medium">
           <div>
             <span className="block font-semibold text-slate-900">GST Invoice</span>
-            <span className="block text-xs text-slate-500">Enable CGST/SGST/IGST tax rates</span>
+            <span className="block text-[11px] text-slate-500">Enable CGST/SGST/IGST tax rates</span>
           </div>
           <input
             type="checkbox"
-            className="h-5 w-5 rounded-md text-teal-700 accent-teal-700"
+            className="h-4 w-4 rounded-md text-teal-700 accent-teal-700"
             checked={config.gstMode === "gst"}
             onChange={(e) =>
               setConfig({ gstMode: e.target.checked ? "gst" : "non-gst" })
             }
           />
         </label>
-        <label className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-sm font-medium">
+        <label className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-xs font-medium">
           <div>
             <span className="block font-semibold text-slate-900">Reverse Charge (RCM)</span>
-            <span className="block text-xs text-slate-500">Tax payable by recipient</span>
+            <span className="block text-[11px] text-slate-500">Tax payable by recipient</span>
           </div>
           <input
             type="checkbox"
-            className="h-5 w-5 rounded-md text-teal-700 accent-teal-700"
+            className="h-4 w-4 rounded-md text-teal-700 accent-teal-700"
             checked={config.reverseCharge}
             onChange={(e) => setConfig({ reverseCharge: e.target.checked })}
           />
@@ -134,14 +134,14 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
           value={meta.dueDate}
           onChange={(v) => setMeta({ dueDate: v })}
         />
-        <label className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-sm font-medium sm:col-span-2">
+        <label className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-xs font-medium sm:col-span-2">
           <div>
             <span className="block font-semibold text-slate-900">Auto Round-off</span>
-            <span className="block text-xs text-slate-500">Round grand total to nearest rupee</span>
+            <span className="block text-[11px] text-slate-500">Round grand total to nearest rupee</span>
           </div>
           <input
             type="checkbox"
-            className="h-5 w-5 rounded-md text-teal-700 accent-teal-700"
+            className="h-4 w-4 rounded-md text-teal-700 accent-teal-700"
             checked={config.autoRoundOff}
             onChange={(e) => setConfig({ autoRoundOff: e.target.checked })}
           />
@@ -152,44 +152,49 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
             type="number"
             inputMode="decimal"
             step="any"
+            className="sm:col-span-2"
             value={String(config.manualRoundOff)}
             onChange={(v) => setConfig({ manualRoundOff: Number(v) })}
             placeholder="0.00"
           />
         ) : null}
       </div>
-      <div className="pt-2 border-t border-slate-100">
-        <p className="mb-2 text-xs font-semibold text-slate-700">A4 PDF Template Style</p>
-        <div className="flex flex-wrap gap-2">
-          {(["modern", "classic", "creative"] as InvoiceTemplate[]).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setConfig({ template: t })}
-              className={`rounded-xl px-4 py-2 text-xs font-semibold capitalize transition active:scale-95 ${
-                config.template === t
-                  ? "bg-teal-700 text-white shadow-xs"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+      <div className="pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="mb-1.5 text-xs font-semibold text-slate-700">A4 PDF Template Style</p>
+          <div className="flex flex-wrap gap-1.5">
+            {(["modern", "classic", "creative"] as InvoiceTemplate[]).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setConfig({ template: t })}
+                className={`rounded-xl px-3 py-1.5 text-xs font-semibold capitalize transition active:scale-95 ${
+                  config.template === t
+                    ? "bg-teal-700 text-white shadow-xs"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
         </div>
-        <p className="mb-2 mt-4 text-xs font-semibold text-slate-700">Theme Accent Colour</p>
-        <div className="flex items-center gap-2.5">
-          {ACCENTS.map((c) => (
-            <button
-              key={c}
-              type="button"
-              aria-label={`Select accent color ${c}`}
-              onClick={() => setConfig({ accentColor: c })}
-              className={`h-8 w-8 rounded-full border-2 transition active:scale-90 ${
-                config.accentColor === c ? "border-slate-900 ring-2 ring-slate-400" : "border-transparent"
-              }`}
-              style={{ backgroundColor: c }}
-            />
-          ))}
+        <div>
+          <p className="mb-1.5 text-xs font-semibold text-slate-700">Theme Accent Colour</p>
+          <div className="flex items-center gap-2">
+            {ACCENTS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                aria-label={`Select accent color ${c}`}
+                onClick={() => setConfig({ accentColor: c })}
+                className={`h-7 w-7 rounded-full border-2 transition active:scale-90 ${
+                  config.accentColor === c ? "border-slate-900 ring-2 ring-slate-400" : "border-transparent"
+                }`}
+                style={{ backgroundColor: c }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -197,7 +202,7 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
 
   // 2. Seller Form Content
   const sellerContent = (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
       <Field
         label="Business Name / Legal Entity"
         className="sm:col-span-2"
@@ -235,24 +240,26 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
         onChange={(v) => setSeller({ address: v })}
         placeholder="Building, street, landmark"
       />
-      <Field
-        label="City"
-        value={seller.city}
-        onChange={(v) => setSeller({ city: v })}
-        placeholder="e.g. Mumbai"
-      />
-      <Field
-        label="PIN Code"
-        value={seller.pincode}
-        inputMode="numeric"
-        onChange={(v) => setSeller({ pincode: v })}
-        placeholder="e.g. 400001"
-      />
-      <StateSelect
-        label="State & GST Code"
-        value={seller.state}
-        onChange={(name, code) => setSeller({ state: name, stateCode: code })}
-      />
+      <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Field
+          label="City"
+          value={seller.city}
+          onChange={(v) => setSeller({ city: v })}
+          placeholder="e.g. Mumbai"
+        />
+        <Field
+          label="PIN Code"
+          value={seller.pincode}
+          inputMode="numeric"
+          onChange={(v) => setSeller({ pincode: v })}
+          placeholder="e.g. 400001"
+        />
+        <StateSelect
+          label="State & GST Code"
+          value={seller.state}
+          onChange={(name, code) => setSeller({ state: name, stateCode: code })}
+        />
+      </div>
       <Field
         label="Phone Number"
         type="tel"
@@ -271,6 +278,7 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
       />
       <Field
         label="Authorized Signatory Name"
+        className="sm:col-span-2"
         value={seller.signatoryName}
         onChange={(v) => setSeller({ signatoryName: v })}
         placeholder="e.g. Rahul Sharma"
@@ -280,7 +288,7 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
 
   // 3. Client Form Content
   const clientContent = (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
       <Field
         label="Client Name / Business Name"
         className="sm:col-span-2"
@@ -289,15 +297,25 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
         placeholder="e.g. Nexus Enterprises"
       />
       <div className="space-y-1 sm:col-span-2">
-        <Field
-          label="Client GSTIN (optional for B2B)"
-          value={client.gstin}
-          onChange={handleClientGstinChange}
-          error={gstinHint(client.gstin)}
-          placeholder="e.g. 29BBBBB0000B1Z2"
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Field
+            label="Client GSTIN (optional for B2B)"
+            value={client.gstin}
+            onChange={handleClientGstinChange}
+            error={gstinHint(client.gstin)}
+            placeholder="e.g. 29BBBBB0000B1Z2"
+          />
+          <Field
+            label="Client Phone"
+            type="tel"
+            inputMode="tel"
+            value={client.phone}
+            onChange={(v) => setClient({ phone: v })}
+            placeholder="e.g. +91 9123456780"
+          />
+        </div>
         {detectedBuyerState && (
-          <p className="text-xs text-slate-600 font-medium flex items-center gap-1.5 px-1 py-1 rounded-lg bg-teal-50/80 border border-teal-200/60 mt-1">
+          <p className="text-xs text-slate-600 font-medium flex items-center gap-1.5 px-2 py-1 rounded-lg bg-teal-50/80 border border-teal-200/60 mt-1">
             <span className="h-2 w-2 rounded-full bg-teal-600 shrink-0"></span>
             <span>
               Detected State: <strong>{detectedBuyerState.code} - {detectedBuyerState.name}</strong> ·{" "}
@@ -309,52 +327,56 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
         )}
       </div>
       <Field
-        label="Client Phone"
-        type="tel"
-        inputMode="tel"
-        value={client.phone}
-        onChange={(v) => setClient({ phone: v })}
-        placeholder="e.g. +91 9123456780"
-      />
-      <Field
         label="Billing Address"
         className="sm:col-span-2"
         value={client.billingAddress}
         onChange={(v) => setClient({ billingAddress: v })}
         placeholder="Building, street, area"
       />
-      <Field
-        label="Billing City"
-        value={client.billingCity}
-        onChange={(v) => setClient({ billingCity: v })}
-        placeholder="e.g. Bengaluru"
-      />
-      <Field
-        label="Billing PIN Code"
-        value={client.billingPincode}
-        inputMode="numeric"
-        onChange={(v) => setClient({ billingPincode: v })}
-        placeholder="e.g. 560001"
-      />
-      <StateSelect
-        label="Billing State"
-        value={client.billingState}
-        onChange={(name, code) =>
-          setClient({
-            billingState: name,
-            billingStateCode: code,
-            placeOfSupply: name,
-            placeOfSupplyCode: code,
-          })
-        }
-      />
-      <StateSelect
-        label="Place of Supply"
-        value={client.placeOfSupply}
-        onChange={(name, code) =>
-          setClient({ placeOfSupply: name, placeOfSupplyCode: code })
-        }
-      />
+      <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Field
+          label="Billing City"
+          value={client.billingCity}
+          onChange={(v) => setClient({ billingCity: v })}
+          placeholder="e.g. Bengaluru"
+        />
+        <Field
+          label="Billing PIN Code"
+          value={client.billingPincode}
+          inputMode="numeric"
+          onChange={(v) => setClient({ billingPincode: v })}
+          placeholder="e.g. 560001"
+        />
+        <StateSelect
+          label="Billing State"
+          value={client.billingState}
+          onChange={(name, code) =>
+            setClient({
+              billingState: name,
+              billingStateCode: code,
+              placeOfSupply: name,
+              placeOfSupplyCode: code,
+            })
+          }
+        />
+      </div>
+      <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <StateSelect
+          label="Place of Supply"
+          value={client.placeOfSupply}
+          onChange={(name, code) =>
+            setClient({ placeOfSupply: name, placeOfSupplyCode: code })
+          }
+        />
+        <Field
+          label="Client Email (optional)"
+          type="email"
+          inputMode="email"
+          value={client.email || ""}
+          onChange={(v) => setClient({ email: v })}
+          placeholder="e.g. billing@nexus.in"
+        />
+      </div>
       <label className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/70 p-3 text-sm font-medium sm:col-span-2">
         <input
           type="checkbox"
@@ -373,19 +395,21 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
             onChange={(v) => setClient({ shippingAddress: v })}
             placeholder="Delivery destination address"
           />
-          <Field
-            label="Shipping City"
-            value={client.shippingCity}
-            onChange={(v) => setClient({ shippingCity: v })}
-            placeholder="e.g. Bengaluru"
-          />
-          <Field
-            label="Shipping PIN"
-            value={client.shippingPincode}
-            inputMode="numeric"
-            onChange={(v) => setClient({ shippingPincode: v })}
-            placeholder="e.g. 560001"
-          />
+          <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Field
+              label="Shipping City"
+              value={client.shippingCity}
+              onChange={(v) => setClient({ shippingCity: v })}
+              placeholder="e.g. Bengaluru"
+            />
+            <Field
+              label="Shipping PIN"
+              value={client.shippingPincode}
+              inputMode="numeric"
+              onChange={(v) => setClient({ shippingPincode: v })}
+              placeholder="e.g. 560001"
+            />
+          </div>
         </>
       ) : null}
     </div>
@@ -413,11 +437,11 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
 
   // 6. Notes Form Content
   const notesContent = (
-    <div className="space-y-3">
+    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
       <label className="block">
         <span className="mb-1 block text-xs font-semibold text-slate-700">Client Notes / Remarks</span>
         <textarea
-          rows={2}
+          rows={3}
           value={meta.notes}
           onChange={(e) => setMeta({ notes: e.target.value })}
           placeholder="e.g. Thank you for your business! Please pay within 15 days."
@@ -427,7 +451,7 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
       <label className="block">
         <span className="mb-1 block text-xs font-semibold text-slate-700">Terms &amp; Conditions</span>
         <textarea
-          rows={4}
+          rows={3}
           value={meta.terms}
           onChange={(e) => setMeta({ terms: e.target.value })}
           placeholder="e.g. 1. Goods once sold will not be taken back. 2. Subject to Mumbai jurisdiction."
