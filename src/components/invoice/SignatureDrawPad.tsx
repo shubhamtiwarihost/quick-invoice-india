@@ -217,6 +217,7 @@ export function SignatureDrawPad({
             <img
               src={value}
               alt="Signature preview"
+              height={32}
               className="h-8 max-w-[120px] object-contain"
             />
           </div>

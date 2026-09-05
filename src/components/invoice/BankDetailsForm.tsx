@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import QRCode from "qrcode";
 import type { BankDetails } from "@/types/invoice";
 
 export function BankDetailsForm({
@@ -36,7 +35,15 @@ export function BankDetailsForm({
       amount,
       invoiceNo,
     });
-    QRCode.toDataURL(uri, { margin: 1, width: 220, color: { dark: "#0f172a", light: "#ffffff" } })
+    import("qrcode")
+      .then((mod) => {
+        const QRCode = mod.default || mod;
+        return QRCode.toDataURL(uri, {
+          margin: 1,
+          width: 220,
+          color: { dark: "#0f172a", light: "#ffffff" },
+        });
+      })
       .then((url) => {
         if (!cancelled) setQr(url);
       })
@@ -84,12 +91,16 @@ export function BankDetailsForm({
       />
       {qr ? (
         <div className="sm:col-span-2 flex items-center gap-3.5 rounded-xl border border-slate-200 bg-slate-50 p-3.5">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={qr}
-            alt="UPI QR Code"
-            className="h-20 w-20 rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs shrink-0"
-          />
+          <div className="h-20 w-20 aspect-square shrink-0 rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qr}
+              alt="UPI QR Code"
+              width={76}
+              height={76}
+              className="h-full w-full object-contain"
+            />
+          </div>
           <div>
             <p className="text-xs font-semibold text-slate-800">Dynamic Payment QR</p>
             <p className="mt-0.5 text-xs text-slate-600">
@@ -164,6 +175,8 @@ export async function upiQrDataUrl(
 ): Promise<string> {
   const uri = buildUpiUri({ upiId, payeeName, amount, invoiceNo });
   if (!uri) return "";
+  const mod = await import("qrcode");
+  const QRCode = mod.default || mod;
   return QRCode.toDataURL(uri, {
     margin: 1,
     width: 240,

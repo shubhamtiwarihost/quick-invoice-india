@@ -500,7 +500,7 @@ export function InvoiceForm({ grandTotal }: { grandTotal: number }) {
         {mobileViewMode === "app" ? (
           <div className="space-y-2.5">
             {/* 1. Quick Summary Banner Card */}
-            <div className="rounded-2xl border border-teal-200/80 bg-gradient-to-br from-teal-50 to-white p-4 shadow-2xs">
+            <div className="rounded-2xl border border-teal-200/80 bg-gradient-to-br from-teal-50 to-white p-4 shadow-2xs min-h-[104px]">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
                   {config.gstMode === "gst" ? "GST Tax Invoice" : "Bill of Supply"}

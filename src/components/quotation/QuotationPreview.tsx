@@ -52,7 +52,9 @@ export function QuotationPreview({
               <img
                 src={seller.logo}
                 alt=""
-                className="h-16 w-16 rounded-xl object-contain border border-slate-100 p-1"
+                width={64}
+                height={64}
+                className="h-16 w-16 aspect-square rounded-xl object-contain border border-slate-100 p-1"
               />
             ) : (
               <div
@@ -238,12 +240,16 @@ export function QuotationPreview({
                 </p>
                 <div className="mt-2.5 flex items-start gap-3.5">
                   {qr ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={qr}
-                      alt="UPI QR Code"
-                      className="h-20 w-20 rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs shrink-0"
-                    />
+                    <div className="h-20 w-20 aspect-square shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={qr}
+                        alt="UPI QR Code"
+                        width={80}
+                        height={80}
+                        className="h-20 w-20 aspect-square rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs"
+                      />
+                    </div>
                   ) : null}
                   <div className="space-y-0.5 text-[10px] text-slate-700">
                     {seller.bank.bankName ? (
@@ -386,7 +392,8 @@ export function QuotationPreview({
               <img
                 src={seller.signatureImage}
                 alt="Signature"
-                className="mt-2 h-10 object-contain"
+                height={40}
+                className="mt-2 h-10 max-w-[160px] object-contain"
               />
             ) : (
               <div className="mt-10" />

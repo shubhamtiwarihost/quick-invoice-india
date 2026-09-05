@@ -87,12 +87,16 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
 
           {qrDataUrl ? (
             <div className="mt-3.5 flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={qrDataUrl}
-                alt="UPI QR Code"
-                className="h-20 w-20 rounded-xl border border-slate-200 bg-white p-[2px] shadow-2xs shrink-0"
-              />
+              <div className="h-20 w-20 aspect-square shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={qrDataUrl}
+                  alt="UPI QR Code"
+                  width={80}
+                  height={80}
+                  className="h-20 w-20 aspect-square rounded-xl border border-slate-200 bg-white p-[2px] shadow-2xs"
+                />
+              </div>
               <div className="space-y-0.5">
                 <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Scan & Pay via UPI</p>
                 <p className="font-mono text-[11px] font-bold text-teal-900">{seller.bank.upiId}</p>
@@ -140,7 +144,7 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
         <div className="text-right">
           {seller.signatureImage ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={seller.signatureImage} alt="" className="ml-auto h-10" />
+            <img src={seller.signatureImage} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
           ) : null}
           <p className="font-semibold">{seller.signatoryName}</p>
           <p className="text-slate-400">Authorised signatory</p>

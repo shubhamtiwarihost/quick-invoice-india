@@ -12,7 +12,7 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
         <div className="flex items-start gap-3">
           {seller.logo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={seller.logo} alt="" className="h-14 w-14 rounded-lg object-cover" />
+            <img src={seller.logo} alt="" width={56} height={56} className="h-14 w-14 aspect-square rounded-lg object-cover" />
           ) : (
             <div
               className="flex h-14 w-14 items-center justify-center rounded-lg text-lg font-bold text-white"
@@ -140,12 +140,16 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           {qrDataUrl ? (
             <div className="mt-3 pt-2.5 border-t border-slate-100">
               <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Scan & Pay via UPI</p>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={qrDataUrl}
-                alt="UPI QR Code"
-                className="h-24 w-24 rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs"
-              />
+              <div className="h-24 w-24 aspect-square">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={qrDataUrl}
+                  alt="UPI QR Code"
+                  width={96}
+                  height={96}
+                  className="h-24 w-24 aspect-square rounded-lg border border-slate-200 bg-white p-[2px] shadow-2xs"
+                />
+              </div>
             </div>
           ) : null}
         </div>
@@ -157,7 +161,7 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           <div className="mt-6 text-right">
             {seller.signatureImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={seller.signatureImage} alt="" className="ml-auto h-10 object-contain" />
+              <img src={seller.signatureImage} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
             ) : null}
             <p className="font-medium">{seller.signatoryName}</p>
             <p className="text-slate-400">Authorised signatory</p>

@@ -17,7 +17,6 @@ import { MobileBottomNav } from "@/components/invoice/MobileBottomNav";
 import { MobileToolsSheet } from "@/components/invoice/MobileToolsSheet";
 import { SavedInvoicesDrawer } from "@/components/invoice/SavedInvoicesDrawer";
 import { WhatsAppShareModal } from "@/components/invoice/WhatsAppShareModal";
-import { downloadInvoicePdf } from "@/lib/exportPdf";
 import { formatCurrency, formatDateIN } from "@/lib/format";
 import { computeInvoice } from "@/lib/gstEngine";
 import {
@@ -142,6 +141,7 @@ export function InvoiceWorkspace({
       // Auto-save to history on PDF download
       saveInvoiceToHistory(draft, summary.grandTotal);
       const safeInvoiceNo = draft.meta.invoiceNo.trim().replace(/[\\/:*?"<>|]/g, "-") || "invoice";
+      const { downloadInvoicePdf } = await import("@/lib/exportPdf");
       await downloadInvoicePdf(el, `${safeInvoiceNo}.pdf`);
       showToast(`Downloaded PDF and saved ${draft.meta.invoiceNo} to history!`);
     } catch (err) {

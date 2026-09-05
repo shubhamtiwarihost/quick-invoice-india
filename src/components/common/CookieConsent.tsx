@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ShieldCheck, X } from "lucide-react";
 
@@ -24,9 +24,14 @@ function getServerSnapshot(): string | null {
 export function CookieConsent() {
   const storedConsent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [dismissed, setDismissed] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // If consent is already recorded or user dismissed in current session, do not render
-  if (storedConsent || dismissed) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // If not mounted yet, consent is already recorded, or user dismissed in current session, do not render
+  if (!mounted || storedConsent || dismissed) {
     return null;
   }
 

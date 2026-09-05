@@ -18,7 +18,6 @@ import { useInvoiceStore } from "@/lib/store";
 import { QuotationForm } from "./QuotationForm";
 import { QuotationPreview } from "./QuotationPreview";
 import { computeInvoice } from "@/lib/gstEngine";
-import { downloadInvoicePdf } from "@/lib/exportPdf";
 import { formatCurrency, formatDateIN, todayISO, addDaysISO } from "@/lib/format";
 import type { InvoiceDraft } from "@/types/invoice";
 
@@ -131,6 +130,7 @@ export function QuotationWorkspace({
     setBusy(true);
     try {
       const safeNo = draft.meta.quotationNo.trim().replace(/[\\/:*?"<>|]/g, "-") || "quotation";
+      const { downloadInvoicePdf } = await import("@/lib/exportPdf");
       await downloadInvoicePdf(el, `${safeNo}.pdf`);
       showToast(`Downloaded quotation ${draft.meta.quotationNo}!`);
     } catch (err) {

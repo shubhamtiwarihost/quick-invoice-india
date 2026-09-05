@@ -19,7 +19,7 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           <div>
             {seller.logo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={seller.logo} alt="" className="mb-2 h-12 object-contain" />
+              <img src={seller.logo} alt="" height={48} className="mb-2 h-12 max-w-[140px] object-contain" />
             ) : null}
             <p>{sellerBlock(draft)}</p>
             <p>Phone: {seller.phone}</p>
@@ -105,12 +105,16 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             {qrDataUrl ? (
               <div className="mt-3 pt-2 border-t border-slate-200">
                 <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1">Scan & Pay via UPI</p>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={qrDataUrl}
-                  alt="UPI QR Code"
-                  className="h-20 w-20 rounded-md border border-slate-300 bg-white p-[2px] shadow-2xs"
-                />
+                <div className="h-20 w-20 aspect-square">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={qrDataUrl}
+                    alt="UPI QR Code"
+                    width={80}
+                    height={80}
+                    className="h-20 w-20 aspect-square rounded-md border border-slate-300 bg-white p-[2px] shadow-2xs"
+                  />
+                </div>
               </div>
             ) : null}
           </div>
@@ -134,7 +138,7 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
               <p>For {seller.businessName}</p>
               {seller.signatureImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={seller.signatureImage} alt="" className="ml-auto mt-2 h-10" />
+                <img src={seller.signatureImage} alt="" height={40} className="ml-auto mt-2 h-10 max-w-[160px] object-contain" />
               ) : (
                 <div className="h-10" />
               )}
