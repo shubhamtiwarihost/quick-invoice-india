@@ -15,11 +15,23 @@ export const metadata: Metadata = {
     "GST jurisdiction codes",
     "place of supply GST code",
   ],
+  alternates: {
+    canonical: "https://swiftgst.in/gst-state-codes/",
+  },
   openGraph: {
     title: "GST State Code List 2026 — Indian State Codes & Capitals Directory — SwiftGST",
     description:
       "Official CBIC 2-digit GST state codes for all 37 Indian States and Union Territories. Search by name, capital, or code with 1-click copy.",
+    url: "https://swiftgst.in/gst-state-codes/",
+    siteName: "SwiftGST",
+    locale: "en_IN",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GST State Codes Directory — SwiftGST",
+    description:
+      "Search all 37 Indian State and UT 2-digit GST codes with 1-click copy.",
   },
 };
 

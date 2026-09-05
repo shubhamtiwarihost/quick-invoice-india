@@ -26,9 +26,22 @@ import {
   saveInvoiceToHistory,
 } from "@/lib/savedInvoices";
 import { useInvoiceStore } from "@/lib/store";
+import { getIndustryPreset, type IndustryKey } from "@/lib/industryPresets";
 import type { InvoiceDraft } from "@/types/invoice";
 
-export function InvoiceWorkspace() {
+export interface InvoiceWorkspaceProps {
+  initialPreset?: IndustryKey;
+  pageTitle?: string;
+  badgeText?: string;
+  childrenBelowWorkspace?: React.ReactNode;
+}
+
+export function InvoiceWorkspace({
+  initialPreset,
+  pageTitle,
+  badgeText,
+  childrenBelowWorkspace,
+}: InvoiceWorkspaceProps = {}) {
   const store = useInvoiceStore();
   const [tab, setTab] = useState<"form" | "preview">("form");
   const [busy, setBusy] = useState(false);
@@ -37,6 +50,31 @@ export function InvoiceWorkspace() {
   const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [savedCount, setSavedCount] = useState(() => getSavedInvoices().length);
+
+  // Sync initial preset on page mount
+  useEffect(() => {
+    if (!store.hydrated) return;
+
+    let targetPreset = initialPreset;
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryPreset = urlParams.get("preset") as IndustryKey | null;
+      if (
+        queryPreset &&
+        ["freelancer", "boutique", "kirana", "b2b"].includes(queryPreset)
+      ) {
+        targetPreset = queryPreset;
+      }
+    }
+
+    if (targetPreset) {
+      const currentActive = sessionStorage.getItem("qi_active_preset");
+      if (currentActive !== targetPreset) {
+        store.loadDraft(getIndustryPreset(targetPreset));
+        sessionStorage.setItem("qi_active_preset", targetPreset);
+      }
+    }
+  }, [store.hydrated, initialPreset, store]);
 
   useEffect(() => {
     function handleUpdate() {
@@ -90,6 +128,10 @@ export function InvoiceWorkspace() {
   }
 
   async function onPdf() {
+    if (tab === "form" && typeof window !== "undefined" && window.innerWidth < 1024) {
+      setTab("preview");
+      await new Promise((resolve) => setTimeout(resolve, 150));
+    }
     const el = document.getElementById("invoice-a4");
     if (!el) {
       showToast("Invoice preview could not be found.");
@@ -128,8 +170,17 @@ export function InvoiceWorkspace() {
       {/* Top Action Bar (Desktop / Tablet) */}
       <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-2.5 sm:py-3">
         <div>
-          <p className="text-sm font-semibold text-slate-900">GST / Tax invoice generator</p>
-          <p className="text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold text-slate-900">
+              {pageTitle || "GST / Tax invoice generator"}
+            </p>
+            {badgeText && (
+              <span className="inline-flex items-center rounded-md bg-teal-50 px-2 py-0.5 text-[11px] font-semibold text-teal-800 border border-teal-200">
+                {badgeText}
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-slate-500 mt-0.5">
             {summary.supplyType === "intra"
               ? "Intra-state: CGST + SGST"
               : summary.supplyType === "inter"
@@ -138,6 +189,31 @@ export function InvoiceWorkspace() {
             · Total {formatCurrency(summary.grandTotal, draft.meta.currency)}
           </p>
         </div>
+        {/* Mobile Quick Action Buttons */}
+        <div className="flex sm:hidden items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setSavedDrawerOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold text-slate-700 active:scale-95 transition"
+          >
+            <History className="h-3.5 w-3.5 text-slate-500" />
+            <span>Saved</span>
+            {savedCount > 0 ? (
+              <span className="rounded-full bg-teal-100 px-1.5 text-[10px] font-bold text-teal-800">
+                {savedCount}
+              </span>
+            ) : null}
+          </button>
+          <button
+            type="button"
+            onClick={() => store.newInvoice()}
+            title="Start New Invoice"
+            className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 active:scale-95 transition"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-teal-700" />
+          </button>
+        </div>
+
         <div className="hidden sm:flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -162,11 +238,19 @@ export function InvoiceWorkspace() {
           </button>
           <button
             type="button"
-            onClick={() => store.resetDraft()}
+            onClick={() => {
+              if (initialPreset) {
+                store.loadDraft(getIndustryPreset(initialPreset));
+                showToast(`Reset to ${initialPreset} preset!`);
+              } else {
+                store.resetDraft();
+                showToast("Loaded sample draft!");
+              }
+            }}
             className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 active:scale-95"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Load sample
+            {initialPreset ? "Reset sample" : "Load sample"}
           </button>
           <button
             type="button"
@@ -204,6 +288,24 @@ export function InvoiceWorkspace() {
         </div>
       </div>
 
+      {/* Trust & Privacy Banner */}
+      <div className="no-print border-b border-emerald-200/70 bg-emerald-50/90 px-4 py-2 text-xs text-emerald-950 flex flex-wrap items-center justify-between gap-2 shadow-2xs">
+        <div className="flex items-center gap-2">
+          <span className="text-sm select-none">🔒</span>
+          <span className="font-bold text-emerald-900">100% Private &amp; No Spam:</span>
+          <span className="text-emerald-800">
+            No phone number or login needed. All calculations happen locally in your browser.
+          </span>
+        </div>
+        <div className="hidden sm:flex items-center gap-2 text-[11px] font-semibold text-emerald-700">
+          <span>Zero Tele-calling</span>
+          <span>·</span>
+          <span>Zero Watermarks</span>
+          <span>·</span>
+          <span>Private &amp; Client-Side</span>
+        </div>
+      </div>
+
       {/* Workspace Grid */}
       <div className="invoice-workspace-grid grid flex-1 lg:grid-cols-[minmax(340px,420px)_1fr]">
         <aside
@@ -220,36 +322,23 @@ export function InvoiceWorkspace() {
         </section>
       </div>
 
-      {/* Floating Action Bar on Mobile Preview Mode */}
-      {tab === "preview" && (
-        <div className="no-print fixed bottom-16 left-3 right-3 z-30 flex items-center gap-2 rounded-2xl bg-slate-900/90 p-2 shadow-2xl backdrop-blur-md md:hidden animate-in slide-in-from-bottom-2 duration-150">
-          <button
-            type="button"
-            onClick={() => setWhatsappModalOpen(true)}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2.5 text-xs font-semibold text-white shadow-xs active:scale-95 transition"
-          >
-            <MessageCircle className="h-4 w-4" />
-            WhatsApp
-          </button>
-          <button
-            type="button"
-            onClick={onPdf}
-            disabled={busy}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-teal-600 py-2.5 text-xs font-semibold text-white shadow-xs active:scale-95 transition disabled:opacity-60"
-          >
-            <Download className="h-4 w-4" />
-            {busy ? "Preparing…" : "Download PDF"}
-          </button>
+      {/* Rich SEO & Industry Content Below Workspace Fold */}
+      {childrenBelowWorkspace ? (
+        <div className="no-print w-full bg-white border-t border-slate-200">
+          {childrenBelowWorkspace}
         </div>
-      )}
+      ) : null}
 
-      {/* Mobile Bottom Navigation Bar */}
+      {/* Mobile Bottom Navigation Bar (Persistent Sticky Action Bar) */}
       <MobileBottomNav
         activeTab={tab}
         onTabChange={setTab}
+        onDownloadPdf={onPdf}
+        onShareWhatsApp={() => setWhatsappModalOpen(true)}
         onOpenSaved={() => setSavedDrawerOpen(true)}
         onOpenTools={() => setToolsSheetOpen(true)}
         savedCount={savedCount}
+        isPdfBusy={busy}
       />
 
       {/* Mobile Slide-Up Tools Sheet */}
@@ -275,6 +364,7 @@ export function InvoiceWorkspace() {
         formattedTotal={formatCurrency(summary.grandTotal, draft.meta.currency)}
         invoiceDate={formatDateIN(draft.meta.invoiceDate) || draft.meta.invoiceDate}
         sellerName={draft.seller.businessName}
+        upiId={draft.seller.bank.upiId}
       />
     </div>
   );

@@ -36,7 +36,6 @@ export function sanitizeInput(
     .normalize("NFKC")
     .replace(/[\u200B-\u200D\uFEFF]/g, "") // Remove zero-width spaces
     .replace(
-      // eslint-disable-next-line no-control-regex
       allowNewlines ? /[^\x20-\x7E\t\r\n]/g : /[^\x20-\x7E]/g,
       ""
     );

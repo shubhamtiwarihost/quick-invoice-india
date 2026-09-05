@@ -22,7 +22,11 @@ import { downloadInvoicePdf } from "@/lib/exportPdf";
 import { formatCurrency, formatDateIN, todayISO, addDaysISO } from "@/lib/format";
 import type { InvoiceDraft } from "@/types/invoice";
 
-export function QuotationWorkspace() {
+export function QuotationWorkspace({
+  childrenBelowWorkspace,
+}: {
+  childrenBelowWorkspace?: React.ReactNode;
+} = {}) {
   const router = useRouter();
   const quoteStore = useQuotationStore();
   const invoiceStore = useInvoiceStore();
@@ -288,6 +292,13 @@ export function QuotationWorkspace() {
           </div>
         </section>
       </div>
+
+      {/* Rich SEO & Editorial Content Below Workspace Fold */}
+      {childrenBelowWorkspace ? (
+        <div className="no-print w-full bg-white border-t border-slate-200">
+          {childrenBelowWorkspace}
+        </div>
+      ) : null}
 
       {/* Mobile Floating Actions */}
       <div className="no-print fixed bottom-0 left-0 right-0 z-30 flex items-center justify-between border-t border-slate-200 bg-white/95 px-3 py-2.5 backdrop-blur-md md:hidden">

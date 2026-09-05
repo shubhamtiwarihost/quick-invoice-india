@@ -26,7 +26,11 @@ const HIGH_LIMIT_STATES: Record<string, string> = {
   "08": "Rajasthan",
 };
 
-export default function EwayBillClient() {
+export default function EwayBillClient({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   const [originCode, setOriginCode] = useState("27"); // Maharashtra
   const [destCode, setDestCode] = useState("27");
   const [movementType, setMovementType] = useState<"goods" | "services">("goods");
@@ -179,6 +183,8 @@ export default function EwayBillClient() {
               </span>
               <input
                 type="number"
+                inputMode="decimal"
+                step="any"
                 min={0}
                 value={consignmentValue || ""}
                 onChange={(e) => setConsignmentValue(Number(e.target.value) || 0)}
@@ -310,6 +316,7 @@ export default function EwayBillClient() {
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
+      {children}
     </main>
   );
 }

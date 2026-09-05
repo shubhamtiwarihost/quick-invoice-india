@@ -10,6 +10,7 @@ import {
   Trash2,
   X,
   CheckCircle2,
+  FileSpreadsheet,
 } from "lucide-react";
 import type { InvoiceDraft, InvoiceStatus, SavedInvoice } from "@/types/invoice";
 import {
@@ -19,6 +20,7 @@ import {
   SAVED_INVOICES_EVENT,
   updateSavedInvoiceStatus,
 } from "@/lib/savedInvoices";
+import { exportInvoicesToGstr1 } from "@/lib/gstr1Export";
 import { formatCurrency, formatDateIN } from "@/lib/format";
 import { useInvoiceStore } from "@/lib/store";
 
@@ -89,6 +91,19 @@ export function SavedInvoicesDrawer({
     reload();
   }
 
+  function handleExportGstr1() {
+    if (invoices.length === 0) {
+      triggerFeedback("No saved invoices found to export.");
+      return;
+    }
+    const res = exportInvoicesToGstr1(invoices);
+    if (res.success) {
+      triggerFeedback(`Exported ${res.recordsCount} record${res.recordsCount === 1 ? "" : "s"} to GSTR-1 Table 4 CSV!`);
+    } else {
+      triggerFeedback(res.error || "Failed to export GSTR-1 CSV.");
+    }
+  }
+
   if (!isOpen) return null;
 
   return (
@@ -114,6 +129,33 @@ export function SavedInvoicesDrawer({
           >
             <X className="h-5 w-5" />
           </button>
+        </div>
+
+        {/* GSTR-1 Sales Summary Action Strip */}
+        <div className="border-b border-slate-200 bg-slate-50 px-4 py-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <FileSpreadsheet className="h-3.5 w-3.5 shrink-0 text-teal-700" />
+                <span className="text-xs font-semibold text-slate-900 truncate">
+                  GSTR-1 Sales Summary
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 truncate">
+                Official Table 4 B2B Taxable Supplies CSV
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleExportGstr1}
+              disabled={invoices.length === 0}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-teal-800 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition shrink-0"
+              title={invoices.length === 0 ? "Save invoices first to export" : "Export GSTR-1 compliant CSV"}
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5" />
+              Export to GSTR-1 Sheet
+            </button>
+          </div>
         </div>
 
         {/* Feedback Alert */}

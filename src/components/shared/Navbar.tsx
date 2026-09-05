@@ -16,6 +16,10 @@ import {
   X,
   FileCheck2,
   MapPin,
+  Download,
+  Scissors,
+  Store,
+  LayoutGrid,
 } from "lucide-react";
 
 export const ALL_TOOLS = [
@@ -82,6 +86,34 @@ export const ALL_TOOLS = [
     desc: "Compare flat 1%/5%/6% composition scheme against regular GST with ITC.",
     icon: Scale,
   },
+  {
+    href: "/gst-invoice-templates",
+    label: "Invoice Templates Hub",
+    shortLabel: "Templates",
+    desc: "Download free Excel, Word, and PDF GST bill formats ready to edit.",
+    icon: Download,
+  },
+  {
+    href: "/freelancer-invoice-generator",
+    label: "Freelancer Invoice Maker",
+    shortLabel: "Freelancer",
+    desc: "Pre-loaded with SAC 998314, hourly rates, and LUT export support.",
+    icon: Briefcase,
+  },
+  {
+    href: "/boutique-invoice-generator",
+    label: "Boutique & Tailoring Bill",
+    shortLabel: "Boutique",
+    desc: "Stitching SAC 998822 and 5%/12% dual apparel GST slabs.",
+    icon: Scissors,
+  },
+  {
+    href: "/kirana-store-bill-maker",
+    label: "Kirana Store Bill Maker",
+    shortLabel: "Kirana Bill",
+    desc: "Retail grocery cash memos with 0% and 5% daily FMCG staples.",
+    icon: Store,
+  },
 ];
 
 export function Navbar() {
@@ -140,6 +172,24 @@ export function Navbar() {
               {item.shortLabel}
             </Link>
           ))}
+
+          {/* All Tools Hub Quick Anchor */}
+          <Link
+            href="/#tools-hub"
+            onClick={(e) => {
+              if (pathname === "/") {
+                e.preventDefault();
+                const el = document.getElementById("tools-hub");
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth" });
+                }
+              }
+            }}
+            className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition font-medium"
+          >
+            <LayoutGrid className="h-3.5 w-3.5 text-teal-700" />
+            <span>All Tools</span>
+          </Link>
 
           {/* More Tools Dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -207,19 +257,19 @@ export function Navbar() {
           </div>
 
           <Link
-            href="/about"
+            href="/about-us"
             className={`rounded-xl px-3 py-2 transition ${
-              pathname === "/about"
+              pathname === "/about-us" || pathname === "/about"
                 ? "bg-teal-700 text-white shadow-xs font-semibold"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
             }`}
           >
-            About
+            About Us
           </Link>
           <Link
-            href="/contact"
+            href="/contact-us"
             className={`rounded-xl px-3 py-2 transition ${
-              pathname === "/contact"
+              pathname === "/contact-us" || pathname === "/contact"
                 ? "bg-teal-700 text-white shadow-xs font-semibold"
                 : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
             }`}
@@ -241,6 +291,30 @@ export function Navbar() {
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen ? (
         <div className="border-b border-slate-200 bg-white px-4 py-3 md:hidden">
+          {/* Featured Tools Hub Link */}
+          <Link
+            href="/#tools-hub"
+            onClick={(e) => {
+              closeAllMenus();
+              if (pathname === "/") {
+                e.preventDefault();
+                const el = document.getElementById("tools-hub");
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth" });
+                }
+              }
+            }}
+            className="flex items-center justify-between rounded-xl bg-teal-50 border border-teal-200/80 p-3 text-xs font-bold text-teal-900 mb-3 shadow-2xs"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-700 text-white">
+                <LayoutGrid className="h-4 w-4" />
+              </div>
+              <span>Explore All Tools &amp; Utilities Hub</span>
+            </div>
+            <span className="text-[10px] rounded-full bg-teal-100 text-teal-800 px-2 py-0.5 font-semibold">13+ Tools</span>
+          </Link>
+
           <div className="space-y-1">
             {ALL_TOOLS.map((item) => {
               const Icon = item.icon;
@@ -264,14 +338,14 @@ export function Navbar() {
           </div>
           <div className="mt-3 border-t border-slate-100 pt-3 grid grid-cols-2 gap-2 text-xs">
             <Link
-              href="/about"
+              href="/about-us"
               onClick={closeAllMenus}
               className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
             >
               About SwiftGST
             </Link>
             <Link
-              href="/contact"
+              href="/contact-us"
               onClick={closeAllMenus}
               className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
             >
@@ -285,11 +359,11 @@ export function Navbar() {
               Privacy Policy
             </Link>
             <Link
-              href="/terms"
+              href="/terms-of-service"
               onClick={closeAllMenus}
               className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
             >
-              Terms & Conditions
+              Terms of Service
             </Link>
             <Link
               href="/disclaimer"
@@ -342,6 +416,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/gst-invoice-templates" className="hover:text-teal-700 font-semibold text-teal-800">
+                  GST Invoice Templates (Excel/Word/PDF)
+                </Link>
+              </li>
+              <li>
                 <Link href="/quotation-maker" className="hover:text-teal-700 font-medium text-slate-700">
                   Estimate & Quotation Maker
                 </Link>
@@ -372,22 +451,37 @@ export function Footer() {
           {/* Tools Col 2 */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
-              Business Calculators
+              Industry Bill Generators
             </h4>
             <ul className="mt-3 space-y-2 text-xs text-slate-500">
               <li>
+                <Link href="/freelancer-invoice-generator" className="hover:text-teal-700 font-medium text-slate-700">
+                  Freelancer & Consultant Bill Maker
+                </Link>
+              </li>
+              <li>
+                <Link href="/boutique-invoice-generator" className="hover:text-teal-700 font-medium text-slate-700">
+                  Boutique & Tailoring GST Invoice
+                </Link>
+              </li>
+              <li>
+                <Link href="/kirana-store-bill-maker" className="hover:text-teal-700 font-medium text-slate-700">
+                  Kirana Store & FMCG Cash Memo
+                </Link>
+              </li>
+              <li className="pt-1 border-t border-slate-100">
                 <Link href="/freelance-rate-calculator" className="hover:text-teal-700">
                   Freelance Hourly & Retainer Rate Calc
                 </Link>
               </li>
               <li>
                 <Link href="/eway-bill-checker" className="hover:text-teal-700">
-                  E-Way Bill Threshold & Exemption Checker
+                  E-Way Bill Threshold Checker
                 </Link>
               </li>
               <li>
                 <Link href="/composition-calculator" className="hover:text-teal-700">
-                  Composition vs Regular GST Scheme Calc
+                  Composition Scheme vs Regular Calc
                 </Link>
               </li>
             </ul>
@@ -396,16 +490,16 @@ export function Footer() {
           {/* Company & Legal */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
-              Company & Legal
+              Company &amp; Legal
             </h4>
             <ul className="mt-3 space-y-2 text-xs text-slate-500">
               <li>
-                <Link href="/about" className="hover:text-teal-700">
+                <Link href="/about-us" className="hover:text-teal-700">
                   About SwiftGST
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-teal-700">
+                <Link href="/contact-us" className="hover:text-teal-700">
                   Contact Us
                 </Link>
               </li>
@@ -415,8 +509,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-teal-700">
-                  Terms & Conditions
+                <Link href="/terms-of-service" className="hover:text-teal-700">
+                  Terms of Service
                 </Link>
               </li>
               <li>
@@ -424,28 +518,38 @@ export function Footer() {
                   Legal Disclaimer
                 </Link>
               </li>
+              <li className="pt-2 border-t border-slate-100">
+                <Link href="/cleartax-free-alternative" className="hover:text-teal-700 font-medium text-slate-700">
+                  ClearTax Free Alternative
+                </Link>
+              </li>
+              <li>
+                <Link href="/mybillbook-free-alternative" className="hover:text-teal-700 font-medium text-slate-700">
+                  myBillBook Free Alternative
+                </Link>
+              </li>
             </ul>
             <p className="mt-4 text-[11px] text-slate-400 leading-relaxed">
-              Designed in compliance with CBIC GST rules, Rule 138 E-Way thresholds & Section 10 norms.
+              Designed in compliance with CBIC GST rules, Rule 138 E-Way thresholds &amp; Section 10 norms.
             </p>
           </div>
         </div>
 
         <div className="mt-8 border-t border-slate-100 pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <div>
-            © {new Date().getFullYear()} SwiftGST · Free open invoicing tool for Indian businesses, creators & freelancers.
+            © {new Date().getFullYear()} SwiftGST · Free open invoicing tool for Indian businesses, creators &amp; freelancers.
           </div>
           <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
-            <Link href="/about" className="hover:text-teal-700">
+            <Link href="/about-us" className="hover:text-teal-700">
               About
             </Link>
-            <Link href="/contact" className="hover:text-teal-700">
+            <Link href="/contact-us" className="hover:text-teal-700">
               Contact
             </Link>
             <Link href="/privacy-policy" className="hover:text-teal-700">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-teal-700">
+            <Link href="/terms-of-service" className="hover:text-teal-700">
               Terms
             </Link>
             <Link href="/disclaimer" className="hover:text-teal-700">

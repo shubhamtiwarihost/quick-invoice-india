@@ -155,6 +155,7 @@ function ItemCard({
           <Mini label="Quantity">
             <input
               type="number"
+              inputMode="decimal"
               min={0}
               step="any"
               value={item.quantity}
@@ -179,6 +180,7 @@ function ItemCard({
           <Mini label="Rate (₹)">
             <input
               type="number"
+              inputMode="decimal"
               min={0}
               step="any"
               value={item.rate}
@@ -203,6 +205,7 @@ function ItemCard({
               </select>
               <input
                 type="number"
+                inputMode="decimal"
                 min={0}
                 step="any"
                 value={item.discountValue}

@@ -481,6 +481,7 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
                       <label className="text-[11px] font-semibold text-slate-600">Qty</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         min={0.01}
                         step="any"
                         value={item.quantity}
@@ -504,7 +505,9 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
                       <label className="text-[11px] font-semibold text-slate-600">Rate (₹)</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         min={0}
+                        step="any"
                         value={item.rate}
                         onChange={(e) => updateItem(item.id, { rate: Number(e.target.value) })}
                         className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-medium text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white"

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Geist } from "next/font/google";
 import { Footer, Navbar } from "@/components/shared/Navbar";
 import { PersistHydration } from "@/components/shared/PersistHydration";
+import { CookieConsent } from "@/components/common/CookieConsent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -60,6 +61,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   );

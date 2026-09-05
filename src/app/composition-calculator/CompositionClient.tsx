@@ -44,7 +44,11 @@ const BUSINESS_CONFIGS: Record<
   },
 };
 
-export default function CompositionClient() {
+export default function CompositionClient({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   const [turnover, setTurnover] = useState<number>(4000000); // 40 Lakhs default
   const [businessType, setBusinessType] = useState<BusinessType>("trader");
   const [regularGstRate, setRegularGstRate] = useState<number>(18);
@@ -156,6 +160,8 @@ export default function CompositionClient() {
               </span>
               <input
                 type="number"
+                inputMode="decimal"
+                step="any"
                 min={0}
                 value={turnover || ""}
                 onChange={(e) => setTurnover(Number(e.target.value) || 0)}
@@ -192,6 +198,8 @@ export default function CompositionClient() {
               </span>
               <input
                 type="number"
+                inputMode="decimal"
+                step="any"
                 min={0}
                 value={purchases || ""}
                 onChange={(e) => setPurchases(Number(e.target.value) || 0)}
@@ -402,6 +410,7 @@ export default function CompositionClient() {
           </Link>
         </div>
       </div>
+      {children}
     </main>
   );
 }

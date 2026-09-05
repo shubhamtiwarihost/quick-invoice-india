@@ -1,93 +1,83 @@
-"use client";
+import type { Metadata } from "next";
+import HsnFinderClient from "./HsnFinderClient";
+import { HsnComplianceGuide, HSN_FAQS } from "@/components/hsn/HsnComplianceGuide";
 
-import { useMemo, useState } from "react";
-import { searchHsn } from "@/lib/hsnCodes";
-import { useInvoiceStore } from "@/lib/store";
-import { useRouter } from "next/navigation";
+export const metadata: Metadata = {
+  title: "HSN & SAC Code Finder (GST Rates Directory) — SwiftGST",
+  description:
+    "Search 4 to 8 digit Indian HSN codes for goods and SAC codes for services. Instant GST slab rates (0%, 5%, 12%, 18%, 28%) and 1-click apply to invoice.",
+  keywords: [
+    "HSN code finder",
+    "SAC code directory India",
+    "GST rate list by HSN",
+    "services accounting code search",
+    "HSN code 998314",
+    "GST HSN code search online",
+    "goods and services tax code directory",
+  ],
+  alternates: {
+    canonical: "https://swiftgst.in/hsn-finder/",
+  },
+  openGraph: {
+    title: "HSN & SAC Code Finder (GST Rates Directory) — SwiftGST",
+    description:
+      "Find official HSN and SAC codes for Indian GST billing. Verify 4 to 8 digit codes and applicable tax rates with 1-click invoice insertion.",
+    url: "https://swiftgst.in/hsn-finder/",
+    siteName: "SwiftGST",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HSN & SAC Code Finder — SwiftGST",
+    description:
+      "Instant search for HSN and SAC codes and official GST rates for Indian invoices.",
+  },
+};
 
 export default function HsnFinderPage() {
-  const [q, setQ] = useState("");
-  const rows = useMemo(() => searchHsn(q), [q]);
-  const addItem = useInvoiceStore((s) => s.addItem);
-  const updateItem = useInvoiceStore((s) => s.updateItem);
-  const items = useInvoiceStore((s) => s.items);
-  const router = useRouter();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "SwiftGST HSN & SAC Code Directory",
+    operatingSystem: "All (Web Browser)",
+    applicationCategory: "BusinessApplication",
+    url: "https://swiftgst.in/hsn-finder/",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "INR",
+    },
+    description:
+      "Free search directory of Indian HSN and SAC codes with official GST tax slabs.",
+  };
 
-  function applyToInvoice(code: string, description: string, gst: number) {
-    const slab = gst === 3 ? 5 : gst === 0 || gst === 5 || gst === 12 || gst === 18 || gst === 28 ? gst : 18;
-    const currentItems = useInvoiceStore.getState().items;
-    const isSingleEmptyItem =
-      currentItems.length === 1 &&
-      !currentItems[0].description.trim() &&
-      !currentItems[0].hsnSac.trim() &&
-      currentItems[0].rate === 0;
-
-    if (isSingleEmptyItem) {
-      updateItem(currentItems[0].id, {
-        description,
-        hsnSac: code,
-        gstSlab: slab as 0 | 5 | 12 | 18 | 28,
-      });
-    } else {
-      addItem();
-      const latest = useInvoiceStore.getState().items;
-      const created = latest[latest.length - 1];
-      if (created) {
-        updateItem(created.id, {
-          description,
-          hsnSac: code,
-          gstSlab: slab as 0 | 5 | 12 | 18 | 28,
-        });
-      }
-    }
-    router.push("/");
-  }
+  const jsonLdFaq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: HSN_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: typeof faq.answer === "string" ? faq.answer : faq.question,
+      },
+    })),
+  };
 
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
-      <h1 className="text-2xl font-semibold">HSN / SAC finder</h1>
-      <p className="mt-1 text-sm text-slate-500">
-        Search a starter directory of common goods (HSN) and services (SAC). Confirm the latest rate on the GST portal for filing.
-      </p>
-      <input
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        placeholder="Search code or description — e.g. tote, 9983, tea"
-        className="mt-5 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-teal-600"
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <p className="mt-2 text-xs text-slate-400">{rows.length} results · {items.length} items already on your draft invoice</p>
-      <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-            <tr>
-              <th className="px-4 py-3">Code</th>
-              <th className="px-4 py-3">Type</th>
-              <th className="px-4 py-3">Description</th>
-              <th className="px-4 py-3">Typical GST</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.code + row.description} className="border-t border-slate-100">
-                <td className="px-4 py-2 font-mono text-xs">{row.code}</td>
-                <td className="px-4 py-2">{row.type}</td>
-                <td className="px-4 py-2">{row.description}</td>
-                <td className="px-4 py-2">{row.typicalGst}%</td>
-                <td className="px-4 py-2 text-right">
-                  <button
-                    type="button"
-                    onClick={() => applyToInvoice(row.code, row.description, row.typicalGst)}
-                    className="text-xs font-medium text-teal-700 hover:underline"
-                  >
-                    Add to invoice
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
+      />
+      <HsnFinderClient>
+        <HsnComplianceGuide />
+      </HsnFinderClient>
+    </>
   );
 }

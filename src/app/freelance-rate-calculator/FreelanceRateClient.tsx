@@ -11,7 +11,11 @@ import { formatCurrency } from "@/lib/format";
 import { useInvoiceStore } from "@/lib/store";
 import type { CurrencyCode } from "@/types/invoice";
 
-export default function FreelanceRateClient() {
+export default function FreelanceRateClient({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   const router = useRouter();
   const [currency, setCurrency] = useState<CurrencyCode>("INR");
 
@@ -178,6 +182,8 @@ export default function FreelanceRateClient() {
                 </span>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  step="any"
                   min={0}
                   value={targetIncome || ""}
                   onChange={(e) => setTargetIncome(Number(e.target.value) || 0)}
@@ -205,6 +211,8 @@ export default function FreelanceRateClient() {
                 </label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  step="any"
                   min={1}
                   max={60}
                   value={billableHoursPerWeek}
@@ -222,6 +230,8 @@ export default function FreelanceRateClient() {
                 </label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  step="any"
                   min={0}
                   max={25}
                   value={vacationWeeks}
@@ -252,6 +262,8 @@ export default function FreelanceRateClient() {
                   </span>
                   <input
                     type="number"
+                    inputMode="decimal"
+                    step="any"
                     min={0}
                     value={monthlyExpenses || ""}
                     onChange={(e) => setMonthlyExpenses(Number(e.target.value) || 0)}
@@ -270,6 +282,8 @@ export default function FreelanceRateClient() {
                 <div className="relative mt-1">
                   <input
                     type="number"
+                    inputMode="decimal"
+                    step="any"
                     min={0}
                     max={60}
                     value={taxAndBufferPercent}
@@ -404,6 +418,7 @@ export default function FreelanceRateClient() {
           </div>
         </div>
       </div>
+      {children}
     </main>
   );
 }

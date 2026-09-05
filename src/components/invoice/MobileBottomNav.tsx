@@ -1,90 +1,108 @@
 "use client";
 
-import { Edit3, Eye, History, LayoutGrid } from "lucide-react";
+import {
+  Edit3,
+  Eye,
+  Download,
+  MessageCircle,
+  History,
+  LayoutGrid,
+} from "lucide-react";
 
 export function MobileBottomNav({
   activeTab,
   onTabChange,
+  onDownloadPdf,
+  onShareWhatsApp,
   onOpenSaved,
   onOpenTools,
   savedCount,
+  isPdfBusy = false,
 }: {
   activeTab: "form" | "preview";
   onTabChange: (tab: "form" | "preview") => void;
+  onDownloadPdf: () => void;
+  onShareWhatsApp: () => void;
   onOpenSaved: () => void;
   onOpenTools: () => void;
   savedCount: number;
+  isPdfBusy?: boolean;
 }) {
   return (
-    <nav className="no-print fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-slate-200/80 bg-white/95 px-2 py-1.5 backdrop-blur-lg md:hidden select-none pb-[max(0.375rem,env(safe-area-inset-bottom))]">
-      {/* 1. Edit Tab */}
-      <button
-        type="button"
-        onClick={() => onTabChange("form")}
-        className={`flex flex-1 flex-col items-center justify-center py-1 text-[11px] font-medium transition active:scale-95 ${
-          activeTab === "form"
-            ? "font-semibold text-teal-700"
-            : "text-slate-500 hover:text-slate-900"
-        }`}
-      >
-        <div
-          className={`flex h-7 w-12 items-center justify-center rounded-full transition ${
-            activeTab === "form" ? "bg-teal-50 text-teal-700" : "text-slate-500"
+    <nav
+      aria-label="Mobile Invoice Actions"
+      className="no-print fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/90 bg-white/95 px-2.5 py-2 backdrop-blur-md md:hidden select-none pb-[max(0.625rem,env(safe-area-inset-bottom))] shadow-2xl"
+    >
+      <div className="flex items-center gap-1.5">
+        {/* 1. Toggle Tab Button (Preview A4 <-> Edit Form) */}
+        <button
+          type="button"
+          onClick={() => onTabChange(activeTab === "form" ? "preview" : "form")}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border py-2.5 px-2 text-xs font-bold transition active:scale-95 h-11 ${
+            activeTab === "form"
+              ? "border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200"
+              : "border-teal-300 bg-teal-50 text-teal-900 hover:bg-teal-100"
           }`}
         >
-          <Edit3 className="h-4 w-4" />
-        </div>
-        <span className="mt-0.5">Edit Form</span>
-      </button>
+          {activeTab === "form" ? (
+            <>
+              <Eye className="h-4 w-4 text-teal-700 shrink-0" />
+              <span className="truncate">Preview A4</span>
+            </>
+          ) : (
+            <>
+              <Edit3 className="h-4 w-4 text-teal-700 shrink-0" />
+              <span className="truncate">Edit Form</span>
+            </>
+          )}
+        </button>
 
-      {/* 2. Preview Tab */}
-      <button
-        type="button"
-        onClick={() => onTabChange("preview")}
-        className={`flex flex-1 flex-col items-center justify-center py-1 text-[11px] font-medium transition active:scale-95 ${
-          activeTab === "preview"
-            ? "font-semibold text-teal-700"
-            : "text-slate-500 hover:text-slate-900"
-        }`}
-      >
-        <div
-          className={`flex h-7 w-12 items-center justify-center rounded-full transition ${
-            activeTab === "preview" ? "bg-teal-50 text-teal-700" : "text-slate-500"
-          }`}
+        {/* 2. Download PDF Button */}
+        <button
+          type="button"
+          onClick={onDownloadPdf}
+          disabled={isPdfBusy}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-teal-700 py-2.5 px-2 text-xs font-bold text-white shadow-xs hover:bg-teal-800 active:scale-95 transition disabled:opacity-60 h-11"
         >
-          <Eye className="h-4 w-4" />
-        </div>
-        <span className="mt-0.5">A4 Preview</span>
-      </button>
+          <Download className="h-4 w-4 shrink-0" />
+          <span className="truncate">{isPdfBusy ? "PDF…" : "Download PDF"}</span>
+        </button>
 
-      {/* 3. Saved Invoices */}
-      <button
-        type="button"
-        onClick={onOpenSaved}
-        className="relative flex flex-1 flex-col items-center justify-center py-1 text-[11px] font-medium text-slate-500 transition hover:text-slate-900 active:scale-95"
-      >
-        <div className="relative flex h-7 w-12 items-center justify-center rounded-full text-slate-500">
-          <History className="h-4 w-4" />
+        {/* 3. Share via WhatsApp Button */}
+        <button
+          type="button"
+          onClick={onShareWhatsApp}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-emerald-600 py-2.5 px-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 active:scale-95 transition h-11"
+        >
+          <MessageCircle className="h-4 w-4 shrink-0" />
+          <span className="truncate">WhatsApp</span>
+        </button>
+
+        {/* 4. Saved Invoices Drawer Trigger */}
+        <button
+          type="button"
+          onClick={onOpenSaved}
+          title="Saved Invoices History"
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 active:scale-95 transition"
+        >
+          <History className="h-4.5 w-4.5" />
           {savedCount > 0 ? (
-            <span className="absolute right-2 top-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-teal-700 px-1 text-[9px] font-bold text-white shadow-xs">
+            <span className="absolute -top-1 -right-1 flex h-4.5 min-w-[1.125rem] items-center justify-center rounded-full bg-teal-700 px-1 text-[10px] font-bold text-white shadow-xs">
               {savedCount}
             </span>
           ) : null}
-        </div>
-        <span className="mt-0.5">Saved</span>
-      </button>
+        </button>
 
-      {/* 4. Tools Sheet */}
-      <button
-        type="button"
-        onClick={onOpenTools}
-        className="flex flex-1 flex-col items-center justify-center py-1 text-[11px] font-medium text-slate-500 transition hover:text-slate-900 active:scale-95"
-      >
-        <div className="flex h-7 w-12 items-center justify-center rounded-full text-slate-500">
-          <LayoutGrid className="h-4 w-4" />
-        </div>
-        <span className="mt-0.5">Tools</span>
-      </button>
+        {/* 5. Tools Sheet Trigger */}
+        <button
+          type="button"
+          onClick={onOpenTools}
+          title="All Tools & Utilities"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 active:scale-95 transition"
+        >
+          <LayoutGrid className="h-4.5 w-4.5" />
+        </button>
+      </div>
     </nav>
   );
 }

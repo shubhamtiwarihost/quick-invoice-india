@@ -1,144 +1,83 @@
-"use client";
+import type { Metadata } from "next";
+import GstCalculatorClient from "./GstCalculatorClient";
+import { GstCalculatorGuide, GST_CALC_FAQS } from "@/components/calculator/GstCalculatorGuide";
 
-import { useMemo, useState } from "react";
-import { formatCurrency } from "@/lib/format";
-import { numberToWordsIndian } from "@/lib/numberToWordsIndian";
-import { round2 } from "@/lib/gstEngine";
-
-const RATES = [0, 5, 12, 18, 28];
+export const metadata: Metadata = {
+  title: "GST Calculator Online (Inclusive & Exclusive) — SwiftGST",
+  description:
+    "Fast online GST calculator for Indian businesses. Calculate inclusive and exclusive GST for 0%, 5%, 12%, 18%, and 28% slabs with CGST, SGST, and IGST breakdown.",
+  keywords: [
+    "GST calculator India",
+    "reverse GST calculator",
+    "inclusive GST formula",
+    "exclusive GST calculator",
+    "CGST SGST calculator",
+    "18% GST calculator",
+    "GST amount calculation online",
+  ],
+  alternates: {
+    canonical: "https://swiftgst.in/gst-calculator/",
+  },
+  openGraph: {
+    title: "GST Calculator Online (Inclusive & Exclusive) — SwiftGST",
+    description:
+      "Calculate GST inclusive and exclusive amounts with CGST, SGST, and IGST breakdowns for 5%, 12%, 18%, and 28% tax slabs.",
+    url: "https://swiftgst.in/gst-calculator/",
+    siteName: "SwiftGST",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GST Calculator Online — SwiftGST",
+    description:
+      "Free GST calculator with inclusive/exclusive modes, tax slab buttons, and intra/inter-state split.",
+  },
+};
 
 export default function GstCalculatorPage() {
-  const [mode, setMode] = useState<"forward" | "reverse">("forward");
-  const [amount, setAmount] = useState(10000);
-  const [rate, setRate] = useState(18);
-  const [supply, setSupply] = useState<"intra" | "inter">("intra");
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "SwiftGST GST Calculator",
+    operatingSystem: "All (Web Browser)",
+    applicationCategory: "BusinessApplication",
+    url: "https://swiftgst.in/gst-calculator/",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "INR",
+    },
+    description:
+      "Free forward and reverse GST calculator with intra/inter-state splits for 0%, 5%, 12%, 18%, and 28% slabs.",
+  };
 
-  const result = useMemo(() => {
-    const r = rate / 100;
-    let taxable = 0;
-    let tax = 0;
-    let total = 0;
-    if (mode === "forward") {
-      taxable = round2(amount);
-      tax = round2(taxable * r);
-      total = round2(taxable + tax);
-    } else {
-      total = round2(amount);
-      taxable = round2(total / (1 + r));
-      tax = round2(total - taxable);
-    }
-    const cgst = supply === "intra" ? round2(tax / 2) : 0;
-    const sgst = supply === "intra" ? round2(tax - cgst) : 0;
-    const igst = supply === "inter" ? tax : 0;
-    return { taxable, tax, total, cgst, sgst, igst };
-  }, [amount, rate, mode, supply]);
+  const jsonLdFaq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: GST_CALC_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: typeof faq.answer === "string" ? faq.answer : faq.question,
+      },
+    })),
+  };
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
-      <h1 className="text-2xl font-semibold">GST calculator</h1>
-      <p className="mt-1 text-sm text-slate-500">
-        Forward (exclusive) or reverse (inclusive) GST with intra / inter-state split.
-      </p>
-
-      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
-        <div className="flex gap-2">
-          <Toggle active={mode === "forward"} onClick={() => setMode("forward")}>
-            Exclusive → add GST
-          </Toggle>
-          <Toggle active={mode === "reverse"} onClick={() => setMode("reverse")}>
-            Inclusive → remove GST
-          </Toggle>
-        </div>
-
-        <label className="mt-4 block text-sm">
-          <span className="text-xs font-medium text-slate-500">
-            {mode === "forward" ? "Taxable amount (₹)" : "Amount including GST (₹)"}
-          </span>
-          <input
-            type="number"
-            min={0}
-            value={amount === 0 ? "" : amount}
-            placeholder="0"
-            onChange={(e) => {
-              const v = e.target.value;
-              setAmount(v === "" ? 0 : Number(v));
-            }}
-            className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 outline-none focus:border-teal-600"
-          />
-        </label>
-
-        <p className="mt-4 text-xs font-medium text-slate-500">GST rate</p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {RATES.map((r) => (
-            <button
-              key={r}
-              type="button"
-              onClick={() => setRate(r)}
-              className={`rounded-full px-3 py-1 text-sm ${
-                rate === r ? "bg-teal-700 text-white" : "bg-slate-100"
-              }`}
-            >
-              {r}%
-            </button>
-          ))}
-        </div>
-
-        <p className="mt-4 text-xs font-medium text-slate-500">Supply type</p>
-        <div className="mt-2 flex gap-2">
-          <Toggle active={supply === "intra"} onClick={() => setSupply("intra")}>
-            Intra-state (CGST + SGST)
-          </Toggle>
-          <Toggle active={supply === "inter"} onClick={() => setSupply("inter")}>
-            Inter-state (IGST)
-          </Toggle>
-        </div>
-      </div>
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <Card label="Taxable value" value={result.taxable} />
-        {supply === "intra" ? (
-          <>
-            <Card label={`CGST ${rate / 2}%`} value={result.cgst} />
-            <Card label={`SGST ${rate / 2}%`} value={result.sgst} />
-          </>
-        ) : (
-          <Card label={`IGST ${rate}%`} value={result.igst} />
-        )}
-        <Card label="Total GST" value={result.tax} />
-        <Card label="Invoice total" value={result.total} accent />
-      </div>
-      <p className="mt-4 text-sm italic text-slate-600">{numberToWordsIndian(result.total)}</p>
-    </main>
-  );
-}
-
-function Toggle({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full px-3 py-1.5 text-sm ${
-        active ? "bg-teal-700 text-white" : "bg-slate-100 text-slate-600"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function Card({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
-  return (
-    <div className={`rounded-2xl border p-4 ${accent ? "border-teal-700 bg-teal-50" : "border-slate-200 bg-white"}`}>
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="mt-1 text-xl font-semibold">{formatCurrency(value)}</p>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
+      />
+      <GstCalculatorClient>
+        <GstCalculatorGuide />
+      </GstCalculatorClient>
+    </>
   );
 }
