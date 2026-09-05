@@ -4,6 +4,8 @@ import { Geist } from "next/font/google";
 import { Footer, Navbar } from "@/components/shared/Navbar";
 import { PersistHydration } from "@/components/shared/PersistHydration";
 import { CookieConsent } from "@/components/common/CookieConsent";
+import { NativeBottomNav } from "@/components/mobile/NativeBottomNav";
+import { InstallPromptBanner } from "@/components/pwa/InstallPromptBanner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,19 +21,19 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#0f172a",
+  themeColor: "#059669",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://swiftgst.in"),
-  title: "SwiftGST - Fast & Easy GST Invoicing",
+  title: "SwiftGST - Free POS, Khata & GST Invoicing",
   description:
-    "Create GST and non-GST invoices for Indian businesses in under a minute. Live A4 preview, CGST/SGST/IGST, and PDF download — no account needed.",
+    "Free retail POS billing counter, inventory stock tracking, customer Khata ledger, and GST invoice generator. 100% offline-ready client-side PWA.",
   manifest: "/manifest.json",
   openGraph: {
-    title: "SwiftGST - Fast & Easy GST Invoicing",
+    title: "SwiftGST - Free POS, Khata & GST Invoicing",
     description:
-      "Create GST and non-GST invoices for Indian businesses in under a minute. Live A4 preview, CGST/SGST/IGST, and PDF download — no account needed.",
+      "Free retail POS billing counter, inventory stock tracking, customer Khata ledger, and GST invoice generator. 100% offline-ready client-side PWA.",
     url: "https://swiftgst.in",
     siteName: "SwiftGST",
     locale: "en_IN",
@@ -39,7 +41,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "SwiftGST",
   },
   icons: {
@@ -63,6 +65,8 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <NativeBottomNav />
+        <InstallPromptBanner />
         <CookieConsent />
       </body>
     </html>

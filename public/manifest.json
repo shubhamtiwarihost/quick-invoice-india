@@ -1,30 +1,75 @@
 {
-  "name": "SwiftGST - Fast & Easy GST Invoicing",
+  "name": "SwiftGST - Free POS & Khata",
   "short_name": "SwiftGST",
-  "description": "Fast & Easy GST Invoicing with Live A4 Preview, Instant PDF & WhatsApp Sharing",
-  "start_url": "/",
+  "description": "Fast retail POS billing, offline inventory stock tracking, customer Khata ledger & GST analytics.",
+  "start_url": "/pos",
+  "scope": "/",
+  "id": "/pos",
   "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "theme_color": "#059669",
   "background_color": "#ffffff",
+  "categories": ["business", "finance", "productivity", "utilities"],
   "icons": [
     {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "POS Billing Counter",
+      "short_name": "Counter",
+      "url": "/pos",
+      "description": "Open high-speed retail checkout counter",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Inventory & Stock",
+      "short_name": "Inventory",
+      "url": "/inventory",
+      "description": "Manage products, barcodes, and stock levels",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Customer Khata CRM",
+      "short_name": "Khata",
+      "url": "/customers",
+      "description": "View customer Udhaar balances and WhatsApp reminders",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Business Reports",
+      "short_name": "Reports",
+      "url": "/analytics",
+      "description": "View daily sales pulse and GSTR-1 reports",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
