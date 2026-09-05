@@ -13,6 +13,7 @@ import {
   BookOpen,
   Mail,
   Lock,
+  Users,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -50,7 +51,8 @@ export default function AboutUsPage() {
       "Free, private, browser-based GST compliance and invoicing tools for Indian small businesses, freelancers, and enterprises.",
     founder: {
       "@type": "Person",
-      name: "SwiftGST Engineering & Tax Research Team",
+      name: "Shubham Tiwari",
+      jobTitle: "Founder & Lead Architect",
     },
     foundingDate: "2024",
     address: {
@@ -112,6 +114,35 @@ export default function AboutUsPage() {
               By leveraging modern client-side web technologies, SwiftGST executes all calculations, PDF document generation, and UPI payment
               QR codes directly inside your browser without transmitting your sensitive client records to any server.
             </p>
+          </div>
+        </section>
+
+        {/* Founder & Leadership */}
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 md:p-10 shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 border border-teal-100 text-teal-700 shadow-2xs">
+              <Users className="h-5 w-5" />
+            </span>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">Founder &amp; Leadership</h2>
+              <p className="text-xs text-slate-500">Dedicated to India&apos;s independent business &amp; freelance community</p>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 rounded-2xl border border-slate-100 bg-slate-50/80 p-5 sm:p-6">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-teal-700 text-xl font-bold text-white shadow-md select-none">
+              ST
+            </div>
+            <div className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-lg font-bold text-slate-900">Shubham Tiwari</h3>
+                <span className="rounded-full bg-teal-100 border border-teal-200 px-2.5 py-0.5 text-xs font-semibold text-teal-800">
+                  Founder &amp; Lead Architect
+                </span>
+              </div>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Shubham Tiwari founded SwiftGST with the objective of eliminating friction in Indian commercial invoicing and GST compliance. Recognizing the privacy risks, subscription costs, and unsolicited telemarketing common with legacy accounting platforms, he built SwiftGST as an open, client-side web suite where calculations, invoice generation, and tax filing utilities run directly in the browser with zero data harvesting.
+              </p>
+            </div>
           </div>
         </section>
 

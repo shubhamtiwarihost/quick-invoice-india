@@ -68,6 +68,10 @@ export default function HomePage() {
     logo: "https://swiftgst.in/icon.svg",
     description:
       "Free, private, browser-based GST compliance and invoicing tools for Indian businesses.",
+    founder: {
+      "@type": "Person",
+      name: "Shubham Tiwari",
+    },
   };
 
   const jsonLdFaq = {
