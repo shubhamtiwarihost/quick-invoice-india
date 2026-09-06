@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Geist } from "next/font/google";
 import { PersistHydration } from "@/components/shared/PersistHydration";
+import { PageViewTracker } from "@/components/shared/PageViewTracker";
 import { CookieConsent } from "@/components/common/CookieConsent";
 import { InstallPromptBanner } from "@/components/pwa/InstallPromptBanner";
 import { AppLayoutManager } from "@/components/layout/AppLayoutManager";
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-slate-100 font-sans text-slate-900">
         <AuthProvider>
           <PersistHydration />
+          <PageViewTracker />
           <AppLayoutManager>{children}</AppLayoutManager>
           <InstallPromptBanner />
           <CookieConsent />

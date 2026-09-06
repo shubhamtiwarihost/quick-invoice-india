@@ -9,20 +9,6 @@ import { BackOfficeShell } from "@/components/layout/BackOfficeShell";
 export function AppLayoutManager({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Automatic non-blocking page view tracking
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (pathname.startsWith("/admin")) return;
-
-    import("@/lib/tracker")
-      .then(({ trackEvent }) => {
-        trackEvent("PAGE_VIEW", "website", {
-          path: pathname,
-          referrer: document.referrer || "direct",
-        });
-      })
-      .catch(() => {});
-  }, [pathname]);
 
   // 1. Fullscreen POS Terminal Mode
   const isPos = pathname === "/pos" || pathname.startsWith("/pos/");

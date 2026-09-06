@@ -253,13 +253,13 @@ export default function SuperAdminPage() {
         <main className="flex-1 p-4 sm:p-8 max-w-[1600px] w-full mx-auto space-y-6">
           {/* Top Metrics Row */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {/* Today's Unique Visitors */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl flex flex-col justify-between">
+            {/* Card 1: Today's Unique Visitors */}
+            <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-slate-900/90 to-slate-900/60 p-5 shadow-xl shadow-indigo-950/20 flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Today&apos;s Visitors
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-300">
+                  Today&apos;s Unique Visitors
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
                   <Users className="h-5 w-5" />
                 </div>
               </div>
@@ -267,20 +267,20 @@ export default function SuperAdminPage() {
                 <div className="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
                   {metrics.todayUniqueVisitors.toLocaleString()}
                 </div>
-                <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
+                <div className="mt-1 flex items-center gap-1.5 text-xs text-indigo-200/70">
                   <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                  <span>Unique IP Visitors Today</span>
+                  <span>Live unique IP visitors</span>
                 </div>
               </div>
             </div>
 
-            {/* Today's Page Hits */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl flex flex-col justify-between">
+            {/* Card 2: Today's Page Views / Hits */}
+            <div className="rounded-2xl border border-sky-500/30 bg-gradient-to-br from-sky-950/40 via-slate-900/90 to-slate-900/60 p-5 shadow-xl shadow-sky-950/20 flex flex-col justify-between">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Today&apos;s Hits
+                <span className="text-xs font-bold uppercase tracking-wider text-sky-300">
+                  Today&apos;s Page Views / Hits
                 </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30">
                   <Eye className="h-5 w-5" />
                 </div>
               </div>
@@ -288,9 +288,9 @@ export default function SuperAdminPage() {
                 <div className="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
                   {metrics.todayPageHits.toLocaleString()}
                 </div>
-                <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                  <span>Total Page &amp; Action Hits</span>
+                <div className="mt-1 flex items-center gap-1.5 text-xs text-sky-200/70">
+                  <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
+                  <span>Total browsing interactions</span>
                 </div>
               </div>
             </div>
