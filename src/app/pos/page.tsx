@@ -64,6 +64,7 @@ import {
 } from "@/lib/db/posDb";
 import dynamic from "next/dynamic";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { trackEvent } from "@/lib/tracker";
 import { PosComplianceGuide } from "@/components/pos/PosComplianceGuide";
 import type { BusinessInfo } from "@/components/pos/ThermalReceipt";
 
@@ -756,17 +757,14 @@ export default function PosCounterPage() {
       setIsReceiptModalOpen(true);
 
       // Telemetry tracking
-      fetch("/api/track.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user?.id || null,
-          storeName: user?.businessName || storeSettings.businessName,
-          event_type: "POS_SALE_COMPLETED",
-          feature: "pos_counter",
-          details: { billAmount: grandTotal, itemCount: cart.length, paymentMode },
-        }),
-      }).catch(() => {});
+      trackEvent(
+        "POS_SALE_COMPLETED",
+        "pos_counter",
+        { grandTotal, itemsCount: cart.length, paymentMode },
+        user
+          ? { id: user.id, businessName: user.businessName }
+          : { businessName: storeSettings.businessName }
+      );
 
       // 3. Clear cart and reload stock & customers in background
       clearCart();

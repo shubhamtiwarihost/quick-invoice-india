@@ -39,6 +39,7 @@ const MobileToolsSheet = dynamic(
 );
 import { formatCurrency, formatDateIN } from "@/lib/format";
 import { computeInvoice } from "@/lib/gstEngine";
+import { trackEvent } from "@/lib/tracker";
 import {
   getSavedInvoices,
   SAVED_INVOICES_EVENT,
@@ -218,15 +219,12 @@ export function InvoiceWorkspace({
       showToast(`Downloaded PDF and saved ${draft.meta.invoiceNo} to history!`);
 
       // Telemetry tracking
-      fetch("/api/track.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          event_type: "INVOICE_GENERATED",
-          feature: "public_invoice",
-          details: { totalAmount: summary.grandTotal, template: draft.config.template },
-        }),
-      }).catch(() => {});
+      trackEvent("INVOICE_GENERATED", "public_invoice", {
+        grandTotal: summary.grandTotal,
+        clientName: draft.client.name,
+        template: draft.config.template,
+        action: "pdf_download",
+      });
     } catch (err) {
       console.error("PDF generation failed:", err);
       showToast("Failed to generate PDF. Please try again or use Print.");
@@ -353,7 +351,15 @@ export function InvoiceWorkspace({
           </button>
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={() => {
+              trackEvent("INVOICE_GENERATED", "public_invoice", {
+                grandTotal: summary.grandTotal,
+                clientName: draft.client.name,
+                template: draft.config.template,
+                action: "print",
+              });
+              window.print();
+            }}
             className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium hover:bg-slate-50 active:scale-95"
           >
             <Printer className="h-3.5 w-3.5" />

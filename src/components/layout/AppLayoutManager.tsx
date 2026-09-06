@@ -38,6 +38,12 @@ export function AppLayoutManager({ children }: { children: React.ReactNode }) {
     return <main className="min-h-screen bg-slate-100">{children}</main>;
   }
 
+  // 4. Super Admin Dashboard Mode
+  const isAdmin = pathname === "/admin" || pathname.startsWith("/admin/");
+  if (isAdmin) {
+    return <main className="min-h-screen bg-slate-950 text-slate-100">{children}</main>;
+  }
+
   // 4. Public Website & Standalone Tools (/, /about-us, /contact-us, /gst-calculator, etc.)
   return (
     <>

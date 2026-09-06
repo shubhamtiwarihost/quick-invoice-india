@@ -3,6 +3,11 @@
  * Non-blocking client-side telemetry to /api/track.php
  */
 
+export interface TrackerUser {
+  id?: string | null;
+  businessName?: string | null;
+}
+
 export interface TrackPayload {
   userId?: string | null;
   storeName?: string | null;
@@ -11,26 +16,29 @@ export interface TrackPayload {
   details?: Record<string, unknown> | null;
 }
 
-export function trackActivity(
+export function trackEvent(
   eventType: string,
   feature: string = "general",
-  details?: Record<string, unknown>
+  details: Record<string, unknown> = {},
+  user?: TrackerUser | null
 ): void {
   if (typeof window === "undefined") return;
 
   try {
-    let userId: string | null = null;
-    let storeName: string | null = null;
+    let userId: string | null = user?.id || null;
+    let storeName: string | null = user?.businessName || null;
 
-    try {
-      const storedUser = localStorage.getItem("swiftpos_auth_user");
-      if (storedUser) {
-        const parsed = JSON.parse(storedUser);
-        userId = parsed.id || null;
-        storeName = parsed.businessName || null;
+    if (!userId || !storeName) {
+      try {
+        const storedUser = localStorage.getItem("swiftpos_auth_user");
+        if (storedUser) {
+          const parsed = JSON.parse(storedUser);
+          if (!userId) userId = parsed.id || null;
+          if (!storeName) storeName = parsed.businessName || null;
+        }
+      } catch {
+        // ignore storage parse errors
       }
-    } catch {
-      // ignore storage parse errors
     }
 
     const payload: TrackPayload = {
@@ -38,7 +46,7 @@ export function trackActivity(
       storeName,
       event_type: eventType,
       feature,
-      details: details || null,
+      details: Object.keys(details).length > 0 ? details : null,
     };
 
     const body = JSON.stringify(payload);
@@ -58,3 +66,5 @@ export function trackActivity(
     // Analytics failures must never interfere with core app functions
   }
 }
+
+export const trackActivity = trackEvent;
