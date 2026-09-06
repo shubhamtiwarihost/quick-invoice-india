@@ -18,7 +18,7 @@ $dbHost = getenv('DB_HOST') ?: 'localhost';
 $dbPort = intval(getenv('DB_PORT') ?: 3306);
 $dbName = getenv('DB_NAME') ?: 'u932835494_alpha';
 $dbUser = getenv('DB_USER') ?: 'u932835494_alpha';
-$dbPass = getenv('DB_PASS') ?: 'shubham@12aaAA12';
+$dbPass = getenv('DB_PASS') ?: 'SwiftGST@2026#Secure';
 
 // Optional: Override via .env file if present
 $envFile = __DIR__ . '/../.env';
