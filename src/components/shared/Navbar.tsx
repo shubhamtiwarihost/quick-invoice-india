@@ -369,15 +369,19 @@ export function Navbar() {
             <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
               <Link
                 href="/login"
-                className="rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition"
+                className="rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition whitespace-nowrap"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
-                className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 active:scale-95 transition"
+                title="Includes Stock Inventory & POS"
+                className="inline-flex flex-col items-center justify-center rounded-xl bg-emerald-600 px-3.5 py-1.5 text-center text-white shadow-xs hover:bg-emerald-700 active:scale-95 transition whitespace-nowrap"
               >
-                Get Started Free
+                <span className="text-xs font-bold leading-tight">Start Free Billing &amp; Khata</span>
+                <span className="hidden xl:inline text-[9px] font-medium text-emerald-100/90 leading-none mt-0.5">
+                  Includes Stock Inventory &amp; POS
+                </span>
               </Link>
             </div>
           )}
@@ -459,9 +463,13 @@ export function Navbar() {
               <Link
                 href="/register"
                 onClick={closeAllMenus}
-                className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-center text-xs font-bold text-white shadow-2xs hover:bg-emerald-700"
+                title="Includes Stock Inventory & POS"
+                className="flex-1 rounded-xl bg-emerald-600 py-2 px-2 text-center text-white shadow-2xs hover:bg-emerald-700 flex flex-col items-center justify-center"
               >
-                Get Started Free
+                <span className="text-xs font-bold leading-tight">Start Free Billing &amp; Khata</span>
+                <span className="text-[9px] font-medium text-emerald-100/90 leading-none mt-0.5">
+                  Includes Stock &amp; POS
+                </span>
               </Link>
             </div>
           )}

@@ -130,9 +130,9 @@ export default function RegisterPage() {
 
         {/* Onboarding Header */}
         <div className="mb-6 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-teal-50 border border-teal-200/80 px-3.5 py-1 text-xs font-semibold text-teal-800 shadow-2xs">
-            <Zap className="h-3.5 w-3.5 text-teal-600" />
-            <span>Instant Store Onboarding &bull; Setup in 60s</span>
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 text-xs font-semibold text-emerald-800 shadow-2xs">
+            <Zap className="h-3.5 w-3.5 text-emerald-600" />
+            <span>Free Store Setup &bull; Billing, Stock &amp; Khata in 60s</span>
           </div>
           <h1 className="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             Create Your Free Store Account
@@ -291,7 +291,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 rounded-2xl bg-teal-700 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-teal-700/25 transition active:scale-[0.98] hover:bg-teal-800 disabled:opacity-70"
+                className="w-full flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-600/25 transition active:scale-[0.98] disabled:opacity-70"
               >
                 {loading ? (
                   <>
@@ -300,7 +300,7 @@ export default function RegisterPage() {
                   </>
                 ) : (
                   <>
-                    <span>Start POS Billing Now</span>
+                    <span>Start Free Billing &amp; Khata</span>
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
