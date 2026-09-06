@@ -62,9 +62,18 @@ import {
   type Shift,
   type HeldTicket,
 } from "@/lib/db/posDb";
+import dynamic from "next/dynamic";
 import { PosComplianceGuide } from "@/components/pos/PosComplianceGuide";
-import { ThermalReceipt, type BusinessInfo } from "@/components/pos/ThermalReceipt";
-import { ZReportReceipt } from "@/components/pos/ZReportReceipt";
+import type { BusinessInfo } from "@/components/pos/ThermalReceipt";
+
+const ThermalReceipt = dynamic(
+  () => import("@/components/pos/ThermalReceipt").then((mod) => mod.ThermalReceipt),
+  { ssr: false }
+);
+const ZReportReceipt = dynamic(
+  () => import("@/components/pos/ZReportReceipt").then((mod) => mod.ZReportReceipt),
+  { ssr: false }
+);
 
 const DEFAULT_STORE: BusinessInfo = {
   businessName: "Swift Retail Store",

@@ -11,12 +11,32 @@ import {
   Save,
   Sparkles,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { InvoiceForm } from "@/components/invoice/InvoiceForm";
 import { InvoicePreview } from "@/components/invoice/InvoicePreview";
 import { MobileBottomNav } from "@/components/invoice/MobileBottomNav";
-import { MobileToolsSheet } from "@/components/invoice/MobileToolsSheet";
-import { SavedInvoicesDrawer } from "@/components/invoice/SavedInvoicesDrawer";
-import { WhatsAppShareModal } from "@/components/invoice/WhatsAppShareModal";
+
+const SavedInvoicesDrawer = dynamic(
+  () =>
+    import("@/components/invoice/SavedInvoicesDrawer").then(
+      (mod) => mod.SavedInvoicesDrawer
+    ),
+  { ssr: false }
+);
+const WhatsAppShareModal = dynamic(
+  () =>
+    import("@/components/invoice/WhatsAppShareModal").then(
+      (mod) => mod.WhatsAppShareModal
+    ),
+  { ssr: false }
+);
+const MobileToolsSheet = dynamic(
+  () =>
+    import("@/components/invoice/MobileToolsSheet").then(
+      (mod) => mod.MobileToolsSheet
+    ),
+  { ssr: false }
+);
 import { formatCurrency, formatDateIN } from "@/lib/format";
 import { computeInvoice } from "@/lib/gstEngine";
 import {
@@ -115,8 +135,60 @@ export function InvoiceWorkspace({
 
   if (!store.hydrated) {
     return (
-      <div className="flex flex-1 items-center justify-center text-sm text-slate-500">
-        Loading your draft…
+      <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col pb-16 md:pb-0 min-h-[850px]">
+        {/* Placeholder Top Action Bar */}
+        <div className="no-print flex items-center justify-between border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 py-2 sm:py-3 h-[57px]">
+          <div className="h-5 w-48 rounded-md bg-slate-100 animate-pulse" />
+          <div className="hidden sm:flex items-center gap-2">
+            <div className="h-8 w-24 rounded-lg bg-slate-100 animate-pulse" />
+            <div className="h-8 w-28 rounded-lg bg-teal-50 animate-pulse" />
+          </div>
+        </div>
+
+        {/* Placeholder Privacy Banner */}
+        <div className="no-print border-b border-emerald-200/70 bg-emerald-50/90 px-3.5 sm:px-4 lg:px-8 py-1 sm:py-2 h-[38px] flex items-center justify-between">
+          <div className="h-3.5 w-64 rounded bg-emerald-200/60 animate-pulse" />
+          <div className="hidden sm:block h-3.5 w-48 rounded bg-emerald-200/60 animate-pulse" />
+        </div>
+
+        {/* Placeholder Workspace Grid */}
+        <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1 min-h-[750px]">
+          {/* Left Editor Skeleton (46%) */}
+          <div className="no-print w-full lg:w-[46%] shrink-0 min-h-[600px] rounded-2xl border border-slate-200 bg-white p-5 space-y-4 animate-pulse">
+            <div className="h-6 w-1/3 bg-slate-100 rounded-md" />
+            <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+            <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+            <div className="h-28 w-full bg-slate-50 rounded-xl border border-slate-100" />
+            <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
+          </div>
+
+          {/* Right Preview Skeleton (54%) */}
+          <div className="invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 min-h-[600px] flex justify-center">
+            <div className="w-full flex justify-center min-h-[600px]">
+              <div className="bg-white shadow-xl rounded-sm w-[794px] lg:w-full lg:max-w-[820px] aspect-[1/1.414] min-h-[600px] border border-slate-200/60 p-8 flex flex-col justify-between animate-pulse">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <div className="h-6 w-36 bg-slate-100 rounded" />
+                    <div className="h-3 w-48 bg-slate-100 rounded" />
+                  </div>
+                  <div className="h-8 w-28 bg-slate-100 rounded" />
+                </div>
+                <div className="h-32 bg-slate-50 rounded-lg border border-slate-100" />
+                <div className="flex justify-between items-end">
+                  <div className="h-16 w-32 bg-slate-50 rounded" />
+                  <div className="h-16 w-32 bg-slate-50 rounded" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Rich SEO & Industry Content Below Workspace Fold */}
+        {childrenBelowWorkspace ? (
+          <div className="no-print w-full my-12 border-t border-slate-200 pt-10">
+            {childrenBelowWorkspace}
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -322,20 +394,20 @@ export function InvoiceWorkspace({
       </div>
 
       {/* Workspace Grid */}
-      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1">
+      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1 min-h-[750px]">
         {/* Left Editor Panel (46%) */}
         <aside
-          className={`no-print w-full lg:w-[46%] shrink-0 pb-28 lg:pb-0 ${tab === "form" ? "block" : "hidden"} lg:block`}
+          className={`no-print w-full lg:w-[46%] shrink-0 pb-28 lg:pb-0 min-h-[600px] ${tab === "form" ? "block" : "hidden"} lg:block`}
         >
           <InvoiceForm grandTotal={summary.grandTotal} />
         </aside>
 
         {/* Right Preview Panel (54%) */}
         <section
-          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center ${tab === "preview" ? "block" : "hidden"} lg:block`}
+          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center min-h-[600px] ${tab === "preview" ? "block" : "hidden"} lg:block`}
         >
-          <div className="sticky top-6 flex justify-center w-full print:static will-change-transform transform-gpu">
-            <div className="invoice-scale w-full flex justify-center">
+          <div className="sticky top-6 flex justify-center w-full print:static will-change-transform transform-gpu min-h-[600px]">
+            <div className="invoice-scale w-full flex justify-center min-h-[600px]">
               <InvoicePreview draft={draft} summary={summary} />
             </div>
           </div>

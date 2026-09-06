@@ -35,10 +35,10 @@ export function QuotationPreview({
   }, [upi, payee, total, quoteNo]);
 
   return (
-    <div className="invoice-print-root flex justify-center w-full">
+    <div className="invoice-print-root flex justify-center w-full min-h-[600px]">
       <div
         id="quotation-a4"
-        className="invoice-a4 origin-top bg-white shadow-2xl rounded-sm text-slate-800 w-[794px] lg:w-full lg:max-w-[820px] aspect-[1/1.414]"
+        className="invoice-a4 origin-top bg-white shadow-2xl rounded-sm text-slate-800 w-[794px] lg:w-full lg:max-w-[820px] aspect-[1/1.414] min-h-[600px]"
         style={{ padding: "32px 36px" }}
       >
         {/* Top Accent Strip */}

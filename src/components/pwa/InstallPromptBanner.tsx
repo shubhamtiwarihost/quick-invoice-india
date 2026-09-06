@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { Download, X, Zap, ShieldCheck, WifiOff } from "lucide-react";
 
@@ -77,14 +78,14 @@ export function InstallPromptBanner() {
     sessionStorage.setItem("swiftgst_pwa_dismissed", "true");
   }
 
-  if (!isVisible || !deferredPrompt) {
+  if (!isVisible || !deferredPrompt || typeof document === "undefined") {
     return null;
   }
 
-  return (
+  return createPortal(
     <aside
       aria-label="Install App Prompt"
-      className="no-print fixed bottom-20 left-3 right-3 z-50 mx-auto max-w-md rounded-2xl border border-emerald-200/80 bg-white/95 p-4 shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-5 duration-200 md:bottom-6 md:left-auto md:right-6 md:w-96 select-none will-change-transform transform-gpu"
+      className="no-print fixed bottom-4 right-4 left-4 sm:left-auto z-50 max-w-md sm:w-96 rounded-2xl border border-emerald-200/80 bg-white/95 p-4 shadow-2xl backdrop-blur-md select-none will-change-transform transform-gpu animate-in fade-in duration-200"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -160,6 +161,7 @@ export function InstallPromptBanner() {
           Not Now
         </button>
       </div>
-    </aside>
+    </aside>,
+    document.body
   );
 }

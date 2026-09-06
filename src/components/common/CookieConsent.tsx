@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { ShieldCheck, X } from "lucide-react";
 
@@ -31,7 +32,7 @@ export function CookieConsent() {
   }, []);
 
   // If not mounted yet, consent is already recorded, or user dismissed in current session, do not render
-  if (!mounted || storedConsent || dismissed) {
+  if (!mounted || storedConsent || dismissed || typeof document === "undefined") {
     return null;
   }
 
@@ -53,11 +54,11 @@ export function CookieConsent() {
     setDismissed(true);
   }
 
-  return (
+  return createPortal(
     <aside
       aria-label="Cookie and privacy consent banner"
       role="dialog"
-      className="no-print fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-50 rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300 select-none will-change-transform transform-gpu"
+      className="no-print fixed bottom-4 right-4 left-4 sm:left-auto z-50 max-w-md rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 shadow-2xl select-none will-change-transform transform-gpu animate-in fade-in duration-200"
     >
       <div className="flex items-start justify-between gap-2.5">
         <div className="flex items-center gap-2">
@@ -110,6 +111,7 @@ export function CookieConsent() {
           </button>
         </div>
       </div>
-    </aside>
+    </aside>,
+    document.body
   );
 }
