@@ -1,17 +1,26 @@
 <?php
 /**
  * Database connection setup for SwiftGST / Quick Invoice India
- * Compatible with Apache & Hostinger MySQL
+ * Connected to Hostinger MySQL Database (u932835494_alpha)
  */
 
-// Read configuration from environment variables or .env file
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+// Default Hostinger Database Credentials
 $dbHost = getenv('DB_HOST') ?: 'localhost';
 $dbPort = intval(getenv('DB_PORT') ?: 3306);
-$dbName = getenv('DB_NAME') ?: '';
-$dbUser = getenv('DB_USER') ?: '';
-$dbPass = getenv('DB_PASS') ?: '';
+$dbName = getenv('DB_NAME') ?: 'u932835494_alpha';
+$dbUser = getenv('DB_USER') ?: 'u932835494_alpha';
+$dbPass = getenv('DB_PASS') ?: 'shubham@12aaAA12';
 
-// Check .env file in public parent or project root
+// Optional: Override via .env file if present
 $envFile = __DIR__ . '/../.env';
 if (!file_exists($envFile)) {
     $envFile = dirname(__DIR__, 2) . '/.env';
@@ -26,23 +35,13 @@ if (file_exists($envFile)) {
         if ($k && $v !== null) {
             $k = trim($k);
             $v = trim(trim($v), '"\'');
-            if ($k === 'DB_HOST' && empty(getenv('DB_HOST'))) $dbHost = $v;
-            if ($k === 'DB_PORT' && empty(getenv('DB_PORT'))) $dbPort = intval($v);
-            if ($k === 'DB_NAME' && empty(getenv('DB_NAME'))) $dbName = $v;
-            if ($k === 'DB_USER' && empty(getenv('DB_USER'))) $dbUser = $v;
-            if ($k === 'DB_PASS' && empty(getenv('DB_PASS'))) $dbPass = $v;
+            if ($k === 'DB_HOST' && !empty($v)) $dbHost = $v;
+            if ($k === 'DB_PORT' && !empty($v)) $dbPort = intval($v);
+            if ($k === 'DB_NAME' && !empty($v)) $dbName = $v;
+            if ($k === 'DB_USER' && !empty($v)) $dbUser = $v;
+            if ($k === 'DB_PASS' && !empty($v)) $dbPass = $v;
         }
     }
-}
-
-if (empty($dbName) || empty($dbUser)) {
-    // If not configured yet, return clear error response
-    http_response_code(500);
-    echo json_encode([
-        "status" => "error",
-        "message" => "Database credentials not configured. Please set DB_NAME, DB_USER, and DB_PASS in your .env file."
-    ]);
-    exit;
 }
 
 $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4";
@@ -54,11 +53,39 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
+
+    // Auto-create users and user_sessions tables if they don't exist yet
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS users (
+            id VARCHAR(32) PRIMARY KEY,
+            business_name VARCHAR(191) NOT NULL,
+            owner_name VARCHAR(191) DEFAULT '',
+            email VARCHAR(191) NOT NULL UNIQUE,
+            phone VARCHAR(32) DEFAULT '',
+            password_hash VARCHAR(255) NOT NULL,
+            store_type VARCHAR(64) DEFAULT 'retail',
+            cashier_pin VARCHAR(10) DEFAULT '1234',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+        CREATE TABLE IF NOT EXISTS user_sessions (
+            id VARCHAR(32) PRIMARY KEY,
+            user_id VARCHAR(32) NOT NULL,
+            token VARCHAR(64) NOT NULL UNIQUE,
+            expires_at DATETIME NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_user_sessions_token (token),
+            INDEX idx_user_sessions_user_id (user_id),
+            CONSTRAINT fk_sessions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ");
+
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode([
         "status" => "error",
-        "message" => "Database connection failed. Please verify your database settings."
+        "message" => "Database connection failed: " . $e->getMessage()
     ]);
     exit;
 }
