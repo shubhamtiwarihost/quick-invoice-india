@@ -11,6 +11,9 @@
   # Route /api/auth directly to api/auth.php on Apache/Hostinger
   RewriteRule ^api/auth/?$ api/auth.php [L,QSA]
 
+  # Route /api/track directly to api/track.php on Apache/Hostinger
+  RewriteRule ^api/track/?$ api/track.php [L,QSA]
+
   # Allow direct access to existing files and directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d

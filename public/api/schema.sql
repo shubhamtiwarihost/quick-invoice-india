@@ -24,3 +24,18 @@ CREATE TABLE IF NOT EXISTS user_sessions (
     INDEX idx_user_sessions_user_id (user_id),
     CONSTRAINT fk_sessions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS activity_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(32) DEFAULT NULL,
+    store_name VARCHAR(191) DEFAULT NULL,
+    event_type VARCHAR(64) NOT NULL,
+    feature_used VARCHAR(64) DEFAULT 'general',
+    details_json TEXT DEFAULT NULL,
+    ip_address VARCHAR(45) DEFAULT '',
+    user_agent VARCHAR(255) DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_activity_logs_user_id (user_id),
+    INDEX idx_activity_logs_event_type (event_type),
+    INDEX idx_activity_logs_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
