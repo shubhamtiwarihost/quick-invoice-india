@@ -52,7 +52,17 @@ $options = [
 ];
 
 try {
-    $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
+    try {
+        $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
+    } catch (PDOException $connErr) {
+        // Fallback: On some Hostinger nodes, TCP 127.0.0.1 is required instead of localhost socket
+        if ($dbHost === 'localhost') {
+            $tcpDsn = "mysql:host=127.0.0.1;port={$dbPort};dbname={$dbName};charset=utf8mb4";
+            $pdo = new PDO($tcpDsn, $dbUser, $dbPass, $options);
+        } else {
+            throw $connErr;
+        }
+    }
 
     // Auto-create users and user_sessions tables if they don't exist yet
     $pdo->exec("
