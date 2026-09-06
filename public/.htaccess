@@ -2,8 +2,14 @@
   RewriteEngine On
   RewriteBase /
 
+  # Pass Authorization Header to PHP on Apache / Hostinger
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
   # Route /api/contact directly to api/contact.php on Apache/Hostinger
   RewriteRule ^api/contact/?$ api/contact.php [L,QSA]
+
+  # Route /api/auth directly to api/auth.php on Apache/Hostinger
+  RewriteRule ^api/auth/?$ api/auth.php [L,QSA]
 
   # Allow direct access to existing files and directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]

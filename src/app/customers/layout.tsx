@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
   title: "Free Customer Khata & Loyalty CRM (Udhaar Ledger & WhatsApp Reminders) — SwiftGST",
@@ -35,5 +36,5 @@ export const metadata: Metadata = {
 };
 
 export default function CustomersLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return <AuthGuard>{children}</AuthGuard>;
 }

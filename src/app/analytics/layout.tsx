@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
   title: "Business Analytics, Profit Tracking & GSTR-1 Sales Report — SwiftGST",
@@ -35,5 +36,5 @@ export const metadata: Metadata = {
 };
 
 export default function AnalyticsLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return <AuthGuard>{children}</AuthGuard>;
 }

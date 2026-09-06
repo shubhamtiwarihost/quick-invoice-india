@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
   title: "Free POS Billing Counter (58mm/80mm Thermal Slip, Barcode & UPI QR) — SwiftGST",
@@ -36,5 +37,5 @@ export const metadata: Metadata = {
 };
 
 export default function PosLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return <AuthGuard>{children}</AuthGuard>;
 }

@@ -36,8 +36,8 @@ const TABS: NavTab[] = [
 export function NativeBottomNav() {
   const pathname = usePathname();
 
-  // On the home invoice maker, InvoiceWorkspace renders its own custom MobileBottomNav
-  if (pathname === "/") {
+  // Hide on invoice maker workspace and auth onboarding screens
+  if (pathname === "/" || pathname === "/login" || pathname === "/register" || pathname.startsWith("/login/") || pathname.startsWith("/register/")) {
     return null;
   }
 

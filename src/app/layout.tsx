@@ -6,6 +6,7 @@ import { PersistHydration } from "@/components/shared/PersistHydration";
 import { CookieConsent } from "@/components/common/CookieConsent";
 import { NativeBottomNav } from "@/components/mobile/NativeBottomNav";
 import { InstallPromptBanner } from "@/components/pwa/InstallPromptBanner";
+import { AuthProvider } from "@/lib/auth/AuthContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -61,13 +62,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-slate-100 font-sans text-slate-900">
-        <PersistHydration />
-        <Navbar />
-        {children}
-        <Footer />
-        <NativeBottomNav />
-        <InstallPromptBanner />
-        <CookieConsent />
+        <AuthProvider>
+          <PersistHydration />
+          <Navbar />
+          {children}
+          <Footer />
+          <NativeBottomNav />
+          <InstallPromptBanner />
+          <CookieConsent />
+        </AuthProvider>
       </body>
     </html>
   );
