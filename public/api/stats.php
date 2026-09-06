@@ -12,14 +12,23 @@ if ($adminKey !== 'swift_master_2026') {
 }
 
 try {
-    // 1. Total Registered Stores
-    $totalStores = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    $today = date('Y-m-d');
 
-    // 2. Activity Aggregates
+    // 1. Visitor Stats
+    $todayUniqueVisitors = $pdo->prepare("SELECT COUNT(*) FROM daily_visitors WHERE visit_date = ?");
+    $todayUniqueVisitors->execute([$today]);
+    $uniqueCount = $todayUniqueVisitors->fetchColumn();
+
+    $todayHits = $pdo->prepare("SELECT COALESCE(SUM(hit_count), 0) FROM daily_visitors WHERE visit_date = ?");
+    $todayHits->execute([$today]);
+    $hitCount = $todayHits->fetchColumn();
+
+    // 2. Stores & Billing Metrics
+    $totalStores = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
     $totalInvoices = $pdo->query("SELECT COUNT(*) FROM activity_logs WHERE feature_used = 'public_invoice'")->fetchColumn();
     $totalPosBills = $pdo->query("SELECT COUNT(*) FROM activity_logs WHERE feature_used = 'pos_counter'")->fetchColumn();
 
-    // 3. Recent 50 Live Activities
+    // 3. Recent Activity Logs
     $logsStmt = $pdo->query("SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 50");
     $recentLogs = $logsStmt->fetchAll();
 
@@ -27,6 +36,8 @@ try {
         "status" => "success",
         "data" => [
             "metrics" => [
+                "todayUniqueVisitors" => (int)$uniqueCount,
+                "todayPageHits" => (int)$hitCount,
                 "totalStores" => (int)$totalStores,
                 "publicInvoices" => (int)$totalInvoices,
                 "posBills" => (int)$totalPosBills

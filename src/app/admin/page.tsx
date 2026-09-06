@@ -10,14 +10,14 @@ import {
   Store,
   FileText,
   ShoppingBag,
-  Activity,
   ArrowLeft,
   AlertCircle,
   Search,
-  Server,
   LogOut,
   X,
   Code2,
+  Users,
+  Eye,
 } from "lucide-react";
 
 interface ActivityLog {
@@ -33,6 +33,8 @@ interface ActivityLog {
 }
 
 interface StatsMetrics {
+  todayUniqueVisitors: number;
+  todayPageHits: number;
   totalStores: number;
   publicInvoices: number;
   posBills: number;
@@ -49,6 +51,8 @@ export default function SuperAdminPage() {
 
   // Dashboard Data State
   const [metrics, setMetrics] = useState<StatsMetrics>({
+    todayUniqueVisitors: 0,
+    todayPageHits: 0,
     totalStores: 0,
     publicInvoices: 0,
     posBills: 0,
@@ -200,6 +204,11 @@ export default function SuperAdminPage() {
                 <p className="text-[10px] text-slate-400 flex items-center gap-1.5">
                   <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span>Hostinger Cloud MySQL • Live Telemetry</span>
+                  {lastUpdated && (
+                    <span className="hidden sm:inline text-slate-500 font-mono">
+                      (Synced {lastUpdated.toLocaleTimeString()})
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
@@ -243,7 +252,49 @@ export default function SuperAdminPage() {
         {/* Dashboard Main Workspace */}
         <main className="flex-1 p-4 sm:p-8 max-w-[1600px] w-full mx-auto space-y-6">
           {/* Top Metrics Row */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* Today's Unique Visitors */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Today&apos;s Visitors
+                </span>
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  <Users className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="mt-4">
+                <div className="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
+                  {metrics.todayUniqueVisitors.toLocaleString()}
+                </div>
+                <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                  <span>Unique IP Visitors Today</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Today's Page Hits */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Today&apos;s Hits
+                </span>
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <Eye className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="mt-4">
+                <div className="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
+                  {metrics.todayPageHits.toLocaleString()}
+                </div>
+                <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                  <span>Total Page &amp; Action Hits</span>
+                </div>
+              </div>
+            </div>
+
             {/* Total Stores Card */}
             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl flex flex-col justify-between">
               <div className="flex items-center justify-between">
@@ -260,7 +311,7 @@ export default function SuperAdminPage() {
                 </div>
                 <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
-                  <span>Onboarded Merchants in MySQL</span>
+                  <span>Onboarded Merchants</span>
                 </div>
               </div>
             </div>
@@ -281,7 +332,7 @@ export default function SuperAdminPage() {
                 </div>
                 <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-                  <span>Public Generator &amp; PDF Downloads</span>
+                  <span>Public Generator &amp; PDFs</span>
                 </div>
               </div>
             </div>
@@ -302,31 +353,7 @@ export default function SuperAdminPage() {
                 </div>
                 <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  <span>Retail Bills &amp; Khata Sales</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Total Telemetry Records */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Active Log Stream
-                </span>
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                  <Activity className="h-5 w-5" />
-                </div>
-              </div>
-              <div className="mt-4">
-                <div className="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
-                  {logs.length}
-                </div>
-                <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
-                  <Server className="h-3.5 w-3.5 text-purple-400" />
-                  <span>
-                    Last updated:{" "}
-                    {lastUpdated ? lastUpdated.toLocaleTimeString() : "Just now"}
-                  </span>
+                  <span>Retail Bills &amp; Sales</span>
                 </div>
               </div>
             </div>

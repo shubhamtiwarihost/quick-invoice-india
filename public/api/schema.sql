@@ -39,3 +39,15 @@ CREATE TABLE IF NOT EXISTS activity_logs (
     INDEX idx_activity_logs_event_type (event_type),
     INDEX idx_activity_logs_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS daily_visitors (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    visit_date DATE NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    hit_count INT DEFAULT 1,
+    user_agent VARCHAR(255) DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_date_ip (visit_date, ip_address),
+    INDEX idx_daily_visitors_date (visit_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

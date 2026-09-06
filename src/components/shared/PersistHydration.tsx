@@ -53,6 +53,26 @@ export function PersistHydration() {
       useQuotationStore.getState().setHydrated(true);
     });
 
+    // Non-blocking session visitor telemetry beacon
+    try {
+      if (typeof window !== "undefined") {
+        const hasTrackedSession = sessionStorage.getItem("swift_visit_tracked");
+        if (!hasTrackedSession) {
+          sessionStorage.setItem("swift_visit_tracked", "1");
+          import("@/lib/tracker")
+            .then(({ trackEvent }) => {
+              trackEvent("PAGE_VIEW", "website", {
+                path: window.location.pathname,
+                referrer: document.referrer || "direct",
+              });
+            })
+            .catch(() => {});
+        }
+      }
+    } catch {
+      // non-blocking
+    }
+
     return () => window.clearTimeout(fallback);
   }, []);
   return null;
