@@ -242,7 +242,7 @@ export function useAuth(): AuthContextType {
 }
 
 /**
- * Loyverse-Style Cashier PIN Pad Unlock Screen
+ * SwiftGST Cashier PIN Pad Unlock Screen
  */
 export function CashierLockScreen() {
   const { user, unlockWithPin, logout } = useAuth();

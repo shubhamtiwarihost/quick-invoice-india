@@ -119,7 +119,7 @@ export default function RegisterPage() {
         <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-teal-50 border border-teal-200/80 px-3.5 py-1 text-xs font-semibold text-teal-800 shadow-2xs">
             <Zap className="h-3.5 w-3.5 text-teal-600" />
-            <span>Loyverse-Style Onboarding &bull; Setup in 60s</span>
+            <span>Instant Store Onboarding &bull; Setup in 60s</span>
           </div>
           <h1 className="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             Create Your Free Store Account
