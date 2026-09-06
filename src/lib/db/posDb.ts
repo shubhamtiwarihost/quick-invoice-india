@@ -11,6 +11,7 @@ export interface Product {
   stock: number;
   minStock: number;
   category?: string;
+  unit?: string;
   createdAt?: number;
   updatedAt?: number;
 }

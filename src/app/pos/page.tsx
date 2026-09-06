@@ -62,6 +62,7 @@ import {
   saveHeldTicket,
   deleteHeldTicket,
   voidSale,
+  getDb,
   type Product,
   type Sale,
   type SaleItem,
@@ -187,6 +188,40 @@ export default function PosCounterPage() {
   async function loadData() {
     setLoading(true);
     try {
+      if (typeof window !== "undefined" && (window.location.search.includes("testSeed=true") || (window as unknown as { __PLAYWRIGHT_TEST__?: boolean }).__PLAYWRIGHT_TEST__)) {
+        const db = await getDb();
+        const count = await db.count("products");
+        if (count === 0) {
+          await db.put("products", {
+            id: "test_milk_1",
+            name: "Fresh Cow Milk 1L",
+            barcode: "1001001001",
+            hsn: "0401",
+            category: "Dairy",
+            costPrice: 50,
+            salePrice: 65,
+            gstRate: 5,
+            stock: 100,
+            minStock: 10,
+            unit: "LTR",
+            updatedAt: Date.now(),
+          });
+          await db.put("products", {
+            id: "test_rice_2",
+            name: "Basmati Rice 5kg",
+            barcode: "1001001002",
+            hsn: "1006",
+            category: "Grocery",
+            costPrice: 400,
+            salePrice: 500,
+            gstRate: 0,
+            stock: 50,
+            minStock: 5,
+            unit: "BAG",
+            updatedAt: Date.now(),
+          });
+        }
+      }
       await seedInitialInventoryIfEmpty();
       await seedInitialCustomersIfEmpty();
       const [productList, customerList, salesList, currentShift, openTickets] = await Promise.all([
@@ -1121,6 +1156,7 @@ export default function PosCounterPage() {
               {/* Open Tickets Counter Button (Loyverse Style) */}
               <button
                 type="button"
+                data-testid="open-tickets-button"
                 onClick={() => setIsOpenTicketsDrawerOpen(true)}
                 className={`inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-black transition active:scale-95 shadow-2xs ${
                   heldTickets.length > 0
@@ -1300,6 +1336,7 @@ export default function PosCounterPage() {
                       <button
                         key={p.id}
                         type="button"
+                        data-testid="product-card"
                         onClick={() => addToCart(p)}
                         disabled={isOutOfStock}
                         className={`group flex flex-col justify-between rounded-2xl border p-3 text-left shadow-2xs transition-all duration-150 active:scale-95 select-none relative min-h-[118px] cursor-pointer ${
@@ -1494,6 +1531,7 @@ export default function PosCounterPage() {
                   cart.map((item) => (
                     <div
                       key={item.productId}
+                      data-testid="cart-item"
                       onClick={() => openItemModifier(item)}
                       className="group flex items-center justify-between py-2 px-2 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition cursor-pointer gap-2"
                       title="Tap to modify quantity, discount or notes"
@@ -1535,7 +1573,10 @@ export default function PosCounterPage() {
                         >
                           <Minus className="h-3 w-3" />
                         </button>
-                        <span className="w-6 text-center font-bold text-xs font-mono tabular-nums">
+                        <span
+                          data-testid="cart-item-qty"
+                          className="w-6 text-center font-bold text-xs font-mono tabular-nums"
+                        >
                           {item.qty}
                         </span>
                         <button
@@ -1608,6 +1649,7 @@ export default function PosCounterPage() {
                 <div className="mt-3 flex items-center gap-2">
                   <button
                     type="button"
+                    data-testid="hold-bill-button"
                     onClick={openHoldModal}
                     disabled={cart.length === 0}
                     className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 py-3.5 text-xs font-bold text-amber-900 transition active:scale-95 disabled:opacity-40"
@@ -1619,6 +1661,7 @@ export default function PosCounterPage() {
 
                   <button
                     type="button"
+                    data-testid="charge-button"
                     onClick={openCheckout}
                     disabled={cart.length === 0}
                     className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 py-3.5 text-sm font-black text-white shadow-lg shadow-emerald-600/25 active:scale-95 transition disabled:opacity-40 ring-2 ring-emerald-500/25 uppercase tracking-wide"
@@ -1798,6 +1841,7 @@ export default function PosCounterPage() {
                     <input
                       type="number"
                       step="1"
+                      data-testid="cash-tender-input"
                       value={cashTendered}
                       onChange={(e) => setCashTendered(e.target.value)}
                       placeholder={String(grandTotal)}
@@ -1835,7 +1879,10 @@ export default function PosCounterPage() {
                     <span className="text-[11px] font-bold text-emerald-900 uppercase tracking-wider block">
                       Change Due (Wapas kitne dene hain)
                     </span>
-                    <p className="text-2xl font-black text-emerald-700 font-mono tabular-nums">
+                    <p
+                      data-testid="change-due-amount"
+                      className="text-2xl font-black text-emerald-700 font-mono tabular-nums"
+                    >
                       ₹{changeToReturn.toFixed(2)}
                     </p>
                   </div>
@@ -1968,6 +2015,7 @@ export default function PosCounterPage() {
 
               <button
                 type="button"
+                data-testid="checkout-charge-button"
                 onClick={handleCompleteSale}
                 disabled={
                   isCheckingOut ||
@@ -1986,7 +2034,10 @@ export default function PosCounterPage() {
 
       {/* LOYVERSE ITEM MODIFIER SHEET */}
       {editingCartItem ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150">
+        <div
+          data-testid="modifier-sheet"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150"
+        >
           <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[92vh] overflow-y-auto space-y-4">
             {/* Header */}
             <div className="flex items-start justify-between border-b border-slate-100 pb-3">
@@ -2067,6 +2118,8 @@ export default function PosCounterPage() {
                     key={k}
                     type="button"
                     onClick={() => handleKeypadPress(k === "⌫" ? "backspace" : k)}
+                    aria-label={k === "⌫" ? "Backspace" : k}
+                    data-testid={k === "⌫" ? "keypad-backspace" : undefined}
                     className={`h-11 rounded-xl text-base font-bold transition active:scale-95 flex items-center justify-center ${
                       k === "C"
                         ? "bg-amber-100 text-amber-900 hover:bg-amber-200"
@@ -2196,6 +2249,7 @@ export default function PosCounterPage() {
             <div className="flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
               <button
                 type="button"
+                data-testid="modifier-delete-button"
                 onClick={handleDeleteFromModifier}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 px-3.5 py-2.5 text-xs font-bold text-red-700 transition active:scale-95"
                 title="Remove item completely from cart"
@@ -2206,6 +2260,7 @@ export default function PosCounterPage() {
 
               <button
                 type="button"
+                data-testid="modifier-save-button"
                 onClick={handleSaveModifier}
                 className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 text-xs font-bold text-white shadow-md active:scale-95 transition"
               >
@@ -2220,6 +2275,7 @@ export default function PosCounterPage() {
       {/* LOYVERSE POST-PAYMENT SUCCESS SCREEN */}
       {isSuccessModalOpen && successSale ? (
         <div
+          data-testid="success-modal"
           className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/65 p-4 backdrop-blur-xs animate-in fade-in duration-150"
           onClick={() => {
             // Clicking backdrop starts a new clean sale immediately
@@ -2282,6 +2338,7 @@ export default function PosCounterPage() {
               {/* 1. Print Receipt */}
               <button
                 type="button"
+                data-testid="print-receipt-button"
                 onClick={() => {
                   setIsSuccessModalOpen(false);
                   setIsReceiptModalOpen(true);
@@ -2295,6 +2352,7 @@ export default function PosCounterPage() {
               {/* 2. WhatsApp Bill */}
               <button
                 type="button"
+                data-testid="whatsapp-bill-button"
                 onClick={handleShareWhatsApp}
                 className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 p-3 text-xs font-bold text-emerald-800 transition active:scale-95 shadow-2xs"
               >
@@ -2305,6 +2363,7 @@ export default function PosCounterPage() {
               {/* 3. New Sale */}
               <button
                 type="button"
+                data-testid="new-sale-button"
                 onClick={handleStartNewSale}
                 className="flex flex-col items-center justify-center gap-1.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 p-3 text-xs font-bold text-white transition active:scale-95 shadow-md shadow-emerald-600/20"
               >
@@ -2674,6 +2733,7 @@ export default function PosCounterPage() {
                 <input
                   type="text"
                   required
+                  data-testid="hold-ticket-name-input"
                   value={holdTicketName}
                   onChange={(e) => setHoldTicketName(e.target.value)}
                   placeholder="e.g. Table 4, Ramesh Bhai, Blue Shirt Customer"
@@ -2704,6 +2764,7 @@ export default function PosCounterPage() {
                 </button>
                 <button
                   type="submit"
+                  data-testid="confirm-hold-button"
                   className="rounded-xl bg-amber-600 hover:bg-amber-700 px-5 py-2 font-bold text-white shadow-xs"
                 >
                   Hold Bill
@@ -2781,6 +2842,7 @@ export default function PosCounterPage() {
                       <div className="flex items-center gap-2 shrink-0">
                         <button
                           type="button"
+                          data-testid="restore-ticket-button"
                           onClick={() => handleRestoreTicket(t)}
                           className="inline-flex items-center gap-1 rounded-xl bg-teal-700 hover:bg-teal-800 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs active:scale-95 transition"
                         >
