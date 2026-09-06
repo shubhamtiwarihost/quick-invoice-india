@@ -5,22 +5,29 @@
   # Pass Authorization Header to PHP on Apache / Hostinger
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-  # Route /api/contact directly to api/contact.php on Apache/Hostinger
+  # Route API calls directly to PHP
+  RewriteRule ^api/(.*\.php)$ api/$1 [L,QSA]
   RewriteRule ^api/contact/?$ api/contact.php [L,QSA]
-
-  # Route /api/auth directly to api/auth.php on Apache/Hostinger
   RewriteRule ^api/auth/?$ api/auth.php [L,QSA]
-
-  # Route /api/track directly to api/track.php on Apache/Hostinger
   RewriteRule ^api/track/?$ api/track.php [L,QSA]
-
-  # Route /api/stats directly to api/stats.php on Apache/Hostinger
   RewriteRule ^api/stats/?$ api/stats.php [L,QSA]
+  RewriteRule ^api/(.*)$ api/$1 [L,QSA]
 
   # Allow direct access to existing files and directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
+
+  # Handle Next.js clean URLs
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.*)$ $1.html [L]
+
+  # Fallback to index.html if using SPA routing
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
 </IfModule>
 
 # Static Asset Long-Term Caching via mod_expires
