@@ -24,6 +24,9 @@ export interface SaleItem {
   qty: number;
   taxAmount: number;
   total: number;
+  discount?: number;
+  discountType?: "percent" | "flat";
+  notes?: string;
 }
 
 export type PaymentMode = "cash" | "upi" | "card" | "split" | "khata";

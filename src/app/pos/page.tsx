@@ -35,6 +35,14 @@ import {
   FileClock,
   RotateCcw,
   Check,
+  Zap,
+  Percent,
+  IndianRupee,
+  Share2,
+  MessageCircle,
+  Sparkles,
+  Delete,
+  Edit2,
 } from "lucide-react";
 import {
   getAllProducts,
@@ -101,6 +109,13 @@ export default function PosCounterPage() {
   const [customerPhone, setCustomerPhone] = useState("");
   const [redeemPoints, setRedeemPoints] = useState(false);
 
+  // Loyverse Item Modifier Sheet State
+  const [editingCartItem, setEditingCartItem] = useState<SaleItem | null>(null);
+  const [modQty, setModQty] = useState<string>("1");
+  const [modDiscountType, setModDiscountType] = useState<"percent" | "flat">("percent");
+  const [modDiscountVal, setModDiscountVal] = useState<string>("0");
+  const [modNotes, setModNotes] = useState<string>("");
+
   // Quick Add Customer Modal
   const [isQuickCustomerOpen, setIsQuickCustomerOpen] = useState(false);
   const [quickCustName, setQuickCustName] = useState("");
@@ -125,6 +140,13 @@ export default function PosCounterPage() {
   const [recentSales, setRecentSales] = useState<Sale[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  // Loyverse Post-Payment Success Screen State
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [successSale, setSuccessSale] = useState<Sale | null>(null);
+  const [successChangeDue, setSuccessChangeDue] = useState(0);
+  const [autoResetCountdown, setAutoResetCountdown] = useState(4);
+  const [isCountdownPaused, setIsCountdownPaused] = useState(false);
 
   // Shift Management State
   const [activeShift, setActiveShift] = useState<Shift | null>(null);
@@ -218,6 +240,38 @@ export default function PosCounterPage() {
       console.error("Failed to save store settings:", e);
     }
     setIsStoreSettingsOpen(false);
+  }
+
+  // Dynamic Category Dot Colors Map
+  const CATEGORY_DOT_COLORS = [
+    "bg-emerald-500",
+    "bg-sky-500",
+    "bg-amber-500",
+    "bg-purple-500",
+    "bg-rose-500",
+    "bg-orange-500",
+    "bg-teal-500",
+    "bg-indigo-500",
+    "bg-pink-500",
+    "bg-lime-500",
+  ];
+
+  function getCategoryColor(cat: string): string {
+    if (!cat || cat === "all") return "bg-teal-500";
+    const lower = cat.toLowerCase().trim();
+    if (lower.includes("groc") || lower.includes("kirana")) return "bg-emerald-500";
+    if (lower.includes("dairy") || lower.includes("milk")) return "bg-sky-500";
+    if (lower.includes("bev") || lower.includes("drink") || lower.includes("tea") || lower.includes("juice") || lower.includes("water")) return "bg-amber-500";
+    if (lower.includes("snack") || lower.includes("biscuit") || lower.includes("bakery") || lower.includes("namkeen")) return "bg-orange-500";
+    if (lower.includes("pers") || lower.includes("care") || lower.includes("beauty") || lower.includes("soap")) return "bg-purple-500";
+    if (lower.includes("clean") || lower.includes("house") || lower.includes("wash") || lower.includes("detergent")) return "bg-rose-500";
+    if (lower.includes("elect") || lower.includes("tech") || lower.includes("mobile")) return "bg-indigo-500";
+
+    let hash = 0;
+    for (let i = 0; i < cat.length; i++) {
+      hash = cat.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return CATEGORY_DOT_COLORS[Math.abs(hash) % CATEGORY_DOT_COLORS.length];
   }
 
   // Categories list
@@ -339,7 +393,7 @@ export default function PosCounterPage() {
     };
   }, [cart, redeemPoints, selectedCustomer, paymentMode]);
 
-  // Add Item to Cart with Stock Check
+  // Add Item to Cart with Stock Check and multi-tap increment
   function addToCart(product: Product) {
     if (product.stock <= 0) {
       showToast(`"${product.name}" is currently out of stock.`);
@@ -363,8 +417,17 @@ export default function PosCounterPage() {
         const updated = [...prev];
         const item = updated[idx];
         const newQty = item.qty + 1;
-        const total = salePrice * newQty;
-        const taxAmount = (total * gstRate) / (100 + gstRate); // GST inclusive calculation
+        const gross = salePrice * newQty;
+        let discountAmt = 0;
+        if (item.discount && item.discount > 0) {
+          if (item.discountType === "percent") {
+            discountAmt = (gross * Math.min(100, item.discount)) / 100;
+          } else {
+            discountAmt = Math.min(gross, item.discount);
+          }
+        }
+        const total = Number(Math.max(0, gross - discountAmt).toFixed(2));
+        const taxAmount = Number(((total * gstRate) / (100 + gstRate)).toFixed(2));
 
         updated[idx] = {
           ...item,
@@ -375,8 +438,8 @@ export default function PosCounterPage() {
         return updated;
       } else {
         const qty = 1;
-        const total = salePrice * qty;
-        const taxAmount = (total * gstRate) / (100 + gstRate);
+        const total = Number((salePrice * qty).toFixed(2));
+        const taxAmount = Number(((total * gstRate) / (100 + gstRate)).toFixed(2));
 
         return [
           ...prev,
@@ -415,13 +478,158 @@ export default function PosCounterPage() {
     setCart((prev) =>
       prev.map((it) => {
         if (it.productId === productId) {
-          const total = it.price * newQty;
-          const taxAmount = (total * it.gstRate) / (100 + it.gstRate);
+          const gross = it.price * newQty;
+          let discountAmt = 0;
+          if (it.discount && it.discount > 0) {
+            if (it.discountType === "percent") {
+              discountAmt = (gross * Math.min(100, it.discount)) / 100;
+            } else {
+              discountAmt = Math.min(gross, item.discount || 0);
+            }
+          }
+          const total = Number(Math.max(0, gross - discountAmt).toFixed(2));
+          const taxAmount = Number(((total * it.gstRate) / (100 + it.gstRate)).toFixed(2));
           return { ...it, qty: newQty, total, taxAmount };
         }
         return it;
       })
     );
+  }
+
+  // Loyverse Item Modifier Handlers
+  function openItemModifier(item: SaleItem) {
+    setEditingCartItem(item);
+    setModQty(String(item.qty));
+    setModDiscountType(item.discountType || "percent");
+    setModDiscountVal(item.discount ? String(item.discount) : "0");
+    setModNotes(item.notes || "");
+  }
+
+  function handleKeypadPress(val: string) {
+    if (val === "C") {
+      setModQty("1");
+      return;
+    }
+    if (val === "backspace") {
+      setModQty((prev) => (prev.length > 1 ? prev.slice(0, -1) : "1"));
+      return;
+    }
+    setModQty((prev) => {
+      if (prev === "0" || prev === "1") return val;
+      if (prev.length >= 3) return prev;
+      return prev + val;
+    });
+  }
+
+  function handleSaveModifier() {
+    if (!editingCartItem) return;
+    const product = products.find((p) => p.id === editingCartItem.productId);
+    const newQty = Math.max(1, parseInt(modQty, 10) || 1);
+
+    if (product && newQty > product.stock) {
+      showToast(`Stock limit: Only ${product.stock} units of "${product.name}" in stock!`);
+      return;
+    }
+
+    const discountVal = Math.max(0, parseFloat(modDiscountVal) || 0);
+    const gross = editingCartItem.price * newQty;
+    let discountAmt = 0;
+    if (modDiscountType === "percent") {
+      discountAmt = (gross * Math.min(100, discountVal)) / 100;
+    } else {
+      discountAmt = Math.min(gross, discountVal);
+    }
+    const netTotal = Number(Math.max(0, gross - discountAmt).toFixed(2));
+    const gstRate = editingCartItem.gstRate || 0;
+    const taxAmount = Number(((netTotal * gstRate) / (100 + gstRate)).toFixed(2));
+
+    setCart((prev) =>
+      prev.map((it) => {
+        if (it.productId === editingCartItem.productId) {
+          return {
+            ...it,
+            qty: newQty,
+            discount: discountVal > 0 ? discountVal : undefined,
+            discountType: discountVal > 0 ? modDiscountType : undefined,
+            notes: modNotes.trim() || undefined,
+            total: netTotal,
+            taxAmount,
+          };
+        }
+        return it;
+      })
+    );
+
+    setEditingCartItem(null);
+    showToast(`Updated "${editingCartItem.name}"`);
+  }
+
+  function handleDeleteFromModifier() {
+    if (!editingCartItem) return;
+    removeFromCart(editingCartItem.productId);
+    setEditingCartItem(null);
+    showToast(`Removed "${editingCartItem.name}" from cart`);
+  }
+
+  // WhatsApp Bill Sharing
+  function handleShareWhatsApp() {
+    const sale = successSale || completedSale;
+    if (!sale) return;
+    const phone = sale.customerPhone || customerPhone || "";
+    let cleanPhone = phone.replace(/[^0-9]/g, "");
+    if (cleanPhone.length === 10) {
+      cleanPhone = "91" + cleanPhone;
+    }
+
+    const storeName = storeSettings.businessName || "Store";
+    const lines: string[] = [];
+    lines.push(`🧾 *${storeName} - Bill #${sale.billNo}*`);
+    lines.push(`📅 Date: ${new Date(sale.timestamp).toLocaleDateString("en-IN")}`);
+    if (sale.customerName) {
+      lines.push(`👤 Customer: ${sale.customerName}`);
+    }
+    lines.push(`--------------------------------`);
+    sale.items.forEach((it) => {
+      const disc = it.discount ? ` (${it.discountType === "percent" ? `-${it.discount}%` : `-₹${it.discount}`})` : "";
+      lines.push(`• ${it.name} x ${it.qty} = ₹${it.total.toFixed(2)}${disc}`);
+    });
+    lines.push(`--------------------------------`);
+    lines.push(`*Total Amount: ₹${sale.grandTotal.toFixed(2)}*`);
+    lines.push(`Payment Mode: ${sale.paymentMode.toUpperCase()}`);
+    if (successChangeDue > 0 && sale.paymentMode === "cash") {
+      lines.push(`Change Returned: ₹${successChangeDue.toFixed(2)}`);
+    }
+    lines.push(`--------------------------------`);
+    lines.push(`Thank you for shopping with us! Visit again. 🙏`);
+
+    const text = encodeURIComponent(lines.join("\n"));
+    const url = cleanPhone
+      ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${text}`
+      : `https://api.whatsapp.com/send?text=${text}`;
+    window.open(url, "_blank");
+  }
+
+  // Auto-reset Countdown Timer for Post-Payment Success Screen
+  useEffect(() => {
+    if (!isSuccessModalOpen || isCountdownPaused) return;
+
+    const timer = setInterval(() => {
+      setAutoResetCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setIsSuccessModalOpen(false);
+          return 4;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isSuccessModalOpen, isCountdownPaused]);
+
+  function handleStartNewSale() {
+    setIsSuccessModalOpen(false);
+    clearCart();
   }
 
   function removeFromCart(productId: string) {
@@ -717,19 +925,43 @@ export default function PosCounterPage() {
   const changeToReturn = Math.max(0, tenderedNum - grandTotal);
   const balanceDue = Math.max(0, grandTotal - tenderedNum);
 
-  // Quick cash preset denominations
-  const cashPresets = useMemo(() => {
-    const presets = [grandTotal];
-    const notes = [50, 100, 200, 500, 1000, 2000];
-    notes.forEach((n) => {
-      if (n >= grandTotal && !presets.includes(n)) {
-        presets.push(n);
+  // Quick cash preset denominations (Loyverse style: [Exact Cash], [Nearest ₹50], [Nearest ₹100], [Nearest ₹500])
+  const quickCashDenominations = useMemo(() => {
+    const list: { label: string; amount: number }[] = [];
+    list.push({ label: `Exact (₹${grandTotal})`, amount: grandTotal });
+
+    // Nearest 50
+    const n50 = Math.ceil(grandTotal / 50) * 50;
+    const next50 = n50 === grandTotal ? grandTotal + 50 : n50;
+    if (!list.some((d) => d.amount === next50)) {
+      list.push({ label: `Nearest ₹50 (₹${next50})`, amount: next50 });
+    }
+
+    // Nearest 100
+    const n100 = Math.ceil(grandTotal / 100) * 100;
+    const next100 = n100 === grandTotal ? grandTotal + 100 : n100;
+    if (!list.some((d) => d.amount === next100)) {
+      list.push({ label: `Nearest ₹100 (₹${next100})`, amount: next100 });
+    }
+
+    // Nearest 500
+    const n500 = Math.ceil(grandTotal / 500) * 500;
+    const next500 = n500 === grandTotal ? grandTotal + 500 : n500;
+    if (!list.some((d) => d.amount === next500)) {
+      list.push({ label: `Nearest ₹500 (₹${next500})`, amount: next500 });
+    }
+
+    // High notes if grandTotal is below 2000
+    [500, 1000, 2000].forEach((note) => {
+      if (note > grandTotal && !list.some((d) => d.amount === note)) {
+        list.push({ label: `₹${note}`, amount: note });
       }
     });
-    return presets.slice(0, 5);
+
+    return list.slice(0, 6);
   }, [grandTotal]);
 
-  // Complete Sale & Print Receipt
+  // Complete Sale & Trigger Loyverse Success Flow
   async function handleCompleteSale() {
     if (paymentMode === "khata" && !selectedCustomerId) {
       showToast("Please select a registered customer for Khata (Udhaar) billing!");
@@ -759,10 +991,17 @@ export default function PosCounterPage() {
       // 1. Record order in IndexedDB, update stock, and update customer Khata / Loyalty
       await recordSale(newSale, true);
 
-      // 2. Update local state
+      // 2. Compute change due
+      const changeDueAmt = paymentMode === "cash" ? Math.max(0, tenderedNum - grandTotal) : 0;
+
+      // 3. Update local state & open Loyverse Success Screen
       setCompletedSale(newSale);
+      setSuccessSale(newSale);
+      setSuccessChangeDue(changeDueAmt);
       setIsCheckoutOpen(false);
-      setIsReceiptModalOpen(true);
+      setIsSuccessModalOpen(true);
+      setAutoResetCountdown(4);
+      setIsCountdownPaused(false);
 
       // Telemetry tracking
       trackEvent(
@@ -774,14 +1013,9 @@ export default function PosCounterPage() {
           : { businessName: storeSettings.businessName }
       );
 
-      // 3. Clear cart and reload stock & customers in background
+      // 4. Clear cart and reload stock & customers in background
       clearCart();
       await loadData();
-
-      // 4. Prompt print
-      setTimeout(() => {
-        window.print();
-      }, 350);
 
       const bonusMsg =
         paymentMode === "khata"
@@ -884,22 +1118,22 @@ export default function PosCounterPage() {
                 </button>
               )}
 
-              {/* Saved Bills / Open Tickets Badge Button */}
+              {/* Open Tickets Counter Button (Loyverse Style) */}
               <button
                 type="button"
                 onClick={() => setIsOpenTicketsDrawerOpen(true)}
-                className={`inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1.5 text-xs font-bold transition active:scale-95 shadow-2xs ${
+                className={`inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-black transition active:scale-95 shadow-2xs ${
                   heldTickets.length > 0
-                    ? "border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100"
+                    ? "border-amber-400 bg-amber-50 text-amber-900 hover:bg-amber-100 ring-2 ring-amber-300/40"
                     : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                 }`}
-                title="View Held Bills / Open Tickets"
+                title="View Open Tickets / Parked Bills"
               >
-                <FileClock className={`h-3.5 w-3.5 ${heldTickets.length > 0 ? "text-amber-700" : "text-slate-500"}`} />
-                <span>Open Bills</span>
+                <FileClock className={`h-4 w-4 ${heldTickets.length > 0 ? "text-amber-700" : "text-slate-500"}`} />
+                <span>Open Tickets</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                    heldTickets.length > 0 ? "bg-amber-200 text-amber-900" : "bg-slate-100 text-slate-600"
+                  className={`rounded-full px-2 py-0.2 text-[10px] font-black ${
+                    heldTickets.length > 0 ? "bg-amber-600 text-white shadow-xs" : "bg-slate-100 text-slate-600"
                   }`}
                 >
                   {heldTickets.length}
@@ -949,10 +1183,10 @@ export default function PosCounterPage() {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-start">
           {/* LEFT 65%: Product Catalog & Search Grid */}
           <section className="lg:col-span-8 space-y-3">
-            {/* Search & Category Tabs */}
+            {/* Search & Dynamic Category Tabs Dock */}
             <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-2xs">
               <div className="flex flex-col sm:flex-row items-center gap-2.5">
-                <div className="relative w-full sm:w-72">
+                <div className="relative w-full sm:w-64 shrink-0">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
                     type="text"
@@ -972,33 +1206,46 @@ export default function PosCounterPage() {
                   ) : null}
                 </div>
 
-                {/* Category Pills */}
+                {/* Loyverse Dynamic Category Dock with Colored Dots */}
                 <div className="flex items-center gap-1.5 overflow-x-auto w-full pb-1 sm:pb-0 scrollbar-none">
                   <button
                     type="button"
                     onClick={() => setSelectedCategory("all")}
-                    className={`rounded-xl px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition ${
+                    className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold whitespace-nowrap transition active:scale-95 ${
                       selectedCategory === "all"
-                        ? "bg-teal-700 text-white shadow-xs"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        ? "bg-slate-900 text-white shadow-xs ring-1 ring-slate-900"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                     }`}
                   >
-                    All Items ({products.length})
+                    <span className="h-2.5 w-2.5 rounded-full bg-teal-400 shrink-0" />
+                    <span>All Items</span>
+                    <span className={`text-[10px] ${selectedCategory === "all" ? "text-slate-300" : "text-slate-400"}`}>
+                      ({products.length})
+                    </span>
                   </button>
-                  {categories.map((cat) => (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`rounded-xl px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition ${
-                        selectedCategory === cat
-                          ? "bg-teal-700 text-white shadow-xs"
-                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
+
+                  {categories.map((cat) => {
+                    const count = products.filter((p) => p.category === cat).length;
+                    const isSelected = selectedCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold whitespace-nowrap transition active:scale-95 ${
+                          isSelected
+                            ? "bg-slate-900 text-white shadow-xs ring-1 ring-slate-900"
+                            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                        }`}
+                      >
+                        <span className={`h-2.5 w-2.5 rounded-full shrink-0 ${getCategoryColor(cat)}`} />
+                        <span>{cat}</span>
+                        <span className={`text-[10px] ${isSelected ? "text-slate-300" : "text-slate-400"}`}>
+                          ({count})
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -1055,26 +1302,28 @@ export default function PosCounterPage() {
                         type="button"
                         onClick={() => addToCart(p)}
                         disabled={isOutOfStock}
-                        className={`group flex flex-col justify-between rounded-xl border p-3 text-left shadow-2xs transition active:scale-[0.98] relative min-h-[110px] ${
+                        className={`group flex flex-col justify-between rounded-2xl border p-3 text-left shadow-2xs transition-all duration-150 active:scale-95 select-none relative min-h-[118px] cursor-pointer ${
                           isOutOfStock
-                            ? "border-slate-200 bg-slate-50 opacity-60 cursor-not-allowed"
-                            : inCartItem
-                            ? "border-teal-500 bg-teal-50/40 ring-1 ring-teal-500/30"
-                            : "border-slate-200/90 bg-white hover:border-teal-400 hover:shadow-xs"
+                            ? "border-slate-200 bg-slate-50/70 opacity-60 cursor-not-allowed"
+                            : qtyInCart > 0
+                            ? "border-emerald-500 bg-emerald-50/40 ring-2 ring-emerald-500/30 shadow-xs"
+                            : "border-slate-200/90 bg-white hover:border-emerald-400 hover:shadow-xs"
                         }`}
+                        title={isOutOfStock ? "Out of stock" : "Tap to add / increment in cart"}
                       >
                         <div>
                           <div className="flex items-center justify-between gap-1">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700 truncate">
-                              {p.category || "Item"}
+                            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 truncate">
+                              <span className={`h-2 w-2 rounded-full shrink-0 ${getCategoryColor(p.category || "")}`} />
+                              <span className="truncate">{p.category || "General"}</span>
                             </span>
                             {qtyInCart > 0 ? (
-                              <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-teal-700 px-1 text-[10px] font-bold text-white shadow-xs">
-                                {qtyInCart}
+                              <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-black text-white shadow-xs animate-in zoom-in-75">
+                                <span>{qtyInCart} in cart</span>
                               </span>
                             ) : null}
                           </div>
-                          <h3 className="mt-0.5 text-xs font-bold text-slate-900 line-clamp-2 leading-snug">
+                          <h3 className="mt-1 text-xs font-bold text-slate-900 line-clamp-2 leading-snug">
                             {p.name}
                           </h3>
                         </div>
@@ -1084,7 +1333,7 @@ export default function PosCounterPage() {
                             <span className="text-[10px] text-slate-400 block font-mono">
                               GST {p.gstRate}%
                             </span>
-                            <span className="text-sm font-bold text-slate-900 font-mono">
+                            <span className="text-sm sm:text-base font-black text-slate-900 font-mono">
                               ₹{p.salePrice.toFixed(2)}
                             </span>
                           </div>
@@ -1245,23 +1494,44 @@ export default function PosCounterPage() {
                   cart.map((item) => (
                     <div
                       key={item.productId}
-                      className="flex items-center justify-between py-2 gap-2"
+                      onClick={() => openItemModifier(item)}
+                      className="group flex items-center justify-between py-2 px-2 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition cursor-pointer gap-2"
+                      title="Tap to modify quantity, discount or notes"
                     >
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-semibold text-slate-900 truncate">
-                          {item.name}
-                        </p>
-                        <p className="text-[10px] text-slate-500 font-mono">
-                          ₹{item.price.toFixed(2)} {item.gstRate ? `· GST ${item.gstRate}%` : ""}
-                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs font-semibold text-slate-900 truncate group-hover:text-emerald-700 transition">
+                            {item.name}
+                          </p>
+                          <Edit2 className="h-3 w-3 text-slate-300 group-hover:text-emerald-600 shrink-0 transition" />
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            ₹{item.price.toFixed(2)} {item.gstRate ? `· GST ${item.gstRate}%` : ""}
+                          </span>
+                          {item.discount && item.discount > 0 ? (
+                            <span className="inline-flex items-center rounded-md bg-emerald-100 px-1 py-0.2 text-[9px] font-bold text-emerald-800 font-mono">
+                              {item.discountType === "percent" ? `-${item.discount}%` : `-₹${item.discount}`}
+                            </span>
+                          ) : null}
+                        </div>
+                        {item.notes ? (
+                          <p className="text-[10px] text-slate-400 italic truncate mt-0.5">
+                            Note: {item.notes}
+                          </p>
+                        ) : null}
                       </div>
 
                       {/* Quantity Stepper */}
-                      <div className="flex items-center gap-1.5 shrink-0">
+                      <div
+                        className="flex items-center gap-1.5 shrink-0"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <button
                           type="button"
                           onClick={() => updateQty(item.productId, -1)}
                           className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition active:scale-95"
+                          title="Decrease quantity"
                         >
                           <Minus className="h-3 w-3" />
                         </button>
@@ -1272,6 +1542,7 @@ export default function PosCounterPage() {
                           type="button"
                           onClick={() => updateQty(item.productId, 1)}
                           className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition active:scale-95"
+                          title="Increase quantity"
                         >
                           <Plus className="h-3 w-3" />
                         </button>
@@ -1285,7 +1556,10 @@ export default function PosCounterPage() {
 
                       <button
                         type="button"
-                        onClick={() => removeFromCart(item.productId)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeFromCart(item.productId);
+                        }}
                         className="text-slate-300 hover:text-red-600 transition p-1"
                         title="Remove item"
                       >
@@ -1330,13 +1604,13 @@ export default function PosCounterPage() {
                   </span>
                 </div>
 
-                {/* Actions: Hold Bill & Checkout */}
+                {/* Actions: Hold Bill & Authentic Loyverse CHARGE Button */}
                 <div className="mt-3 flex items-center gap-2">
                   <button
                     type="button"
                     onClick={openHoldModal}
                     disabled={cart.length === 0}
-                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 py-3 text-xs font-bold text-amber-900 transition active:scale-95 disabled:opacity-40"
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 py-3.5 text-xs font-bold text-amber-900 transition active:scale-95 disabled:opacity-40"
                     title="Park active cart items as open ticket"
                   >
                     <Pause className="h-3.5 w-3.5 text-amber-700" />
@@ -1347,10 +1621,10 @@ export default function PosCounterPage() {
                     type="button"
                     onClick={openCheckout}
                     disabled={cart.length === 0}
-                    className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-teal-700 hover:bg-teal-800 py-3 text-sm font-bold text-white shadow-md active:scale-95 transition disabled:opacity-40 ring-2 ring-teal-600/20"
+                    className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 py-3.5 text-sm font-black text-white shadow-lg shadow-emerald-600/25 active:scale-95 transition disabled:opacity-40 ring-2 ring-emerald-500/25 uppercase tracking-wide"
                   >
-                    <Receipt className="h-4 w-4 stroke-[2.5]" />
-                    <span>Checkout (₹{grandTotal.toFixed(2)})</span>
+                    <Zap className="h-4 w-4 fill-current" />
+                    <span>CHARGE ₹{grandTotal.toFixed(2)}</span>
                   </button>
                 </div>
               </div>
@@ -1366,22 +1640,27 @@ export default function PosCounterPage() {
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <h3 className="text-base font-bold text-slate-900">
-                  Payment &amp; Thermal Checkout
-                </h3>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
-                  <span>Payable: <strong className="text-teal-800 font-mono">₹{grandTotal.toFixed(2)}</strong></span>
-                  {selectedCustomer ? (
-                    <span>· Bill to: <strong>{selectedCustomer.name}</strong></span>
-                  ) : null}
+                <span className="inline-block text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
+                  Loyverse Fast Checkout
+                </span>
+                <div className="mt-1 flex items-baseline gap-2">
+                  <span className="text-xs font-semibold text-slate-500">Total Amount to Pay:</span>
+                  <span className="text-2xl font-black text-slate-900 font-mono tracking-tight">
+                    ₹{grandTotal.toFixed(2)}
+                  </span>
                 </div>
+                {selectedCustomer ? (
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Customer: <strong className="text-slate-800">{selectedCustomer.name}</strong> ({selectedCustomer.phone})
+                  </p>
+                ) : null}
               </div>
               <button
                 type="button"
                 onClick={() => setIsCheckoutOpen(false)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
@@ -1396,7 +1675,7 @@ export default function PosCounterPage() {
                   onClick={() => setPaymentMode("cash")}
                   className={`flex flex-col items-center justify-center gap-1 rounded-xl p-2 border transition ${
                     paymentMode === "cash"
-                      ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                      ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
                       : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                   }`}
                 >
@@ -1409,7 +1688,7 @@ export default function PosCounterPage() {
                   onClick={() => setPaymentMode("upi")}
                   className={`flex flex-col items-center justify-center gap-1 rounded-xl p-2 border transition ${
                     paymentMode === "upi"
-                      ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                      ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
                       : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                   }`}
                 >
@@ -1422,7 +1701,7 @@ export default function PosCounterPage() {
                   onClick={() => setPaymentMode("card")}
                   className={`flex flex-col items-center justify-center gap-1 rounded-xl p-2 border transition ${
                     paymentMode === "card"
-                      ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                      ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
                       : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                   }`}
                 >
@@ -1435,7 +1714,7 @@ export default function PosCounterPage() {
                   onClick={() => setPaymentMode("split")}
                   className={`flex flex-col items-center justify-center gap-1 rounded-xl p-2 border transition ${
                     paymentMode === "split"
-                      ? "border-teal-600 bg-teal-700 text-white shadow-xs"
+                      ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
                       : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                   }`}
                 >
@@ -1522,46 +1801,52 @@ export default function PosCounterPage() {
                       value={cashTendered}
                       onChange={(e) => setCashTendered(e.target.value)}
                       placeholder={String(grandTotal)}
-                      className="w-full rounded-xl border border-slate-300 bg-white pl-8 pr-3 py-2.5 text-base font-bold font-mono text-slate-900 focus:border-teal-600 focus:outline-none"
+                      className="w-full rounded-xl border border-slate-300 bg-white pl-8 pr-3 py-2.5 text-base font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none"
                     />
                   </div>
                 </div>
 
-                {/* Cash Preset Denomination Buttons */}
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {cashPresets.map((amt) => (
-                    <button
-                      key={amt}
-                      type="button"
-                      onClick={() => setCashTendered(String(amt))}
-                      className={`rounded-lg px-2.5 py-1 text-xs font-bold font-mono border transition ${
-                        tenderedNum === amt
-                          ? "bg-teal-700 text-white border-teal-700"
-                          : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100"
-                      }`}
-                    >
-                      {amt === grandTotal ? `Exact (₹${amt})` : `₹${amt}`}
-                    </button>
-                  ))}
+                {/* Quick Cash Preset Denomination Buttons (Loyverse Style) */}
+                <div>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">
+                    Quick Cash Tender
+                  </span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {quickCashDenominations.map((denom) => (
+                      <button
+                        key={denom.label}
+                        type="button"
+                        onClick={() => setCashTendered(String(denom.amount))}
+                        className={`rounded-xl px-2.5 py-1.5 text-xs font-bold font-mono border transition active:scale-95 ${
+                          tenderedNum === denom.amount
+                            ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs"
+                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100 hover:border-slate-300"
+                        }`}
+                      >
+                        {denom.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Change to Return Calculation */}
-                <div className="rounded-xl border border-slate-200 bg-white p-3 flex items-center justify-between">
+                {/* Real-time Change Due (Wapas kitne paise dene hain) */}
+                <div className="rounded-2xl border-2 border-emerald-200 bg-emerald-50/70 p-3.5 flex items-center justify-between shadow-2xs">
                   <div>
-                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
-                      Change to Return
+                    <span className="text-[11px] font-bold text-emerald-900 uppercase tracking-wider block">
+                      Change Due (Wapas kitne dene hain)
                     </span>
-                    <p className="text-xl font-bold text-emerald-600 font-mono tabular-nums">
+                    <p className="text-2xl font-black text-emerald-700 font-mono tabular-nums">
                       ₹{changeToReturn.toFixed(2)}
                     </p>
                   </div>
                   {balanceDue > 0 ? (
-                    <span className="rounded-lg bg-red-50 border border-red-200 px-2.5 py-1 text-xs font-bold text-red-700">
+                    <span className="rounded-xl bg-red-100 border border-red-300 px-3 py-1.5 text-xs font-bold text-red-800">
                       Balance Due: ₹{balanceDue.toFixed(2)}
                     </span>
                   ) : (
-                    <span className="rounded-lg bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-xs font-bold text-emerald-700">
-                      Amount Covered ✓
+                    <span className="rounded-xl bg-emerald-600 text-white px-3 py-1.5 text-xs font-bold shadow-xs flex items-center gap-1">
+                      <Check className="h-3.5 w-3.5" />
+                      Exact Covered
                     </span>
                   )}
                 </div>
@@ -1689,10 +1974,361 @@ export default function PosCounterPage() {
                   (paymentMode === "cash" && balanceDue > 0) ||
                   (paymentMode === "khata" && !selectedCustomerId)
                 }
-                className="inline-flex items-center gap-2 rounded-xl bg-teal-700 hover:bg-teal-800 px-5 py-2.5 text-xs font-bold text-white shadow-md active:scale-95 transition disabled:opacity-40"
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-6 py-2.5 text-sm font-black text-white shadow-lg shadow-emerald-600/25 active:scale-95 transition disabled:opacity-40 ring-2 ring-emerald-500/25"
               >
-                <Printer className="h-4 w-4" />
-                <span>{isCheckingOut ? "Processing..." : "Print & Complete Sale"}</span>
+                <Zap className="h-4 w-4 fill-current" />
+                <span>{isCheckingOut ? "Processing..." : `CHARGE ₹${grandTotal.toFixed(2)}`}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* LOYVERSE ITEM MODIFIER SHEET */}
+      {editingCartItem ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[92vh] overflow-y-auto space-y-4">
+            {/* Header */}
+            <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+              <div>
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md">
+                  <Edit2 className="h-3 w-3 text-emerald-700" />
+                  <span>Item Modifier</span>
+                </span>
+                <h3 className="text-base font-bold text-slate-900 line-clamp-1 mt-1">
+                  {editingCartItem.name}
+                </h3>
+                <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-500 font-mono">
+                  <span>Price: ₹{editingCartItem.price.toFixed(2)}</span>
+                  <span>· GST {editingCartItem.gstRate}%</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingCartItem(null)}
+                className="rounded-xl p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Quantity Stepper & Display */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Quantity
+                </label>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setModQty((prev) => String(Math.max(1, (parseInt(prev, 10) || 1) + 5)))}
+                    className="rounded-lg bg-slate-100 hover:bg-slate-200 px-2 py-0.5 text-[11px] font-bold text-slate-700 transition font-mono"
+                  >
+                    +5
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModQty((prev) => String(Math.max(1, (parseInt(prev, 10) || 1) + 10)))}
+                    className="rounded-lg bg-slate-100 hover:bg-slate-200 px-2 py-0.5 text-[11px] font-bold text-slate-700 transition font-mono"
+                  >
+                    +10
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setModQty((prev) => String(Math.max(1, (parseInt(prev, 10) || 1) - 1)))}
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition active:scale-95 shrink-0"
+                >
+                  <Minus className="h-5 w-5" />
+                </button>
+                <div className="flex-1 rounded-2xl border border-slate-300 bg-white py-2 px-3 text-center">
+                  <span className="text-2xl font-black font-mono text-slate-900 tracking-tight">
+                    {modQty}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setModQty((prev) => String((parseInt(prev, 10) || 1) + 1))}
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition active:scale-95 shrink-0"
+                >
+                  <Plus className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Numeric Keypad for fast quantity change */}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/50 p-2.5">
+              <div className="grid grid-cols-3 gap-1.5">
+                {["1", "2", "3", "4", "5", "6", "7", "8", "9", "C", "0", "⌫"].map((k) => (
+                  <button
+                    key={k}
+                    type="button"
+                    onClick={() => handleKeypadPress(k === "⌫" ? "backspace" : k)}
+                    className={`h-11 rounded-xl text-base font-bold transition active:scale-95 flex items-center justify-center ${
+                      k === "C"
+                        ? "bg-amber-100 text-amber-900 hover:bg-amber-200"
+                        : k === "⌫"
+                        ? "bg-slate-200 text-slate-800 hover:bg-slate-300"
+                        : "bg-white border border-slate-200 text-slate-900 hover:border-emerald-500 shadow-2xs font-mono"
+                    }`}
+                  >
+                    {k === "⌫" ? <Delete className="h-4 w-4" /> : k}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Discount Toggle (% or Flat) */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Discount
+                </label>
+                {/* Toggle Type */}
+                <div className="inline-flex rounded-xl bg-slate-100 p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setModDiscountType("percent")}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                      modDiscountType === "percent"
+                        ? "bg-white text-emerald-700 shadow-2xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    % Percent
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModDiscountType("flat")}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                      modDiscountType === "flat"
+                        ? "bg-white text-emerald-700 shadow-2xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    ₹ Flat Amount
+                  </button>
+                </div>
+              </div>
+
+              {/* Preset Chips */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {(modDiscountType === "percent" ? [0, 5, 10, 15, 20, 25] : [0, 10, 20, 50, 100]).map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setModDiscountVal(String(preset))}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-bold font-mono border transition ${
+                      parseFloat(modDiscountVal) === preset
+                        ? "bg-emerald-600 text-white border-emerald-600 shadow-2xs"
+                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    }`}
+                  >
+                    {modDiscountType === "percent" ? `${preset}%` : `₹${preset}`}
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Discount Input */}
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 font-mono">
+                  {modDiscountType === "percent" ? "%" : "₹"}
+                </span>
+                <input
+                  type="number"
+                  step="any"
+                  min="0"
+                  max={modDiscountType === "percent" ? 100 : undefined}
+                  value={modDiscountVal}
+                  onChange={(e) => setModDiscountVal(e.target.value)}
+                  placeholder="0"
+                  className="w-full rounded-xl border border-slate-300 bg-white pl-8 pr-3 py-2 text-xs font-bold font-mono text-slate-900 focus:border-emerald-600 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Optional Notes */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Item Note / Instructions
+              </label>
+              <input
+                type="text"
+                value={modNotes}
+                onChange={(e) => setModNotes(e.target.value)}
+                placeholder="e.g. Gift wrap, Extra cold, Specific batch"
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-emerald-600 focus:outline-none"
+              />
+            </div>
+
+            {/* Computed Calculation Preview */}
+            {(() => {
+              const q = Math.max(1, parseInt(modQty, 10) || 1);
+              const gross = editingCartItem.price * q;
+              const dVal = Math.max(0, parseFloat(modDiscountVal) || 0);
+              const dAmt =
+                modDiscountType === "percent"
+                  ? (gross * Math.min(100, dVal)) / 100
+                  : Math.min(gross, dVal);
+              const net = Math.max(0, gross - dAmt);
+
+              return (
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-slate-500 block">
+                      Subtotal: ₹{gross.toFixed(2)}{dAmt > 0 ? ` · Disc: -₹${dAmt.toFixed(2)}` : ""}
+                    </span>
+                    <span className="font-bold text-slate-900 text-sm font-mono">
+                      Net: ₹{net.toFixed(2)}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    GST Included
+                  </span>
+                </div>
+              );
+            })()}
+
+            {/* Actions: Remove & Save */}
+            <div className="flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
+              <button
+                type="button"
+                onClick={handleDeleteFromModifier}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 px-3.5 py-2.5 text-xs font-bold text-red-700 transition active:scale-95"
+                title="Remove item completely from cart"
+              >
+                <Trash2 className="h-4 w-4 text-red-600" />
+                <span>Remove</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSaveModifier}
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 text-xs font-bold text-white shadow-md active:scale-95 transition"
+              >
+                <Check className="h-4 w-4" />
+                <span>Save Changes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* LOYVERSE POST-PAYMENT SUCCESS SCREEN */}
+      {isSuccessModalOpen && successSale ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/65 p-4 backdrop-blur-xs animate-in fade-in duration-150"
+          onClick={() => {
+            // Clicking backdrop starts a new clean sale immediately
+            handleStartNewSale();
+          }}
+        >
+          <div
+            className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Animated Checkmark */}
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 ring-8 ring-emerald-50 shadow-inner">
+              <Check className="h-10 w-10 stroke-[3] animate-in zoom-in-50 duration-300" />
+            </div>
+
+            <h2 className="mt-4 text-xl font-black text-slate-900 tracking-tight">
+              Payment Successful!
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">
+              Bill #{successSale.billNo} · ₹{successSale.grandTotal.toFixed(2)} Paid ({successSale.paymentMode.toUpperCase()})
+            </p>
+
+            {/* Change Due Card (Prominent Loyverse feature for cashiers) */}
+            {successSale.paymentMode === "cash" ? (
+              <div className="my-5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 p-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+                  Change Due (Wapas kitne paise dene hain)
+                </span>
+                <div className="mt-1 text-3xl font-black text-emerald-700 font-mono tracking-tight">
+                  ₹{successChangeDue.toFixed(2)}
+                </div>
+                <p className="mt-1 text-[11px] text-emerald-600 font-medium">
+                  {successChangeDue > 0
+                    ? "Please return change to the customer."
+                    : "Exact payment received. No change required."}
+                </p>
+              </div>
+            ) : (
+              <div className="my-5 rounded-2xl border border-teal-200 bg-teal-50/60 p-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-teal-800">
+                  Transaction Recorded
+                </span>
+                <div className="mt-1 text-2xl font-black text-teal-900 font-mono">
+                  ₹{successSale.grandTotal.toFixed(2)}
+                </div>
+                <p className="mt-1 text-[11px] text-teal-700 font-medium">
+                  {successSale.paymentMode === "upi"
+                    ? "UPI payment confirmed instantly."
+                    : successSale.paymentMode === "card"
+                    ? "Card EDC transaction logged."
+                    : successSale.paymentMode === "khata"
+                    ? "Recorded in customer's credit ledger (Udhaar)."
+                    : "Split payment completed."}
+                </p>
+              </div>
+            )}
+
+            {/* 3 Prominent Action Buttons */}
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              {/* 1. Print Receipt */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSuccessModalOpen(false);
+                  setIsReceiptModalOpen(true);
+                }}
+                className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-slate-100 p-3 text-xs font-bold text-slate-800 transition active:scale-95 shadow-2xs"
+              >
+                <Printer className="h-5 w-5 text-teal-700" />
+                <span>Print Receipt</span>
+              </button>
+
+              {/* 2. WhatsApp Bill */}
+              <button
+                type="button"
+                onClick={handleShareWhatsApp}
+                className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 p-3 text-xs font-bold text-emerald-800 transition active:scale-95 shadow-2xs"
+              >
+                <Share2 className="h-5 w-5 text-emerald-600" />
+                <span>WhatsApp</span>
+              </button>
+
+              {/* 3. New Sale */}
+              <button
+                type="button"
+                onClick={handleStartNewSale}
+                className="flex flex-col items-center justify-center gap-1.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 p-3 text-xs font-bold text-white transition active:scale-95 shadow-md shadow-emerald-600/20"
+              >
+                <Zap className="h-5 w-5 fill-current" />
+                <span>New Sale</span>
+              </button>
+            </div>
+
+            {/* Auto-reset countdown timer banner */}
+            <div className="mt-5 border-t border-slate-100 pt-3 flex items-center justify-between text-[11px] text-slate-500">
+              <div className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-slate-400" />
+                <span>
+                  {isCountdownPaused
+                    ? "Auto-reset paused"
+                    : `Auto-resetting in ${autoResetCountdown}s...`}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCountdownPaused((prev) => !prev)}
+                className="text-[11px] font-bold text-slate-600 hover:text-slate-900 underline"
+              >
+                {isCountdownPaused ? "Resume" : "Pause Timer"}
               </button>
             </div>
           </div>
