@@ -14,6 +14,9 @@
   # Route /api/track directly to api/track.php on Apache/Hostinger
   RewriteRule ^api/track/?$ api/track.php [L,QSA]
 
+  # Route /api/stats directly to api/stats.php on Apache/Hostinger
+  RewriteRule ^api/stats/?$ api/stats.php [L,QSA]
+
   # Allow direct access to existing files and directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
