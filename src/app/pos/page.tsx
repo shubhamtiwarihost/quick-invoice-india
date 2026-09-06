@@ -78,11 +78,11 @@ const ZReportReceipt = dynamic(
 );
 
 const DEFAULT_STORE: BusinessInfo = {
-  businessName: "Swift Retail Store",
-  address: "Main Market, Sector 14, New Delhi - 110001",
-  phone: "+91 98765 43210",
-  gstin: "07AAAAA0000A1Z5",
-  upiId: "swiftretail@upi",
+  businessName: "",
+  address: "",
+  phone: "",
+  gstin: "",
+  upiId: "",
 };
 
 export default function PosCounterPage() {
@@ -129,7 +129,7 @@ export default function PosCounterPage() {
   // Shift Management State
   const [activeShift, setActiveShift] = useState<Shift | null>(null);
   const [isStartShiftModalOpen, setIsStartShiftModalOpen] = useState(false);
-  const [openingFloatInput, setOpeningFloatInput] = useState("1000");
+  const [openingFloatInput, setOpeningFloatInput] = useState("0");
   const [shiftNotesInput, setShiftNotesInput] = useState("");
   const [isEndShiftModalOpen, setIsEndShiftModalOpen] = useState(false);
   const [actualPhysicalCash, setActualPhysicalCash] = useState("");
@@ -190,16 +190,24 @@ export default function PosCounterPage() {
   useEffect(() => {
     loadData();
 
-    // Load store settings from localStorage
+    // Load store settings from localStorage or user profile
     try {
       const saved = localStorage.getItem("swiftgst_pos_store_settings");
       if (saved) {
         setStoreSettings(JSON.parse(saved));
+      } else if (user?.businessName) {
+        setStoreSettings({
+          businessName: user.businessName,
+          address: user.address || "",
+          phone: user.phone || "",
+          gstin: user.gstin || "",
+          upiId: user.upiId || "",
+        });
       }
     } catch (e) {
       console.error("Failed to parse store settings:", e);
     }
-  }, []);
+  }, [user]);
 
   function saveStoreSettings(updated: BusinessInfo) {
     setStoreSettings(updated);
@@ -1002,16 +1010,36 @@ export default function PosCounterPage() {
                   <RefreshCw className="h-5 w-5 animate-spin mr-2" />
                   <span>Loading product catalog...</span>
                 </div>
-              ) : filteredProducts.length === 0 ? (
-                <div className="py-28 text-center">
-                  <Package className="mx-auto h-10 w-10 text-slate-300" />
-                  <p className="mt-2 text-xs font-semibold text-slate-600">No matching products</p>
+              ) : products.length === 0 ? (
+                <div className="py-24 text-center px-4 max-w-md mx-auto">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-3xl shadow-sm border border-emerald-100/60 mb-3">
+                    📦
+                  </div>
+                  <h3 className="text-base font-bold text-slate-800">No items in stock yet</h3>
+                  <p className="mt-1.5 text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                    Start scanning barcodes or add your first product to begin billing.
+                  </p>
                   <Link
                     href="/inventory"
-                    className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-teal-700 hover:underline"
+                    className="mt-5 inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-500 active:scale-95 transition"
                   >
-                    + Add products in Stock Master
+                    <span>+ Add First Product</span>
                   </Link>
+                </div>
+              ) : filteredProducts.length === 0 ? (
+                <div className="py-24 text-center px-4">
+                  <Package className="mx-auto h-10 w-10 text-slate-300" />
+                  <p className="mt-2 text-xs font-semibold text-slate-600">No matching products found</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedCategory("all");
+                    }}
+                    className="mt-2 text-xs font-semibold text-teal-700 hover:underline"
+                  >
+                    Clear search filter
+                  </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-4">

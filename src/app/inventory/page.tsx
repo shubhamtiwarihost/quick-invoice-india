@@ -548,24 +548,52 @@ export default function InventoryPage() {
               <RefreshCw className="h-5 w-5 animate-spin mr-2" />
               <span>Loading inventory from IndexedDB...</span>
             </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="py-16 text-center">
-              <Package className="mx-auto h-12 w-12 text-slate-300" />
-              <h3 className="mt-3 text-sm font-bold text-slate-800">No items found</h3>
-              <p className="mt-1 text-xs text-slate-500">
-                {searchQuery || showLowStockOnly
-                  ? "Try resetting your search filter or category selection."
-                  : "Start adding products or import a CSV catalog to track inventory."}
+          ) : products.length === 0 ? (
+            <div className="py-20 text-center px-4 max-w-md mx-auto">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 text-3xl shadow-sm border border-teal-100/60 mb-3">
+                📦
+              </div>
+              <h3 className="text-base font-bold text-slate-800">Your inventory is empty</h3>
+              <p className="mt-1.5 text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                Add your store catalog or import via Excel/CSV.
               </p>
-              <div className="mt-4 flex justify-center gap-2">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
                 <button
                   type="button"
                   onClick={openAddModal}
-                  className="rounded-xl bg-teal-700 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-teal-800"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-teal-700 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-teal-800 transition active:scale-95"
                 >
-                  + Add First Product
+                  <Plus className="h-4 w-4 stroke-[2.5]" />
+                  <span>+ Add First Product</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-2xs hover:bg-slate-50 transition active:scale-95"
+                >
+                  <Upload className="h-4 w-4 text-slate-500" />
+                  <span>Import Excel / CSV</span>
                 </button>
               </div>
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="py-16 text-center px-4">
+              <Package className="mx-auto h-12 w-12 text-slate-300" />
+              <h3 className="mt-3 text-sm font-bold text-slate-800">No items found</h3>
+              <p className="mt-1 text-xs text-slate-500">
+                Try resetting your search filter or category selection.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedCategory("all");
+                  setShowLowStockOnly(false);
+                }}
+                className="mt-3 text-xs font-semibold text-teal-700 hover:underline"
+              >
+                Clear all filters
+              </button>
             </div>
           ) : (
             <div className="overflow-x-auto">

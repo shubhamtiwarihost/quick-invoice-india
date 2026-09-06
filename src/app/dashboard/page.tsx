@@ -219,9 +219,9 @@ export default function DashboardPage() {
   }
 
   const businessInfo: BusinessInfo = useMemo(() => {
-    let storedAddress = "Main Market, Commercial Center";
-    let storedGstin = "07AAAAA0000A1Z5";
-    let storedUpiId = "swiftpos@upi";
+    let storedAddress = user?.address || "";
+    let storedGstin = user?.gstin || "";
+    let storedUpiId = user?.upiId || "";
 
     if (typeof window !== "undefined") {
       try {
@@ -240,9 +240,9 @@ export default function DashboardPage() {
     }
 
     return {
-      businessName: user?.businessName || "Swift Retail Store",
+      businessName: user?.businessName || "My Store",
       address: storedAddress,
-      phone: user?.phone || "+91 98765 43210",
+      phone: user?.phone || "",
       gstin: storedGstin,
       upiId: storedUpiId,
     };

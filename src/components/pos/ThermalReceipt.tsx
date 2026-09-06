@@ -22,11 +22,11 @@ export interface ThermalReceiptProps {
 }
 
 const DEFAULT_BUSINESS: BusinessInfo = {
-  businessName: "Swift Retail Store",
-  address: "Main Market, Sector 14, New Delhi - 110001",
-  phone: "+91 98765 43210",
-  gstin: "07AAAAA0000A1Z5",
-  upiId: "swiftretail@upi",
+  businessName: "",
+  address: "",
+  phone: "",
+  gstin: "",
+  upiId: "",
 };
 
 export const ThermalReceipt = forwardRef<HTMLDivElement, ThermalReceiptProps>(

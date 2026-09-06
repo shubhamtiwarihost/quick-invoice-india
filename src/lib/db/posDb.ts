@@ -211,350 +211,75 @@ export function getDb(): Promise<IDBPDatabase<PosDBSchema>> {
 }
 
 // ----------------------------------------------------------------------
-// Sample Catalog & Customer Seeds
+// Sample Catalog & Customer Seeds (Disabled for Clean Zero-State)
 // ----------------------------------------------------------------------
-export const DEMO_PRODUCTS: Omit<Product, "id">[] = [
-  {
-    name: "Tata Salt Vacuum Evaporated (1kg)",
-    barcode: "8901030383321",
-    hsn: "2501",
-    costPrice: 22,
-    salePrice: 28,
-    gstRate: 0,
-    stock: 45,
-    minStock: 10,
-    category: "Grocery & Staples",
-  },
-  {
-    name: "Fortune Sunlite Refined Sunflower Oil (1L)",
-    barcode: "8906007280012",
-    hsn: "1512",
-    costPrice: 125,
-    salePrice: 145,
-    gstRate: 5,
-    stock: 24,
-    minStock: 8,
-    category: "Edible Oils",
-  },
-  {
-    name: "Amul Butter Pasteurized (500g)",
-    barcode: "8901262010057",
-    hsn: "0405",
-    costPrice: 245,
-    salePrice: 275,
-    gstRate: 12,
-    stock: 14,
-    minStock: 5,
-    category: "Dairy",
-  },
-  {
-    name: "Aashirvaad Shudh Chakki Atta (5kg)",
-    barcode: "8901725181223",
-    hsn: "1101",
-    costPrice: 220,
-    salePrice: 255,
-    gstRate: 0,
-    stock: 18,
-    minStock: 6,
-    category: "Flours & Grains",
-  },
-  {
-    name: "Maggi 2-Minute Noodles Masala (280g)",
-    barcode: "8901058852441",
-    hsn: "1902",
-    costPrice: 50,
-    salePrice: 60,
-    gstRate: 18,
-    stock: 5,
-    minStock: 12,
-    category: "Packaged Foods",
-  },
-  {
-    name: "Dettol Original Bathing Soap Bar (125g)",
-    barcode: "8901396316209",
-    hsn: "3401",
-    costPrice: 42,
-    salePrice: 52,
-    gstRate: 18,
-    stock: 32,
-    minStock: 10,
-    category: "Personal Care",
-  },
-  {
-    name: "Red Bull Energy Drink Can (250ml)",
-    barcode: "9002490100070",
-    hsn: "2202",
-    costPrice: 100,
-    salePrice: 125,
-    gstRate: 28,
-    stock: 3,
-    minStock: 6,
-    category: "Beverages",
-  },
-];
+export const DEMO_PRODUCTS: Omit<Product, "id">[] = [];
 
-export const DEMO_CUSTOMERS: Omit<Customer, "id">[] = [
-  {
-    name: "Ramesh Sharma",
-    phone: "9810012345",
-    creditBalance: 1450,
-    loyaltyPoints: 35,
-  },
-  {
-    name: "Priya Verma",
-    phone: "9820067890",
-    creditBalance: 0,
-    loyaltyPoints: 120,
-  },
-  {
-    name: "Amit Gupta",
-    phone: "9830045678",
-    creditBalance: 680,
-    loyaltyPoints: 15,
-  },
-  {
-    name: "Sunita Patel",
-    phone: "9840098765",
-    creditBalance: 2100,
-    loyaltyPoints: 50,
-  },
-];
+export const DEMO_CUSTOMERS: Omit<Customer, "id">[] = [];
+
+export async function purgeDemoSeedDataIfPresent(): Promise<void> {
+  if (typeof window === "undefined") return;
+  try {
+    const db = await getDb();
+
+    // 1. Purge demo sales
+    const sales = await db.getAll("sales");
+    for (const s of sales) {
+      if (s.id && (s.id.startsWith("sal_demo_") || s.billNo === "POS-1001" || s.billNo === "POS-1002" || s.billNo === "POS-1003")) {
+        await db.delete("sales", s.id);
+      }
+    }
+
+    // 2. Purge demo products
+    const demoBarcodes = new Set([
+      "8901030383321",
+      "8906007280012",
+      "8901262010057",
+      "8901725181223",
+      "8901058852441",
+      "8901396316209",
+      "9002490100070",
+    ]);
+    const products = await db.getAll("products");
+    for (const p of products) {
+      if (p.barcode && demoBarcodes.has(p.barcode)) {
+        await db.delete("products", p.id);
+      }
+    }
+
+    // 3. Purge demo customers
+    const demoPhones = new Set(["9810012345", "9820067890", "9830045678", "9840098765"]);
+    const customers = await db.getAll("customers");
+    for (const c of customers) {
+      if (demoPhones.has(c.phone)) {
+        await db.delete("customers", c.id);
+      }
+    }
+
+    // 4. Purge demo ledger entries
+    const ledger = await db.getAll("ledger");
+    for (const l of ledger) {
+      if (l.billNo === "BILL-INIT") {
+        await db.delete("ledger", l.id);
+      }
+    }
+  } catch (err) {
+    console.error("Error purging demo data:", err);
+  }
+}
 
 export async function seedInitialInventoryIfEmpty(): Promise<boolean> {
   if (typeof window === "undefined") return false;
-  try {
-    const db = await getDb();
-    const count = await db.count("products");
-    if (count > 0) return false;
-
-    const tx = db.transaction("products", "readwrite");
-    const now = Date.now();
-    for (const item of DEMO_PRODUCTS) {
-      const id = "prd_" + Math.random().toString(36).substring(2, 9);
-      await tx.store.put({
-        ...item,
-        id,
-        createdAt: now,
-        updatedAt: now,
-      });
-    }
-    await tx.done;
-    return true;
-  } catch (err) {
-    console.error("Failed to seed demo inventory:", err);
-    return false;
-  }
+  await purgeDemoSeedDataIfPresent();
+  return false;
 }
 
 export async function seedInitialCustomersIfEmpty(): Promise<boolean> {
-  if (typeof window === "undefined") return false;
-  try {
-    const db = await getDb();
-    const count = await db.count("customers");
-    if (count > 0) return false;
-
-    const now = Date.now();
-    for (const item of DEMO_CUSTOMERS) {
-      const custId = "cst_" + Math.random().toString(36).substring(2, 9);
-      await db.put("customers", {
-        ...item,
-        id: custId,
-        createdAt: now,
-        updatedAt: now,
-      });
-
-      // Also seed an initial ledger entry if they have an outstanding balance
-      if (item.creditBalance > 0) {
-        await db.put("ledger", {
-          id: "ldg_" + Math.random().toString(36).substring(2, 9),
-          customerId: custId,
-          type: "sale",
-          billNo: "BILL-INIT",
-          amount: item.creditBalance,
-          paymentMode: "khata",
-          notes: "Previous Udhaar balance brought forward",
-          timestamp: now - 86400000 * 3,
-        });
-      }
-    }
-    return true;
-  } catch (err) {
-    console.error("Failed to seed demo customers:", err);
-    return false;
-  }
+  return false;
 }
 
 export async function seedInitialSalesIfEmpty(): Promise<boolean> {
-  if (typeof window === "undefined") return false;
-  try {
-    const db = await getDb();
-    const count = await db.count("sales");
-    if (count > 0) return false;
-
-    const products = await db.getAll("products");
-    if (products.length === 0) return false;
-
-    const customers = await db.getAll("customers");
-    const now = Date.now();
-    const oneDay = 86400000;
-
-    const demoSales: Sale[] = [
-      {
-        id: "sal_demo_1",
-        billNo: "POS-1001",
-        items: [
-          {
-            productId: products[0]?.id || "",
-            name: products[0]?.name || "Tata Salt 1kg",
-            price: 28,
-            gstRate: 0,
-            qty: 2,
-            taxAmount: 0,
-            total: 56,
-          },
-          {
-            productId: products[1]?.id || "",
-            name: products[1]?.name || "Fortune Sunflower Oil 1L",
-            price: 145,
-            gstRate: 5,
-            qty: 1,
-            taxAmount: 6.9,
-            total: 145,
-          },
-        ],
-        subtotal: 194.1,
-        taxTotal: 6.9,
-        grandTotal: 201,
-        paymentMode: "cash",
-        timestamp: now - 3600000 * 2, // 2 hours ago (Today)
-        customerName: "Walk-in Cash",
-      },
-      {
-        id: "sal_demo_2",
-        billNo: "POS-1002",
-        items: [
-          {
-            productId: products[2]?.id || "",
-            name: products[2]?.name || "Amul Butter 500g",
-            price: 275,
-            gstRate: 12,
-            qty: 2,
-            taxAmount: 58.9,
-            total: 550,
-          },
-          {
-            productId: products[4]?.id || "",
-            name: products[4]?.name || "Maggi Noodles 280g",
-            price: 60,
-            gstRate: 18,
-            qty: 3,
-            taxAmount: 27.45,
-            total: 180,
-          },
-        ],
-        subtotal: 643.65,
-        taxTotal: 86.35,
-        grandTotal: 730,
-        paymentMode: "upi",
-        timestamp: now - 3600000 * 4, // 4 hours ago (Today)
-        customerName: customers[1]?.name || "Priya Verma",
-        customerPhone: customers[1]?.phone || "9820067890",
-      },
-      {
-        id: "sal_demo_3",
-        billNo: "POS-1003",
-        items: [
-          {
-            productId: products[3]?.id || "",
-            name: products[3]?.name || "Aashirvaad Atta 5kg",
-            price: 255,
-            gstRate: 0,
-            qty: 1,
-            taxAmount: 0,
-            total: 255,
-          },
-          {
-            productId: products[6]?.id || "",
-            name: products[6]?.name || "Red Bull 250ml",
-            price: 125,
-            gstRate: 28,
-            qty: 2,
-            taxAmount: 54.68,
-            total: 250,
-          },
-        ],
-        subtotal: 450.32,
-        taxTotal: 54.68,
-        grandTotal: 505,
-        paymentMode: "card",
-        timestamp: now - oneDay * 1.5, // Yesterday
-        customerName: "Card Customer",
-      },
-      {
-        id: "sal_demo_4",
-        billNo: "POS-1004",
-        items: [
-          {
-            productId: products[5]?.id || "",
-            name: products[5]?.name || "Dettol Soap 125g",
-            price: 52,
-            gstRate: 18,
-            qty: 4,
-            taxAmount: 31.73,
-            total: 208,
-          },
-          {
-            productId: products[1]?.id || "",
-            name: products[1]?.name || "Fortune Sunflower Oil 1L",
-            price: 145,
-            gstRate: 5,
-            qty: 2,
-            taxAmount: 13.8,
-            total: 290,
-          },
-        ],
-        subtotal: 452.47,
-        taxTotal: 45.53,
-        grandTotal: 498,
-        paymentMode: "khata",
-        timestamp: now - oneDay * 3, // 3 days ago
-        customerId: customers[0]?.id || "",
-        customerName: customers[0]?.name || "Ramesh Sharma",
-        customerPhone: customers[0]?.phone || "9810012345",
-      },
-      {
-        id: "sal_demo_5",
-        billNo: "POS-1005",
-        items: [
-          {
-            productId: products[4]?.id || "",
-            name: products[4]?.name || "Maggi Noodles 280g",
-            price: 60,
-            gstRate: 18,
-            qty: 6,
-            taxAmount: 54.9,
-            total: 360,
-          },
-        ],
-        subtotal: 305.1,
-        taxTotal: 54.9,
-        grandTotal: 360,
-        paymentMode: "upi",
-        timestamp: now - oneDay * 5, // 5 days ago
-        customerName: "UPI Customer",
-      },
-    ];
-
-    const tx = db.transaction("sales", "readwrite");
-    for (const sale of demoSales) {
-      await tx.store.put(sale);
-    }
-    await tx.done;
-    return true;
-  } catch (err) {
-    console.error("Failed to seed demo sales:", err);
-    return false;
-  }
+  return false;
 }
 
 // ----------------------------------------------------------------------

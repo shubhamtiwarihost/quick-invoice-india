@@ -19,6 +19,9 @@ export interface AuthUser {
   phone?: string;
   storeType?: string;
   cashierPin?: string;
+  address?: string;
+  gstin?: string;
+  upiId?: string;
 }
 
 export interface AuthContextType {

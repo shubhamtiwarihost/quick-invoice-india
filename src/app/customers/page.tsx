@@ -32,16 +32,18 @@ import {
 } from "@/lib/db/posDb";
 import { type BusinessInfo } from "@/components/pos/ThermalReceipt";
 import { CustomersComplianceGuide } from "@/components/customers/CustomersComplianceGuide";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 const DEFAULT_STORE: BusinessInfo = {
-  businessName: "Swift Retail Store",
-  address: "Main Market, Sector 14, New Delhi - 110001",
-  phone: "+91 98765 43210",
-  gstin: "07AAAAA0000A1Z5",
-  upiId: "swiftretail@upi",
+  businessName: "",
+  address: "",
+  phone: "",
+  gstin: "",
+  upiId: "",
 };
 
 export default function CustomersKhataPage() {
+  const { user } = useAuth();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -100,11 +102,19 @@ export default function CustomersKhataPage() {
       const saved = localStorage.getItem("swiftgst_pos_store_settings");
       if (saved) {
         setStoreSettings(JSON.parse(saved));
+      } else if (user?.businessName) {
+        setStoreSettings({
+          businessName: user.businessName,
+          address: user.address || "",
+          phone: user.phone || "",
+          gstin: user.gstin || "",
+          upiId: user.upiId || "",
+        });
       }
     } catch (e) {
       console.error("Failed to parse store settings:", e);
     }
-  }, []);
+  }, [user]);
 
   // Filter Customers
   const filteredCustomers = useMemo(() => {
@@ -414,24 +424,45 @@ export default function CustomersKhataPage() {
               <RefreshCw className="h-5 w-5 animate-spin mr-2" />
               <span>Loading customer records...</span>
             </div>
+          ) : customers.length === 0 ? (
+            <div className="py-20 text-center px-4 max-w-md mx-auto">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 text-3xl shadow-sm border border-teal-100/60 mb-3">
+                👥
+              </div>
+              <h3 className="text-base font-bold text-slate-800">No customers in Khata ledger</h3>
+              <p className="mt-1.5 text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                Add your store customers to track credit balance (Udhaar), issue payment reminders, and award loyalty points.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <button
+                  type="button"
+                  onClick={openAddModal}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-teal-700 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-teal-800 transition active:scale-95"
+                >
+                  <Plus className="h-4 w-4 stroke-[2.5]" />
+                  <span>+ Add First Customer</span>
+                </button>
+              </div>
+            </div>
           ) : filteredCustomers.length === 0 ? (
-            <div className="py-20 text-center">
+            <div className="py-16 text-center px-4">
               <Users className="mx-auto h-12 w-12 text-slate-300" />
               <h3 className="mt-3 text-sm font-bold text-slate-800">No customers found</h3>
               <p className="mt-1 text-xs text-slate-500">
                 {searchQuery || showOutstandingOnly
-                  ? "Try resetting your search query."
-                  : "Add your first regular customer to start tracking Udhaar & Loyalty."}
+                  ? "Try resetting your search query or toggling filters."
+                  : "No customers matching your criteria."}
               </p>
-              <div className="mt-4 flex justify-center">
-                <button
-                  type="button"
-                  onClick={openAddModal}
-                  className="rounded-xl bg-teal-700 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-teal-800"
-                >
-                  + Add First Customer
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setShowOutstandingOnly(false);
+                }}
+                className="mt-3 text-xs font-semibold text-teal-700 hover:underline"
+              >
+                Clear all filters
+              </button>
             </div>
           ) : (
             <div className="overflow-x-auto">
