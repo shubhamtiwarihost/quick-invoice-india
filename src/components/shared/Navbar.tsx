@@ -175,8 +175,22 @@ export function Navbar() {
     setMobileMenuOpen(false);
   }
 
-  const primaryLinks = ALL_TOOLS.slice(0, 5);
-  const secondaryLinks = ALL_TOOLS.slice(5);
+  const primaryLinks = [
+    { href: "/", label: "Invoice Generator", shortLabel: "Invoice" },
+    { href: "/quotation-maker", label: "Estimate & Quotation Maker", shortLabel: "Quotation" },
+    { href: "/gst-calculator", label: "GST Calculator", shortLabel: "GST Calc" },
+  ];
+
+  const secondaryLinks = ALL_TOOLS.filter(
+    (t) =>
+      t.href !== "/" &&
+      t.href !== "/quotation-maker" &&
+      t.href !== "/gst-calculator" &&
+      t.href !== "/pos" &&
+      t.href !== "/inventory" &&
+      t.href !== "/customers" &&
+      t.href !== "/analytics"
+  );
 
   return (
     <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md will-change-transform transform-gpu">
@@ -315,13 +329,21 @@ export function Navbar() {
           {/* User / Store Auth Status & Quick-Lock */}
           {user ? (
             <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-              <div
-                className="flex items-center gap-1.5 rounded-xl bg-teal-50 border border-teal-200/80 px-2.5 py-1.5 text-xs text-teal-900 font-semibold max-w-[170px]"
-                title={`${user.businessName} (${user.ownerName || "Cashier"})`}
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-1.5 rounded-xl bg-teal-50 border border-teal-200/80 px-2.5 py-1.5 text-xs text-teal-900 font-semibold max-w-[160px] hover:bg-teal-100 transition"
+                title={`${user.businessName} - Open Back-Office`}
               >
                 <Store className="h-3.5 w-3.5 text-teal-700 shrink-0" />
                 <span className="truncate">{user.businessName}</span>
-              </div>
+              </Link>
+
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1 rounded-xl bg-teal-700 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-teal-800 transition"
+              >
+                <span>Back-Office</span>
+              </Link>
 
               <button
                 type="button"
@@ -344,18 +366,18 @@ export function Navbar() {
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200">
+            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
               <Link
                 href="/login"
-                className="rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition"
+                className="rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
-                className="rounded-xl bg-teal-700 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-teal-800 transition"
+                className="rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 active:scale-95 transition"
               >
-                Register Store
+                Get Started Free
               </Link>
             </div>
           )}
@@ -430,16 +452,16 @@ export function Navbar() {
               <Link
                 href="/login"
                 onClick={closeAllMenus}
-                className="flex-1 rounded-xl border border-slate-200 bg-white py-2 text-center text-xs font-bold text-slate-800 shadow-2xs hover:bg-slate-50"
+                className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-center text-xs font-bold text-slate-800 shadow-2xs hover:bg-slate-50"
               >
                 Sign In
               </Link>
               <Link
                 href="/register"
                 onClick={closeAllMenus}
-                className="flex-1 rounded-xl bg-teal-700 py-2 text-center text-xs font-bold text-white shadow-2xs hover:bg-teal-800"
+                className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-center text-xs font-bold text-white shadow-2xs hover:bg-emerald-700"
               >
-                Register Store
+                Get Started Free
               </Link>
             </div>
           )}
@@ -468,60 +490,51 @@ export function Navbar() {
             <span className="text-[10px] rounded-full bg-teal-100 text-teal-800 px-2 py-0.5 font-semibold">13+ Tools</span>
           </Link>
 
-          {/* Quick POS & Retail Mobile Bar */}
-          <div className="grid grid-cols-2 gap-2 mb-3">
+          {/* Primary Public Tools on Mobile */}
+          <div className="space-y-1 mb-2">
             <Link
-              href="/inventory"
+              href="/"
               onClick={closeAllMenus}
-              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
-                pathname === "/inventory"
-                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
-                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
+              className={`flex items-center gap-3 rounded-xl p-2.5 text-xs font-semibold ${
+                pathname === "/"
+                  ? "bg-teal-700 text-white font-bold"
+                  : "text-slate-800 hover:bg-slate-50"
               }`}
             >
-              <Package className="h-4 w-4" />
-              <span>Inventory</span>
+              <FileText className="h-4 w-4 text-teal-700" />
+              <span>Invoice Generator</span>
             </Link>
             <Link
-              href="/pos"
+              href="/quotation-maker"
               onClick={closeAllMenus}
-              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
-                pathname === "/pos"
-                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
-                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
+              className={`flex items-center gap-3 rounded-xl p-2.5 text-xs font-semibold ${
+                pathname === "/quotation-maker"
+                  ? "bg-teal-700 text-white font-bold"
+                  : "text-slate-800 hover:bg-slate-50"
               }`}
             >
-              <Store className="h-4 w-4" />
-              <span>POS Counter</span>
+              <FileCheck2 className="h-4 w-4 text-teal-700" />
+              <span>Estimate &amp; Quotation Maker</span>
             </Link>
             <Link
-              href="/customers"
+              href="/gst-calculator"
               onClick={closeAllMenus}
-              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
-                pathname === "/customers"
-                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
-                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
+              className={`flex items-center gap-3 rounded-xl p-2.5 text-xs font-semibold ${
+                pathname === "/gst-calculator"
+                  ? "bg-teal-700 text-white font-bold"
+                  : "text-slate-800 hover:bg-slate-50"
               }`}
             >
-              <Users className="h-4 w-4" />
-              <span>Khata CRM</span>
-            </Link>
-            <Link
-              href="/analytics"
-              onClick={closeAllMenus}
-              className={`flex items-center justify-center gap-2 rounded-xl border p-2.5 text-xs font-bold transition ${
-                pathname === "/analytics"
-                  ? "border-teal-600 bg-teal-700 text-white shadow-xs"
-                  : "border-teal-200 bg-teal-50 text-teal-950 hover:bg-teal-100"
-              }`}
-            >
-              <BarChart3 className="h-4 w-4" />
-              <span>Analytics</span>
+              <Calculator className="h-4 w-4 text-teal-700" />
+              <span>GST Calculator</span>
             </Link>
           </div>
 
+          <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            More GST &amp; Business Utilities
+          </div>
           <div className="space-y-1">
-            {ALL_TOOLS.map((item) => {
+            {secondaryLinks.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (

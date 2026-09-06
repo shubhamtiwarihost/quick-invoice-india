@@ -11,6 +11,7 @@ import {
   Phone,
   Tag,
   KeyRound,
+  ArrowLeft,
   ArrowRight,
   ShieldCheck,
   Zap,
@@ -115,6 +116,18 @@ export default function RegisterPage() {
   return (
     <div className="min-h-[90vh] bg-gradient-to-b from-slate-50 to-slate-100/80 px-4 py-8 sm:py-12">
       <div className="mx-auto max-w-xl">
+        {/* Back to Website Link */}
+        <div className="mb-5 flex items-center justify-between">
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-teal-700 transition"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            <span>Back to SwiftGST</span>
+          </Link>
+          <span className="text-[11px] font-medium text-slate-400">Merchant Onboarding</span>
+        </div>
+
         {/* Onboarding Header */}
         <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-teal-50 border border-teal-200/80 px-3.5 py-1 text-xs font-semibold text-teal-800 shadow-2xs">

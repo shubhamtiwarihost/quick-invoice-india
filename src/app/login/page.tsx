@@ -7,6 +7,7 @@ import {
   Store,
   Mail,
   Lock,
+  ArrowLeft,
   ArrowRight,
   AlertCircle,
   Loader2,
@@ -76,6 +77,18 @@ function LoginForm() {
   return (
     <div className="min-h-[85vh] bg-gradient-to-b from-slate-50 to-slate-100/80 px-4 py-12 flex flex-col justify-center">
       <div className="mx-auto w-full max-w-md">
+        {/* Back to Website Link */}
+        <div className="mb-5 flex items-center justify-between">
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-teal-700 transition"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            <span>Back to SwiftGST</span>
+          </Link>
+          <span className="text-[11px] font-medium text-slate-400">Merchant Portal</span>
+        </div>
+
         {/* Header */}
         <div className="mb-6 text-center">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-700 text-white shadow-md shadow-teal-700/20 mb-3">
