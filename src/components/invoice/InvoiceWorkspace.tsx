@@ -216,6 +216,17 @@ export function InvoiceWorkspace({
       const { downloadInvoicePdf } = await import("@/lib/exportPdf");
       await downloadInvoicePdf(el, `${safeInvoiceNo}.pdf`);
       showToast(`Downloaded PDF and saved ${draft.meta.invoiceNo} to history!`);
+
+      // Telemetry tracking
+      fetch("/api/track.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          event_type: "INVOICE_GENERATED",
+          feature: "public_invoice",
+          details: { totalAmount: summary.grandTotal, template: draft.config.template },
+        }),
+      }).catch(() => {});
     } catch (err) {
       console.error("PDF generation failed:", err);
       showToast("Failed to generate PDF. Please try again or use Print.");

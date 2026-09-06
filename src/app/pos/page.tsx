@@ -63,6 +63,7 @@ import {
   type HeldTicket,
 } from "@/lib/db/posDb";
 import dynamic from "next/dynamic";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { PosComplianceGuide } from "@/components/pos/PosComplianceGuide";
 import type { BusinessInfo } from "@/components/pos/ThermalReceipt";
 
@@ -84,6 +85,7 @@ const DEFAULT_STORE: BusinessInfo = {
 };
 
 export default function PosCounterPage() {
+  const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -752,6 +754,19 @@ export default function PosCounterPage() {
       setCompletedSale(newSale);
       setIsCheckoutOpen(false);
       setIsReceiptModalOpen(true);
+
+      // Telemetry tracking
+      fetch("/api/track.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?.id || null,
+          storeName: user?.businessName || storeSettings.businessName,
+          event_type: "POS_SALE_COMPLETED",
+          feature: "pos_counter",
+          details: { billAmount: grandTotal, itemCount: cart.length, paymentMode },
+        }),
+      }).catch(() => {});
 
       // 3. Clear cart and reload stock & customers in background
       clearCart();
