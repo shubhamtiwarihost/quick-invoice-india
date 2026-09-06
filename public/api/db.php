@@ -107,16 +107,29 @@ try {
 
         CREATE TABLE IF NOT EXISTS daily_visitors (
             id INT AUTO_INCREMENT PRIMARY KEY,
+            visitor_hash VARCHAR(64) NOT NULL DEFAULT '',
+            ip_address VARCHAR(45) NOT NULL DEFAULT '',
             visit_date DATE NOT NULL,
-            ip_address VARCHAR(45) NOT NULL,
+            page_path VARCHAR(255) NOT NULL DEFAULT '/',
             hit_count INT DEFAULT 1,
             user_agent VARCHAR(255) DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            UNIQUE KEY uq_date_ip (visit_date, ip_address),
+            UNIQUE KEY uq_date_visitor (visit_date, visitor_hash),
             INDEX idx_daily_visitors_date (visit_date)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
+
+    // Auto-migration if daily_visitors table was created in an earlier session
+    try {
+        $pdo->exec("ALTER TABLE daily_visitors ADD COLUMN visitor_hash VARCHAR(64) NOT NULL DEFAULT '' AFTER id");
+    } catch (Exception $e) {}
+    try {
+        $pdo->exec("ALTER TABLE daily_visitors ADD COLUMN page_path VARCHAR(255) NOT NULL DEFAULT '/' AFTER visit_date");
+    } catch (Exception $e) {}
+    try {
+        $pdo->exec("ALTER TABLE daily_visitors ADD UNIQUE KEY uq_date_visitor (visit_date, visitor_hash)");
+    } catch (Exception $e) {}
 
 } catch (PDOException $e) {
     http_response_code(500);

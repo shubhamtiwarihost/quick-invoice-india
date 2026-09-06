@@ -13,6 +13,7 @@ export interface TrackPayload {
   storeName?: string | null;
   event_type: string;
   feature?: string;
+  page?: string;
   details?: Record<string, unknown> | null;
 }
 
@@ -41,11 +42,19 @@ export function trackEvent(
       }
     }
 
+    const page =
+      typeof details.path === "string"
+        ? (details.path as string)
+        : typeof window !== "undefined"
+        ? window.location.pathname
+        : "/";
+
     const payload: TrackPayload = {
       userId,
       storeName,
       event_type: eventType,
       feature,
+      page,
       details: Object.keys(details).length > 0 ? details : null,
     };
 
