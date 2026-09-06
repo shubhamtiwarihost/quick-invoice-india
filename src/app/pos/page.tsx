@@ -786,11 +786,12 @@ export default function PosCounterPage() {
             {/* Title & Brand */}
             <div className="flex items-center gap-3">
               <Link
-                href="/inventory"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition"
-                title="Back to Stock Master"
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition shadow-2xs"
+                title="Back to Back-Office Dashboard"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Back-Office</span>
               </Link>
               <div className="flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-700 text-white shadow-xs">

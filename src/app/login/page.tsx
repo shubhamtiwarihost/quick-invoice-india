@@ -17,7 +17,7 @@ import { useAuth } from "@/lib/auth/AuthContext";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTarget = searchParams.get("redirect") || "/pos";
+  const redirectTarget = searchParams.get("redirect") || "/dashboard";
 
   const { login, user } = useAuth();
 

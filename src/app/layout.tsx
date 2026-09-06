@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Geist } from "next/font/google";
-import { Footer, Navbar } from "@/components/shared/Navbar";
 import { PersistHydration } from "@/components/shared/PersistHydration";
 import { CookieConsent } from "@/components/common/CookieConsent";
-import { NativeBottomNav } from "@/components/mobile/NativeBottomNav";
 import { InstallPromptBanner } from "@/components/pwa/InstallPromptBanner";
+import { AppLayoutManager } from "@/components/layout/AppLayoutManager";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import "./globals.css";
 
@@ -64,10 +63,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-slate-100 font-sans text-slate-900">
         <AuthProvider>
           <PersistHydration />
-          <Navbar />
-          {children}
-          <Footer />
-          <NativeBottomNav />
+          <AppLayoutManager>{children}</AppLayoutManager>
           <InstallPromptBanner />
           <CookieConsent />
         </AuthProvider>

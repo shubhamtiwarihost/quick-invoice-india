@@ -49,9 +49,9 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // If already logged in, redirect to POS
+  // If already logged in, redirect to Dashboard
   if (user) {
-    router.replace("/pos");
+    router.replace("/dashboard");
     return null;
   }
 
@@ -103,7 +103,7 @@ export default function RegisterPage() {
 
       // Store session and redirect
       login(data.token, data.user);
-      router.replace("/pos");
+      router.replace("/dashboard");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Something went wrong. Please check your connection.";
       setErrorMsg(msg);

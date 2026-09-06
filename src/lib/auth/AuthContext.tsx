@@ -120,14 +120,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem(LOCKED_KEY);
       setCookie(COOKIE_NAME, newToken, 30);
 
-      // Sync store settings for POS receipts
-      const existingSettings = localStorage.getItem("swiftpos_store_settings");
-      if (existingSettings) {
-        const parsed = JSON.parse(existingSettings);
-        parsed.businessName = newUser.businessName;
-        if (newUser.phone) parsed.phone = newUser.phone;
-        localStorage.setItem("swiftpos_store_settings", JSON.stringify(parsed));
-      }
+      const existingSettings = localStorage.getItem("swiftpos_store_settings") || localStorage.getItem("swiftgst_pos_store_settings");
+      const parsed = existingSettings ? JSON.parse(existingSettings) : {};
+      parsed.businessName = newUser.businessName;
+      if (newUser.phone) parsed.phone = newUser.phone;
+      localStorage.setItem("swiftpos_store_settings", JSON.stringify(parsed));
+      localStorage.setItem("swiftgst_pos_store_settings", JSON.stringify(parsed));
     } catch {
       // Ignore storage errors
     }
