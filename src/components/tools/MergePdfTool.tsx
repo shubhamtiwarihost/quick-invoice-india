@@ -13,6 +13,7 @@ import { DropZone } from '../common/DropZone';
 import { ProcessingOverlay } from '../common/ProcessingOverlay';
 import { formatFileSize, getPdfPageCount, mergePdfs } from '../../lib/pdf-helpers';
 import { downloadFile } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { PdfFileItem, ProcessingStatus } from '../../types';
 
 export const MergePdfTool: React.FC = () => {
@@ -84,6 +85,8 @@ export const MergePdfTool: React.FC = () => {
       return;
     }
 
+    const startTime = trackToolStart('merge_pdf');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Merging PDF documents',
@@ -110,8 +113,16 @@ export const MergePdfTool: React.FC = () => {
 
       const outputFilename = `merged_${files[0].name.replace(/\.pdf$/i, '')}_and_more.pdf`;
       downloadFile(mergedBytes, outputFilename);
+
+      trackToolSuccess('merge_pdf', {
+        startTime,
+        pageCount: totalPages,
+        fileCount: files.length,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Merge failed';
+      trackToolError('merge_pdf', { startTime, errorMessage: msg });
       alert('An error occurred while merging your PDFs. Please verify the files are valid.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });

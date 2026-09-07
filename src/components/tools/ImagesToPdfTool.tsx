@@ -14,6 +14,7 @@ import { ProcessingOverlay } from '../common/ProcessingOverlay';
 import { loadImageFile, convertImagesToPdf } from '../../lib/image-helpers';
 import { formatFileSize } from '../../lib/pdf-helpers';
 import { downloadFile } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { ImageFileItem, ImageToPdfOptions, ProcessingStatus } from '../../types';
 
 export const ImagesToPdfTool: React.FC = () => {
@@ -78,6 +79,8 @@ export const ImagesToPdfTool: React.FC = () => {
   const handleConvert = async () => {
     if (images.length === 0) return;
 
+    const startTime = trackToolStart('images_to_pdf');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Generating PDF document',
@@ -96,8 +99,16 @@ export const ImagesToPdfTool: React.FC = () => {
 
       const outputName = `images_converted_${Date.now()}.pdf`;
       downloadFile(pdfBlob, outputName);
+
+      trackToolSuccess('images_to_pdf', {
+        startTime,
+        pageCount: images.length,
+        fileCount: images.length,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Image to PDF conversion failed';
+      trackToolError('images_to_pdf', { startTime, errorMessage: msg });
       alert('Failed to generate PDF from images.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });

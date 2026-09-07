@@ -5,7 +5,9 @@ import { Footer } from './components/layout/Footer';
 import { SecurityBadge } from './components/common/SecurityBadge';
 import { AdBanner } from './components/ads/AdBanner';
 import { LegalModal } from './components/legal/LegalModal';
+import { AdminDashboard } from './components/admin/AdminDashboard';
 import type { LegalPageId } from './components/legal/legalContent';
+import { initAnalytics } from './utils/tracker';
 import { MergePdfTool } from './components/tools/MergePdfTool';
 import { SplitPdfTool } from './components/tools/SplitPdfTool';
 import { RotatePdfTool } from './components/tools/RotatePdfTool';
@@ -30,11 +32,33 @@ import {
 export const App: React.FC = () => {
   const [activeTool, setActiveTool] = useState<PdfToolId>('merge');
   const [legalModalPage, setLegalModalPage] = useState<LegalPageId | null>(null);
+  const [isAdminView, setIsAdminView] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      window.location.pathname === '/admin' ||
+      window.location.pathname.endsWith('/admin') ||
+      window.location.hash === '#admin'
+    );
+  });
 
-  // Sync hash routing for deep links (SEO & direct access)
+  // Initialize analytics on boot
   useEffect(() => {
-    const handleHashChange = () => {
+    initAnalytics();
+  }, []);
+
+  // Sync hash and pathname routing for deep links & admin
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname;
       const hash = window.location.hash.replace('#', '').toLowerCase();
+
+      if (path === '/admin' || path.endsWith('/admin') || hash === 'admin') {
+        setIsAdminView(true);
+        return;
+      }
+
+      setIsAdminView(false);
+
       if (['privacy', 'terms', 'about', 'contact'].includes(hash)) {
         setLegalModalPage(hash as LegalPageId);
       } else if (TOOLS_CONFIG.some((t) => t.id === hash)) {
@@ -42,12 +66,17 @@ export const App: React.FC = () => {
       }
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleLocationChange();
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
   }, []);
 
   const handleSelectTool = (id: PdfToolId) => {
+    setIsAdminView(false);
     setActiveTool(id);
     window.location.hash = id;
   };
@@ -59,6 +88,19 @@ export const App: React.FC = () => {
 
   const handleCloseLegal = () => {
     setLegalModalPage(null);
+    window.location.hash = activeTool;
+  };
+
+  const handleOpenAdmin = () => {
+    setIsAdminView(true);
+    window.location.hash = 'admin';
+  };
+
+  const handleBackFromAdmin = () => {
+    setIsAdminView(false);
+    if (window.location.pathname === '/admin') {
+      window.history.pushState(null, '', '/');
+    }
     window.location.hash = activeTool;
   };
 
@@ -121,75 +163,84 @@ export const App: React.FC = () => {
       {/* Prominent Zero-Server Security Banner */}
       <SecurityBadge variant="banner" />
 
-      {/* Tool Navigation Tabs */}
-      <Navigation activeTool={activeTool} onSelectTool={handleSelectTool} />
+      {/* When in Admin mode, render the Admin Console view */}
+      {isAdminView ? (
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <AdminDashboard onBackToApp={handleBackFromAdmin} />
+        </main>
+      ) : (
+        <>
+          {/* Tool Navigation Tabs */}
+          <Navigation activeTool={activeTool} onSelectTool={handleSelectTool} />
 
-      {/* Main Content Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* Active Tool Workspace Card */}
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 md:p-10 mb-8">
-          {renderTool()}
+          {/* Main Content Workspace */}
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            {/* Active Tool Workspace Card */}
+            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 md:p-10 mb-8">
+              {renderTool()}
 
-          {/* AdSense Placement: Non-intrusive, zero-CLS slot below primary action area */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
-            <AdBanner format="horizontal" />
-          </div>
-        </div>
-
-        {/* Quick Tools Explorer Grid */}
-        <div className="mt-8 mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">Explore All PDF Utilities</h3>
-              <p className="text-xs text-slate-500">Every utility operates 100% in your browser memory.</p>
+              {/* AdSense Placement: Non-intrusive, zero-CLS slot below primary action area */}
+              <div className="mt-8 pt-6 border-t border-slate-100">
+                <AdBanner format="horizontal" />
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {TOOLS_CONFIG.map((tool) => {
-              const isCurrent = activeTool === tool.id;
-              return (
-                <div
-                  key={tool.id}
-                  onClick={() => {
-                    handleSelectTool(tool.id);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer group flex flex-col justify-between ${
-                    isCurrent
-                      ? 'border-indigo-600 bg-indigo-50/50 shadow-xs'
-                      : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-xs'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2.5">
-                      <div className="p-2 rounded-xl bg-slate-100 group-hover:bg-indigo-100/60 transition-colors">
-                        {getToolIcon(tool.id)}
-                      </div>
-                      {tool.badge && (
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                          {tool.badge}
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors">
-                      {tool.title}
-                    </h4>
-                    <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                      {tool.shortDesc}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-indigo-600">
-                    <span>{isCurrent ? 'Active Tool' : 'Open Tool'}</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
+            {/* Quick Tools Explorer Grid */}
+            <div className="mt-8 mb-12">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Explore All PDF Utilities</h3>
+                  <p className="text-xs text-slate-500">Every utility operates 100% in your browser memory.</p>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </main>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {TOOLS_CONFIG.map((tool) => {
+                  const isCurrent = activeTool === tool.id;
+                  return (
+                    <div
+                      key={tool.id}
+                      onClick={() => {
+                        handleSelectTool(tool.id);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className={`p-4 rounded-2xl border transition-all cursor-pointer group flex flex-col justify-between ${
+                        isCurrent
+                          ? 'border-indigo-600 bg-indigo-50/50 shadow-xs'
+                          : 'border-slate-200 bg-white hover:border-indigo-300 hover:shadow-xs'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-2.5">
+                          <div className="p-2 rounded-xl bg-slate-100 group-hover:bg-indigo-100/60 transition-colors">
+                            {getToolIcon(tool.id)}
+                          </div>
+                          {tool.badge && (
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                              {tool.badge}
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors">
+                          {tool.title}
+                        </h4>
+                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                          {tool.shortDesc}
+                        </p>
+                      </div>
+
+                      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-indigo-600">
+                        <span>{isCurrent ? 'Active Tool' : 'Open Tool'}</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </main>
+        </>
+      )}
 
       {/* Legal & Compliance Modal (AdSense Required) */}
       <LegalModal
@@ -199,7 +250,7 @@ export const App: React.FC = () => {
       />
 
       {/* Footer */}
-      <Footer onOpenLegal={handleOpenLegal} />
+      <Footer onOpenLegal={handleOpenLegal} onOpenAdmin={handleOpenAdmin} />
     </div>
   );
 };

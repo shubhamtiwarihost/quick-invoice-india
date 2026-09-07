@@ -19,6 +19,7 @@ import {
   formatFileSize,
 } from '../../lib/pdf-helpers';
 import { downloadFile, downloadAsZip } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { PageThumbnailInfo, ProcessingStatus } from '../../types';
 
 export const SplitPdfTool: React.FC = () => {
@@ -130,6 +131,8 @@ export const SplitPdfTool: React.FC = () => {
       return;
     }
 
+    const startTime = trackToolStart('split_pdf');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Extracting selected pages',
@@ -143,8 +146,16 @@ export const SplitPdfTool: React.FC = () => {
       const baseName = file.name.replace(/\.pdf$/i, '');
       const filename = `${baseName}_extracted_pages_${formatPageRangeString(selectedPages).replace(/[\s,]+/g, '_')}.pdf`;
       downloadFile(extractedBytes, filename);
+
+      trackToolSuccess('split_pdf', {
+        startTime,
+        pageCount: selectedCount,
+        fileCount: 1,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Extract failed';
+      trackToolError('split_pdf', { startTime, errorMessage: msg });
       alert('Failed to extract pages from PDF.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });
@@ -156,6 +167,8 @@ export const SplitPdfTool: React.FC = () => {
       alert('Please select at least one page to extract.');
       return;
     }
+
+    const startTime = trackToolStart('split_pdf_zip');
 
     setProcessingStatus({
       isProcessing: true,
@@ -197,8 +210,16 @@ export const SplitPdfTool: React.FC = () => {
           progress: Math.round(85 + (pct / 100) * 15),
         }));
       });
+
+      trackToolSuccess('split_pdf_zip', {
+        startTime,
+        pageCount: selectedCount,
+        fileCount: selectedPages.length,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'ZIP packaging failed';
+      trackToolError('split_pdf_zip', { startTime, errorMessage: msg });
       alert('Failed to generate ZIP archive of extracted pages.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });

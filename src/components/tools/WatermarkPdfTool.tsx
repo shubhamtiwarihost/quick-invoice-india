@@ -12,6 +12,7 @@ import { DropZone } from '../common/DropZone';
 import { ProcessingOverlay } from '../common/ProcessingOverlay';
 import { renderAllPageThumbnails, watermarkPdf, formatFileSize } from '../../lib/pdf-helpers';
 import { downloadFile } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { PageThumbnailInfo, WatermarkOptions, ProcessingStatus } from '../../types';
 
 export const WatermarkPdfTool: React.FC = () => {
@@ -74,6 +75,8 @@ export const WatermarkPdfTool: React.FC = () => {
       return;
     }
 
+    const startTime = trackToolStart('watermark_pdf');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Applying watermark across all pages',
@@ -85,8 +88,16 @@ export const WatermarkPdfTool: React.FC = () => {
       const watermarkedBytes = await watermarkPdf(arrayBuffer, options);
       const baseName = file.name.replace(/\.pdf$/i, '');
       downloadFile(watermarkedBytes, `${baseName}_watermarked.pdf`);
+
+      trackToolSuccess('watermark_pdf', {
+        startTime,
+        pageCount: totalPages,
+        fileCount: 1,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Watermark failed';
+      trackToolError('watermark_pdf', { startTime, errorMessage: msg });
       alert('Failed to apply watermark to PDF.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });

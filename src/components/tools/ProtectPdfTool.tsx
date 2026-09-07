@@ -14,6 +14,7 @@ import { DropZone } from '../common/DropZone';
 import { ProcessingOverlay } from '../common/ProcessingOverlay';
 import { protectPdf, formatFileSize } from '../../lib/pdf-helpers';
 import { downloadFile } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { ProcessingStatus } from '../../types';
 
 export const ProtectPdfTool: React.FC = () => {
@@ -76,6 +77,8 @@ export const ProtectPdfTool: React.FC = () => {
       return;
     }
 
+    const startTime = trackToolStart('protect_pdf');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Encrypting PDF document',
@@ -92,8 +95,16 @@ export const ProtectPdfTool: React.FC = () => {
 
       const baseName = file.name.replace(/\.pdf$/i, '');
       downloadFile(encryptedBytes, `${baseName}_protected.pdf`);
+
+      trackToolSuccess('protect_pdf', {
+        startTime,
+        pageCount: 1,
+        fileCount: 1,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Encryption failed';
+      trackToolError('protect_pdf', { startTime, errorMessage: msg });
       alert('Failed to encrypt PDF. Make sure the file is not already password protected.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });

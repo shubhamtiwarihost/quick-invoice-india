@@ -15,6 +15,7 @@ import {
   formatFileSize,
 } from '../../lib/pdf-helpers';
 import { downloadFile } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { PageThumbnailInfo, ProcessingStatus } from '../../types';
 
 export const DeletePagesTool: React.FC = () => {
@@ -99,6 +100,8 @@ export const DeletePagesTool: React.FC = () => {
       if (!proceed) return;
     }
 
+    const startTime = trackToolStart('delete_pages');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Deleting unwanted pages',
@@ -114,8 +117,16 @@ export const DeletePagesTool: React.FC = () => {
       const cleanedBytes = await deletePagesFromPdf(arrayBuffer, indicesToDelete);
       const baseName = file.name.replace(/\.pdf$/i, '');
       downloadFile(cleanedBytes, `${baseName}_cleaned.pdf`);
+
+      trackToolSuccess('delete_pages', {
+        startTime,
+        pageCount: remainingCount,
+        fileCount: 1,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Page deletion failed';
+      trackToolError('delete_pages', { startTime, errorMessage: msg });
       alert('Failed to export cleaned PDF.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });

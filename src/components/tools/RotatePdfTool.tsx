@@ -15,6 +15,7 @@ import {
   formatFileSize,
 } from '../../lib/pdf-helpers';
 import { downloadFile } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { PageThumbnailInfo, ProcessingStatus } from '../../types';
 
 export const RotatePdfTool: React.FC = () => {
@@ -102,6 +103,8 @@ export const RotatePdfTool: React.FC = () => {
       if (!proceed) return;
     }
 
+    const startTime = trackToolStart('rotate_pdf');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Applying page rotations',
@@ -119,8 +122,16 @@ export const RotatePdfTool: React.FC = () => {
       const rotatedBytes = await rotatePdfPages(arrayBuffer, rotationMap);
       const baseName = file.name.replace(/\.pdf$/i, '');
       downloadFile(rotatedBytes, `${baseName}_rotated.pdf`);
+
+      trackToolSuccess('rotate_pdf', {
+        startTime,
+        pageCount: thumbnails.length,
+        fileCount: 1,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Rotation export failed';
+      trackToolError('rotate_pdf', { startTime, errorMessage: msg });
       alert('Failed to export rotated PDF.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });

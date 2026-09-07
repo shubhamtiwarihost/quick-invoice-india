@@ -13,6 +13,7 @@ import { ProcessingOverlay } from '../common/ProcessingOverlay';
 import { renderPdfToImages } from '../../lib/image-helpers';
 import { formatFileSize } from '../../lib/pdf-helpers';
 import { downloadFile, downloadAsZip } from '../../lib/zip-helpers';
+import { trackToolStart, trackToolSuccess, trackToolError } from '../../utils/tracker';
 import type { ProcessingStatus } from '../../types';
 
 interface RenderedImageItem {
@@ -36,6 +37,8 @@ export const PdfToImagesTool: React.FC = () => {
     const selected = selectedFiles[0];
     setFile(selected);
 
+    const startTime = trackToolStart('pdf_to_images');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Rasterizing PDF pages',
@@ -54,8 +57,16 @@ export const PdfToImagesTool: React.FC = () => {
       });
 
       setRenderedImages(images);
+
+      trackToolSuccess('pdf_to_images', {
+        startTime,
+        pageCount: images.length,
+        fileCount: 1,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'Rasterization failed';
+      trackToolError('pdf_to_images', { startTime, errorMessage: msg });
       alert('Failed to render PDF to images. Please check if the file is valid.');
       setFile(null);
       setRenderedImages([]);
@@ -105,6 +116,8 @@ export const PdfToImagesTool: React.FC = () => {
   const downloadAllAsZip = async () => {
     if (!file || renderedImages.length === 0) return;
 
+    const startTime = trackToolStart('pdf_to_images_zip');
+
     setProcessingStatus({
       isProcessing: true,
       title: 'Creating ZIP archive',
@@ -126,8 +139,16 @@ export const PdfToImagesTool: React.FC = () => {
           message: `Compressing ZIP archive (${pct}%)...`,
         }));
       });
+
+      trackToolSuccess('pdf_to_images_zip', {
+        startTime,
+        pageCount: renderedImages.length,
+        fileCount: renderedImages.length,
+      });
     } catch (err) {
       console.error(err);
+      const msg = err instanceof Error ? err.message : 'ZIP generation failed';
+      trackToolError('pdf_to_images_zip', { startTime, errorMessage: msg });
       alert('Failed to create ZIP archive.');
     } finally {
       setProcessingStatus({ isProcessing: false, title: '' });
