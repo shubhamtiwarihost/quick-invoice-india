@@ -1,30 +1,19 @@
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType application/wasm .wasm
+  AddType application/pdf .pdf
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-
-  # Pass Authorization Header to PHP on Apache / Hostinger
-  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-  # Route API calls directly to PHP
-  RewriteRule ^api/(.*\.php)$ api/$1 [L,QSA]
-  RewriteRule ^api/contact/?$ api/contact.php [L,QSA]
-  RewriteRule ^api/auth/?$ api/auth.php [L,QSA]
-  RewriteRule ^api/track/?$ api/track.php [L,QSA]
-  RewriteRule ^api/stats/?$ api/stats.php [L,QSA]
-  RewriteRule ^api/(.*)$ api/$1 [L,QSA]
 
   # Allow direct access to existing files and directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Handle Next.js clean URLs
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME}.html -f
-  RewriteRule ^(.*)$ $1.html [L]
-
-  # Fallback to index.html if using SPA routing
+  # Fallback to index.html for Single Page Application routing
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
@@ -61,8 +50,8 @@
 
 # Cache-Control Headers for Modern Browsers
 <IfModule mod_headers.c>
-  # 1-year immutable caching for static assets
-  <FilesMatch "\.(js|css|webp|svg|png|jpg|jpeg|gif|ico|woff|woff2)$">
+  # 1-year immutable caching for hashed static assets
+  <FilesMatch "\.(js|mjs|css|webp|svg|png|jpg|jpeg|gif|ico|woff|woff2)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
