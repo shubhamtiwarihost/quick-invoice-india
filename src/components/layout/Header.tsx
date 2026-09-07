@@ -1,14 +1,16 @@
 import React from 'react';
-import { ShieldCheck, FileCheck2, Cpu, HardDriveDownload } from 'lucide-react';
+import { ShieldCheck, FileCheck2, HardDriveDownload, HelpCircle } from 'lucide-react';
 import { SecurityBadge } from '../common/SecurityBadge';
 import type { PdfToolId } from '../../types';
+import type { LegalPageId } from '../legal/legalContent';
 
 interface HeaderProps {
   activeTool: PdfToolId;
   onSelectTool: (id: PdfToolId) => void;
+  onOpenLegal: (pageId: LegalPageId) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTool, onSelectTool }) => {
+export const Header: React.FC<HeaderProps> = ({ activeTool, onSelectTool, onOpenLegal }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,9 +38,18 @@ export const Header: React.FC<HeaderProps> = ({ activeTool, onSelectTool }) => {
             </div>
           </div>
 
-          {/* Security & Client-Side Prominent Guarantee */}
+          {/* Security & Client-Side Prominent Guarantee + Legal Link */}
           <div className="flex items-center gap-2 sm:gap-4">
             <SecurityBadge variant="compact" />
+            
+            <button
+              onClick={() => onOpenLegal('privacy')}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Privacy &amp; Terms</span>
+            </button>
+
             <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono">
               <HardDriveDownload className="w-3.5 h-3.5 text-indigo-600" />
               <span>Hostinger Static Ready</span>

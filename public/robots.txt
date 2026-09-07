@@ -1,0 +1,8 @@
+# robots.txt for DocuShield PDF
+# https://docushieldpdf.com
+
+User-agent: *
+Allow: /
+
+# Direct search engines to the XML sitemap
+Sitemap: https://docushieldpdf.com/sitemap.xml

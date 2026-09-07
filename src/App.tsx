@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header';
 import { Navigation, TOOLS_CONFIG } from './components/layout/Navigation';
 import { Footer } from './components/layout/Footer';
 import { SecurityBadge } from './components/common/SecurityBadge';
+import { AdBanner } from './components/ads/AdBanner';
+import { LegalModal } from './components/legal/LegalModal';
+import type { LegalPageId } from './components/legal/legalContent';
 import { MergePdfTool } from './components/tools/MergePdfTool';
 import { SplitPdfTool } from './components/tools/SplitPdfTool';
 import { RotatePdfTool } from './components/tools/RotatePdfTool';
@@ -22,11 +25,42 @@ import {
   Stamp,
   Lock,
   ArrowRight,
-  ShieldCheck,
 } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [activeTool, setActiveTool] = useState<PdfToolId>('merge');
+  const [legalModalPage, setLegalModalPage] = useState<LegalPageId | null>(null);
+
+  // Sync hash routing for deep links (SEO & direct access)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (['privacy', 'terms', 'about', 'contact'].includes(hash)) {
+        setLegalModalPage(hash as LegalPageId);
+      } else if (TOOLS_CONFIG.some((t) => t.id === hash)) {
+        setActiveTool(hash as PdfToolId);
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleSelectTool = (id: PdfToolId) => {
+    setActiveTool(id);
+    window.location.hash = id;
+  };
+
+  const handleOpenLegal = (pageId: LegalPageId) => {
+    setLegalModalPage(pageId);
+    window.location.hash = pageId;
+  };
+
+  const handleCloseLegal = () => {
+    setLegalModalPage(null);
+    window.location.hash = activeTool;
+  };
 
   const renderTool = () => {
     switch (activeTool) {
@@ -78,18 +112,28 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-indigo-500 selection:text-white">
       {/* Top Header */}
-      <Header activeTool={activeTool} onSelectTool={setActiveTool} />
+      <Header
+        activeTool={activeTool}
+        onSelectTool={handleSelectTool}
+        onOpenLegal={handleOpenLegal}
+      />
 
       {/* Prominent Zero-Server Security Banner */}
       <SecurityBadge variant="banner" />
 
       {/* Tool Navigation Tabs */}
-      <Navigation activeTool={activeTool} onSelectTool={setActiveTool} />
+      <Navigation activeTool={activeTool} onSelectTool={handleSelectTool} />
 
       {/* Main Content Workspace */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 md:p-10 mb-10">
+        {/* Active Tool Workspace Card */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 md:p-10 mb-8">
           {renderTool()}
+
+          {/* AdSense Placement: Non-intrusive, zero-CLS slot below primary action area */}
+          <div className="mt-8 pt-6 border-t border-slate-100">
+            <AdBanner format="horizontal" />
+          </div>
         </div>
 
         {/* Quick Tools Explorer Grid */}
@@ -108,7 +152,7 @@ export const App: React.FC = () => {
                 <div
                   key={tool.id}
                   onClick={() => {
-                    setActiveTool(tool.id);
+                    handleSelectTool(tool.id);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                   className={`p-4 rounded-2xl border transition-all cursor-pointer group flex flex-col justify-between ${
@@ -147,8 +191,15 @@ export const App: React.FC = () => {
         </div>
       </main>
 
+      {/* Legal & Compliance Modal (AdSense Required) */}
+      <LegalModal
+        pageId={legalModalPage}
+        onClose={handleCloseLegal}
+        onSwitchPage={handleOpenLegal}
+      />
+
       {/* Footer */}
-      <Footer />
+      <Footer onOpenLegal={handleOpenLegal} />
     </div>
   );
 };
