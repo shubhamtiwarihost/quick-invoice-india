@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>Freelancer Invoice Template</title>
+<style>
+  body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; margin: 40px; color: #1e293b; }
+  .header { border-bottom: 3px solid #0f766e; padding-bottom: 12px; margin-bottom: 24px; }
+  .title { font-size: 24px; font-weight: bold; color: #0f766e; margin: 0; }
+  .subtitle { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .meta-table { width: 100%; margin-bottom: 24px; }
+  .meta-table td { vertical-align: top; font-size: 13px; }
+  .box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
+  .items-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .items-table th { background: #0f766e; color: white; text-align: left; padding: 10px; font-size: 12px; }
+  .items-table td { border-bottom: 1px solid #e2e8f0; padding: 10px; font-size: 13px; }
+  .total-row td { font-weight: bold; font-size: 15px; color: #0f766e; border-top: 2px solid #0f766e; }
+  .bank-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="title">TAX INVOICE / FREELANCE BILL</div>
+    <div class="subtitle">Issued under Central Goods and Services Tax Act 2017</div>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td width="50%">
+        <div class="box">
+          <strong>FREELANCER / CONSULTANT</strong><br>
+          Name: <em>Aditi Rao (UI/UX Consultant)</em><br>
+          Address: Mindspace Business Park, Malad West, Mumbai 400064<br>
+          GSTIN: 27AAPCA9876K1Z2 | PAN: AAPCA9876K<br>
+          Email: aditi@example.com | Phone: +91 98200 12345
+        </div>
+      </td>
+      <td width="5%"></td>
+      <td width="45%">
+        <div class="box">
+          <strong>INVOICE DETAILS</strong><br>
+          Invoice No: <strong>INV-2026-088</strong><br>
+          Date: 05-Sep-2026 | Due Date: 20-Sep-2026<br>
+          Place of Supply: 29-Karnataka (Inter-State IGST)<br>
+          LUT Reference (if export): ARN-AD270326001234F
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="box" style="margin-bottom: 20px;">
+    <strong>BILLED TO (CLIENT)</strong><br>
+    Company: Nexus Tech Solutions Pvt Ltd | GSTIN: 29AABCN4321D1ZE<br>
+    Address: Electronic City Phase 1, Bangalore, Karnataka - 560100
+  </div>
+
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th>Sr</th>
+        <th>Description of Services</th>
+        <th>SAC</th>
+        <th>Qty/Hrs</th>
+        <th>Rate (₹)</th>
+        <th>Taxable (₹)</th>
+        <th>GST</th>
+        <th>Total (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Full-Stack Web Application Development Sprint</td>
+        <td>998314</td>
+        <td>40 Hrs</td>
+        <td>₹2,500</td>
+        <td>₹1,00,000</td>
+        <td>18% IGST</td>
+        <td>₹1,18,000</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>UI/UX Mobile App Figma Design System</td>
+        <td>998314</td>
+        <td>1 Nos</td>
+        <td>₹35,000</td>
+        <td>₹35,000</td>
+        <td>18% IGST</td>
+        <td>₹41,300</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="5" style="text-align: right;">GRAND TOTAL:</td>
+        <td>₹1,35,000</td>
+        <td>₹24,300</td>
+        <td>₹1,59,300</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bank-box">
+    <strong>PAYMENT &amp; SETTLEMENT DETAILS</strong><br>
+    Bank Name: HDFC Bank Ltd | A/c No: 50200012345678 | IFSC: HDFC0000128<br>
+    Account Holder: Aditi Rao | Instant UPI VPA: aditirao@okhdfcbank<br>
+    <em>TDS Section 194J applicable for Indian corporate clients. Please forward Form 16A TDS certificate to freelancer email.</em>
+  </div>
+</body>
+</html>

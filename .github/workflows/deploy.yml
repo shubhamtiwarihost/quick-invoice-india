@@ -27,10 +27,17 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm ci
+          cd pdf-suite && npm ci
+
+      - name: Run ESLint
+        run: npm run lint
 
       - name: Build Project
         run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
 
       # Deploy static build directly to swiftgst.in on Hostinger
       - name: Deploy Build to Hostinger via SCP
@@ -45,7 +52,7 @@ jobs:
           shopt -s dotglob
           for i in 1 2 3; do
             echo "Deployment attempt $i/3..."
-            if sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ConnectionAttempts=3 -r dist/* "$USER@$HOST:domains/swiftgst.in/public_html/"; then
+            if sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ConnectionAttempts=3 -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"; then
               echo "Deployment succeeded!"
               exit 0
             fi
