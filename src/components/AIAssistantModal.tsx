@@ -502,10 +502,11 @@ export function AIAssistantModal() {
 
         const data = await res.json();
 
-        if (data.quotaExceeded) {
+        if (res.status === 429 || data.quotaExceeded) {
           setQuotaExceeded(true);
           setAiResponse(
-            data.text ||
+            data.message ||
+              data.text ||
               "Aaj ka AI free quota pura ho gaya hai. Kal subah reset hoga. Manual billing aur khata smoothly chalu hai."
           );
         } else {

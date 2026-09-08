@@ -108,7 +108,8 @@ if (empty($apiKey)) {
 }
 
 // Call Google Gemini API
-$url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . urlencode($apiKey);
+$model = getenv('GEMINI_MODEL') ?: 'gemini-3.6-flash';
+$url = "https://generativelanguage.googleapis.com/v1beta/models/" . urlencode($model) . ":generateContent?key=" . urlencode($apiKey);
 $payload = [
     'system_instruction' => [
         'parts' => [['text' => 'You are SwiftGST AI Co-Pilot. Interpret Hindi/Hinglish/English store queries accurately. Call matching functions with validated parameters. Return concise, shopkeeper-friendly responses.']]
