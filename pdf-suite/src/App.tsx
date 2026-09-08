@@ -259,10 +259,7 @@ export const App: React.FC = () => {
         onOpenAdmin={handleOpenAdmin}
       />
 
-      {/* 2. Security Banner */}
-      <SecurityBadge variant="banner" />
-
-      {/* 3. Main Body View Routing */}
+      {/* 2. Main Body View Routing */}
       {isAdminView ? (
         /* VIEW A: Admin Telemetry Dashboard */
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
