@@ -175,7 +175,7 @@ export const MergePdfTool: React.FC = () => {
           accept="pdf"
           multiple={true}
           title="Select 2 or more PDF files to merge"
-          subtitle="Drag & drop your PDFs here or click to browse. Files stay 100% inside your browser."
+          subtitle="Drag & drop your PDFs here or click to browse and combine your documents."
           onFilesSelected={handleFilesSelected}
         />
       ) : (

@@ -90,7 +90,7 @@ const TOOL_META_EXTENDED: Record<
     iconBg: 'bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white',
     borderHover: 'hover:border-purple-500',
     tag: 'AES Encrypted',
-    bullets: ['Client-side encryption', 'Owner & User passwords', 'Standard reader support'],
+    bullets: ['In-browser encryption', 'Owner & User passwords', 'Standard reader support'],
   },
 };
 
@@ -123,15 +123,14 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
       {/* 1. Modern High-Converting Hero Section */}
       <section className="text-center max-w-4xl mx-auto pt-4 pb-10 sm:pb-14 px-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 text-xs font-bold tracking-wide mb-5 shadow-2xs">
-          <ShieldCheck className="w-4 h-4 text-indigo-600" />
-          <span>100% Client-Side In-Browser PDF Suite</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <Sparkles className="w-4 h-4 text-indigo-600" />
+          <span>SwiftGST PDF Tools Suite</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
           Every PDF Tool You Need.{' '}
           <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 via-indigo-700 to-violet-600">
-            Zero Server Uploads.
+            Fast &amp; Free.
           </span>
         </h1>
 
@@ -144,7 +143,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm font-medium text-slate-600">
           <div className="flex items-center gap-2 bg-white border border-slate-200/90 px-3.5 py-2 rounded-xl shadow-xs">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>Zero Server Uploads (100% Private)</span>
+            <span>Secure In-Browser Tools</span>
           </div>
           <div className="flex items-center gap-2 bg-white border border-slate-200/90 px-3.5 py-2 rounded-xl shadow-xs">
             <Zap className="w-4 h-4 text-amber-500" />
@@ -255,14 +254,13 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Why In-Browser PDF Processing is 100% Safer
+            Why In-Browser PDF Processing is Safer
           </h2>
 
           <p className="text-sm sm:text-base text-slate-300 mt-3 leading-relaxed">
             Most online PDF services silently upload your tax records, personal invoices, and ID
-            scans to remote cloud storage. DocuShield operates differently: 100% of the cryptographic
-            and PDF parsing code runs inside your local browser tab via modern JavaScript &amp;
-            WebAssembly.
+            scans to remote cloud storage. SwiftGST operates differently: the cryptographic
+            and PDF parsing code runs inside your local browser tab via modern Web standards.
           </p>
 
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-indigo-800/60">

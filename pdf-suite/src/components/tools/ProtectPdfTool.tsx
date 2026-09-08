@@ -151,7 +151,7 @@ export const ProtectPdfTool: React.FC = () => {
           accept="pdf"
           multiple={false}
           title="Select a PDF to encrypt with a password"
-          subtitle="Encryption occurs 100% inside your browser memory. Your password and document are never sent anywhere."
+          subtitle="Fast in-browser encryption. Your password and document stay safe on your device."
           onFilesSelected={handleFileSelected}
         />
       ) : (

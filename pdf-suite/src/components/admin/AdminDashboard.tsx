@@ -30,7 +30,7 @@ interface AdminDashboardProps {
   onBackToApp: () => void;
 }
 
-const AUTH_SESSION_KEY = 'docushield_admin_auth';
+const AUTH_SESSION_KEY = 'swiftgst_admin_auth';
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {

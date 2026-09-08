@@ -176,7 +176,7 @@ export const RotatePdfTool: React.FC = () => {
           accept="pdf"
           multiple={false}
           title="Select a PDF to rotate pages"
-          subtitle="All page orientations are adjusted client-side in seconds."
+          subtitle="Adjust page orientations quickly and losslessly."
           onFilesSelected={handleFileSelected}
         />
       ) : (
@@ -303,7 +303,7 @@ export const RotatePdfTool: React.FC = () => {
           {/* Bottom Export Bar */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-xs text-slate-500">
-              Rotations are saved without any image recompression, preserving 100% vector fidelity and original PDF quality.
+              Rotations are saved without any image recompression, preserving original vector fidelity and PDF quality.
             </div>
             <button
               onClick={handleExport}

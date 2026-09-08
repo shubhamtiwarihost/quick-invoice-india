@@ -44,8 +44,8 @@ interface ToolCategory {
 
 const TOOL_CATEGORIES: ToolCategory[] = [
   {
-    category: "100% Private Client-Side PDF Utilities Suite",
-    tagline: "Free in-browser PDF tools: Merge, Split, Rotate, Delete pages, Convert images & Protect PDFs with zero server uploads",
+    category: "SwiftGST PDF Utilities Suite",
+    tagline: "Free in-browser PDF tools: Merge, Split, Rotate, Delete pages, Convert images & Protect PDFs",
     icon: Scissors,
     tools: [
       {
@@ -54,7 +54,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
         badge: "8 Free Tools",
         badgeColor: "bg-indigo-50 text-indigo-800 border-indigo-200",
         description:
-          "Launch our full suite of 8 client-side PDF utilities. Work with files directly in browser memory without sending private documents to any server.",
+          "Launch our full suite of 8 PDF utilities. Work with files directly in your browser without sending private documents anywhere.",
         icon: Sparkles,
         features: ["Merge & Split PDFs", "Images to PDF / PDF to Img", "Watermark & AES Protect"],
       },

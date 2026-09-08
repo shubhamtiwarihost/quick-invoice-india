@@ -1,5 +1,5 @@
 /**
- * DOCUSHIELD PDF - PRIVACY-FIRST ANONYMIZED TELEMETRY & TRACKING
+ * SWIFTGST PDF - PRIVACY-FIRST ANONYMIZED TELEMETRY & TRACKING
  *
  * PRIVACY GUARANTEE:
  * Never logs or transmits personal user files, document names, or PDF contents.
@@ -41,7 +41,7 @@ export interface AnalyticsSummary {
   >;
 }
 
-const STORAGE_KEY = 'docushield_analytics_events';
+const STORAGE_KEY = 'swiftgst_pdf_analytics_events';
 const MAX_STORED_EVENTS = 1000;
 
 // Declare global Google Analytics gtag
@@ -332,7 +332,7 @@ export function exportEventsToCsv(): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `docushield_analytics_${new Date().toISOString().split('T')[0]}.csv`;
+  a.download = `swiftgst_analytics_${new Date().toISOString().split('T')[0]}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

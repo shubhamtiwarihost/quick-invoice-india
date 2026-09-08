@@ -43,7 +43,7 @@ export const ProcessingOverlay: React.FC<ProcessingOverlayProps> = ({ status }) 
 
         <div className="mt-6 pt-4 border-t border-slate-100 w-full flex items-center justify-center gap-1.5 text-xs text-emerald-700 font-medium">
           <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          <span>No network uploads • 100% In-Memory</span>
+          <span>Secure In-Memory Processing</span>
         </div>
       </div>
     </div>

@@ -1,86 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage & Core Dashboard -->
+  <!-- Main SwiftGST Endpoints -->
   <url>
-    <loc>https://docushieldpdf.com/</loc>
+    <loc>https://swiftgst.in/</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Individual PDF Tool Endpoints -->
   <url>
-    <loc>https://docushieldpdf.com/#merge</loc>
+    <loc>https://swiftgst.in/pos</loc>
     <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://docushieldpdf.com/#split</loc>
-    <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://docushieldpdf.com/#rotate</loc>
+    <loc>https://swiftgst.in/quotation-maker</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://docushieldpdf.com/#delete</loc>
+    <loc>https://swiftgst.in/gst-calculator</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://docushieldpdf.com/#images-to-pdf</loc>
-    <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://docushieldpdf.com/#pdf-to-images</loc>
-    <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://docushieldpdf.com/#watermark</loc>
-    <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://docushieldpdf.com/#protect</loc>
-    <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
   </url>
 
-  <!-- Legal & Compliance Endpoints -->
+  <!-- SwiftGST PDF Suite -->
   <url>
-    <loc>https://docushieldpdf.com/#privacy</loc>
+    <loc>https://swiftgst.in/pdf-tools/</loc>
     <lastmod>2026-09-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://docushieldpdf.com/#terms</loc>
+    <loc>https://swiftgst.in/pdf-tools/#merge</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://docushieldpdf.com/#about</loc>
+    <loc>https://swiftgst.in/pdf-tools/#split</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://docushieldpdf.com/#contact</loc>
+    <loc>https://swiftgst.in/pdf-tools/#rotate</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swiftgst.in/pdf-tools/#delete</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swiftgst.in/pdf-tools/#images-to-pdf</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swiftgst.in/pdf-tools/#pdf-to-images</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swiftgst.in/pdf-tools/#watermark</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://swiftgst.in/pdf-tools/#protect</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

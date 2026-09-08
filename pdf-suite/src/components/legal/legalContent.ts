@@ -11,19 +11,19 @@ export const LEGAL_PAGES: Record<LegalPageId, LegalPageContent> = {
   privacy: {
     id: 'privacy',
     title: 'Privacy Policy',
-    subtitle: 'Our 100% Client-Side In-Memory Privacy Guarantee & Cookie Policy',
+    subtitle: 'Privacy Guarantee & Cookie Policy',
     lastUpdated: 'September 2026',
   },
   terms: {
     id: 'terms',
     title: 'Terms of Service',
-    subtitle: 'Terms and Conditions for Using DocuShield PDF Utility Suite',
+    subtitle: 'Terms and Conditions for Using SwiftGST PDF Tools',
     lastUpdated: 'September 2026',
   },
   about: {
     id: 'about',
-    title: 'About DocuShield PDF',
-    subtitle: 'Our Mission: Zero-Knowledge, Zero-Server PDF Productivity',
+    title: 'About SwiftGST PDF',
+    subtitle: 'Our Mission: Fast, Private In-Browser PDF Productivity',
     lastUpdated: 'September 2026',
   },
   contact: {

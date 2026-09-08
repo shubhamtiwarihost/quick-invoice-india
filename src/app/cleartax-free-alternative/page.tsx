@@ -226,7 +226,7 @@ export default function ClearTaxAlternativePage() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700 font-bold mb-3">
             <Lock className="h-5 w-5" />
           </div>
-          <h3 className="text-sm font-bold text-slate-900">100% Client-Side Privacy</h3>
+          <h3 className="text-sm font-bold text-slate-900">Private In-Browser Architecture</h3>
           <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
             Calculations run locally in your browser. Your customer data, rates, and turnover figures are never sent to remote servers.
           </p>

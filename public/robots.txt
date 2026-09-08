@@ -1,8 +1,8 @@
-# robots.txt for DocuShield PDF
-# https://docushieldpdf.com
+# robots.txt for SwiftGST
+# https://swiftgst.in
 
 User-agent: *
 Allow: /
 
 # Direct search engines to the XML sitemap
-Sitemap: https://docushieldpdf.com/sitemap.xml
+Sitemap: https://swiftgst.in/sitemap.xml

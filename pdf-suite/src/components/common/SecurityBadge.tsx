@@ -10,7 +10,7 @@ export const SecurityBadge: React.FC<SecurityBadgeProps> = ({ variant = 'compact
     return (
       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium shadow-xs">
         <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-        <span>100% Secure &amp; Private — Files never leave your browser</span>
+        <span>Secure &amp; Private — Files stay in your browser</span>
       </div>
     );
   }
@@ -25,7 +25,7 @@ export const SecurityBadge: React.FC<SecurityBadgeProps> = ({ variant = 'compact
         <ShieldCheck className="w-5 h-5" />
       </div>
       <div>
-        <h4 className="text-sm font-semibold text-slate-900">100% Client-Side Guarantee</h4>
+        <h4 className="text-sm font-semibold text-slate-900">Browser Privacy Guarantee</h4>
         <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
           Your files are processed strictly within your browser&apos;s RAM using Web APIs, Web Workers, and WebAssembly. No files, logs, or metadata are ever transmitted to any remote server or third-party service.
         </p>

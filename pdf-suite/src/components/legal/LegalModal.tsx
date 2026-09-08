@@ -100,14 +100,14 @@ export const LegalModal: React.FC<LegalModalProps> = ({
               <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-start gap-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="text-xs leading-relaxed">
-                  <strong>The Zero-Knowledge Privacy Standard:</strong> When you use DocuShield PDF, your files are never uploaded to any remote server or third-party cloud. Every single calculation, canvas render, and binary manipulation happens entirely in your local computer or smartphone&apos;s web browser.
+                  <strong>In-Browser Privacy:</strong> When you use SwiftGST PDF Tools, your files are processed directly in your device&apos;s web browser. Every calculation, preview render, and document manipulation happens in your local computer or smartphone.
                 </div>
               </div>
 
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">1. Information We Do NOT Collect</h3>
                 <p>
-                  DocuShield PDF does not require user registration, logins, or payment details. Because all file processing (merging, splitting, rotating, deleting pages, watermarking, converting, and password encryption) executes client-side via JavaScript Web APIs and WebAssembly, <strong>we have zero access to:</strong>
+                  SwiftGST PDF does not require user registration, logins, or payment details. Because file processing (merging, splitting, rotating, deleting pages, watermarking, converting, and password encryption) executes in your local browser tab, <strong>we have zero access to:</strong>
                 </p>
                 <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
                   <li>Your PDF documents, pages, or textual content.</li>
@@ -120,14 +120,14 @@ export const LegalModal: React.FC<LegalModalProps> = ({
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">2. In-Memory Processing</h3>
                 <p>
-                  When you select or drag &amp; drop a file into DocuShield, the file is read into your browser&apos;s volatile RAM as an <code className="bg-slate-100 px-1 py-0.5 rounded text-xs font-mono">ArrayBuffer</code> or <code className="bg-slate-100 px-1 py-0.5 rounded text-xs font-mono">Blob</code>. Once you close or reload the browser tab, the memory is immediately deallocated by your browser&apos;s garbage collector.
+                  When you select or drag &amp; drop a file into SwiftGST PDF, the file is read into your browser&apos;s temporary session memory as an <code className="bg-slate-100 px-1 py-0.5 rounded text-xs font-mono">ArrayBuffer</code> or <code className="bg-slate-100 px-1 py-0.5 rounded text-xs font-mono">Blob</code>. Once you close or reload the browser tab, the memory is immediately deallocated.
                 </p>
               </div>
 
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">3. Cookies &amp; Third-Party Advertising (Google AdSense)</h3>
                 <p>
-                  To keep DocuShield PDF 100% free for users worldwide, we may display non-intrusive advertisements served by third-party advertising partners such as <strong>Google AdSense</strong>.
+                  To keep SwiftGST PDF free for users worldwide, we may display non-intrusive advertisements served by third-party advertising partners such as <strong>Google AdSense</strong>.
                 </p>
                 <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
                   <li>Third-party vendors, including Google, use cookies to serve ads based on a user&apos;s prior visits to this website or other websites on the Internet.</li>
@@ -157,21 +157,21 @@ export const LegalModal: React.FC<LegalModalProps> = ({
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">1. Acceptance of Terms</h3>
                 <p>
-                  By accessing and using DocuShield PDF, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please discontinue use of the utility suite immediately.
+                  By accessing and using SwiftGST PDF, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please discontinue use of the utility suite immediately.
                 </p>
               </div>
 
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">2. Permitted Use</h3>
                 <p>
-                  You are free to use DocuShield PDF for personal, educational, non-profit, or commercial document processing tasks. You agree not to use the application to process unlawful, defamatory, infringing, or malicious content.
+                  You are free to use SwiftGST PDF for personal, educational, non-profit, or commercial document processing tasks. You agree not to use the application to process unlawful, defamatory, infringing, or malicious content.
                 </p>
               </div>
 
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">3. Intellectual Property Rights</h3>
                 <p>
-                  <strong>You retain 100% ownership and copyright of all documents and images you process.</strong> DocuShield PDF does not claim, store, or assert any rights over your files.
+                  <strong>You retain complete ownership and copyright of all documents and images you process.</strong> SwiftGST PDF does not claim, store, or assert any rights over your files.
                 </p>
               </div>
 
@@ -179,10 +179,10 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 <h3 className="text-base font-bold text-slate-900 mb-2">4. &ldquo;As-Is&rdquo; Service &amp; Limitation of Liability</h3>
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-xs leading-relaxed space-y-2">
                   <p>
-                    DocuShield PDF is provided on an <strong>&ldquo;AS IS&rdquo;</strong> and <strong>&ldquo;AS AVAILABLE&rdquo;</strong> basis without warranties of any kind, whether express or implied.
+                    SwiftGST PDF is provided on an <strong>&ldquo;AS IS&rdquo;</strong> and <strong>&ldquo;AS AVAILABLE&rdquo;</strong> basis without warranties of any kind, whether express or implied.
                   </p>
                   <p>
-                    While we utilize rigorous PDF standards compliance, the developers and operators of DocuShield PDF shall not be liable for any direct, indirect, incidental, or consequential damages resulting from document corruption, accidental data loss, or system interruption. <strong>We strongly advise always keeping backup copies of critical documents.</strong>
+                    While we utilize rigorous PDF standards compliance, the developers and operators of SwiftGST PDF shall not be liable for any direct, indirect, incidental, or consequential damages resulting from document corruption, accidental data loss, or system interruption. <strong>We strongly advise always keeping backup copies of critical documents.</strong>
                   </p>
                 </div>
               </div>
@@ -190,7 +190,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">5. Document Encryption Notice</h3>
                 <p>
-                  When utilizing the &ldquo;Protect PDF&rdquo; tool, ensure you memorize or securely store the password you set. Because DocuShield PDF has no backend server or database, <strong>it is technically impossible for us to recover or reset forgotten passwords for your protected files.</strong>
+                  When utilizing the &ldquo;Protect PDF&rdquo; tool, ensure you memorize or securely store the password you set. Because SwiftGST PDF processes files locally without a database, <strong>it is technically impossible for us to recover or reset forgotten passwords for your protected files.</strong>
                 </p>
               </div>
             </div>
@@ -199,12 +199,12 @@ export const LegalModal: React.FC<LegalModalProps> = ({
           {pageId === 'about' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-base font-bold text-slate-900 mb-2">Why We Built DocuShield PDF</h3>
+                <h3 className="text-base font-bold text-slate-900 mb-2">Why We Built SwiftGST PDF Tools</h3>
                 <p>
-                  Millions of individuals, attorneys, accountants, and businesses need everyday PDF tools: merging contracts, extracting tax receipts, rotating scanned papers, or protecting bank records.
+                  Millions of businesses, accountants, and individuals need everyday PDF utilities: merging invoices, extracting tax receipts, rotating scanned paperwork, or protecting financial statements.
                 </p>
                 <p className="mt-2">
-                  Unfortunately, almost every popular online PDF website uploads your confidential documents to unknown cloud servers, creating massive privacy vulnerabilities, data breach hazards, and regulatory compliance headaches (GDPR, HIPAA).
+                  SwiftGST PDF provides fast, seamless utilities directly in your browser without requiring external uploads or subscription fees.
                 </p>
               </div>
 
@@ -214,7 +214,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                   <div>
                     <h4 className="font-bold text-slate-900 text-sm">Pure In-Browser Engines</h4>
                     <p className="text-xs text-slate-600 mt-1">
-                      Powered by industry standards: <code className="text-indigo-700">pdf-lib</code>, <code className="text-indigo-700">pdfjs-dist</code>, and <code className="text-indigo-700">jsPDF</code> compiled for browser memory execution.
+                      Powered by industry standards: <code className="text-indigo-700">pdf-lib</code>, <code className="text-indigo-700">pdfjs-dist</code>, and <code className="text-indigo-700">jsPDF</code>.
                     </p>
                   </div>
                 </div>
@@ -222,18 +222,18 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100 flex items-start gap-3">
                   <Lock className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm">Complete Data Sovereignty</h4>
+                    <h4 className="font-bold text-slate-900 text-sm">Private &amp; Secure</h4>
                     <p className="text-xs text-slate-600 mt-1">
-                      No network uploads occur. You can even disconnect your internet after loading the page and every tool will continue to function seamlessly.
+                      Your documents stay on your device and are processed locally in your browser.
                     </p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-base font-bold text-slate-900 mb-2">Open &amp; Static Architecture</h3>
+                <h3 className="text-base font-bold text-slate-900 mb-2">Lightweight Architecture</h3>
                 <p>
-                  DocuShield PDF is built as a static Single Page Application (SPA). It requires zero server-side computation, zero cloud databases, and zero Node.js daemon processes on the hosting provider.
+                  SwiftGST PDF is built as an ultra-fast application running directly in your modern web browser.
                 </p>
               </div>
             </div>
@@ -248,9 +248,9 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                   </div>
                   <h3 className="text-base font-bold text-emerald-950">Thank You for Reaching Out!</h3>
                   <p className="text-xs text-emerald-800 max-w-md mx-auto">
-                    Your feedback has been received. Because DocuShield is client-side, you can also email our compliance and developer desk directly at{' '}
-                    <a href="mailto:support@docushieldpdf.com" className="font-bold underline">
-                      support@docushieldpdf.com
+                    Your feedback has been received. You can also email our team directly at{' '}
+                    <a href="mailto:support@swiftgst.in" className="font-bold underline">
+                      support@swiftgst.in
                     </a>.
                   </p>
                   <button
@@ -324,7 +324,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500 flex items-center gap-2">
                     <Mail className="w-4 h-4 text-indigo-600 shrink-0" />
                     <span>
-                      Direct email inquiries: <a href="mailto:support@docushieldpdf.com" className="font-semibold text-indigo-600 hover:underline">support@docushieldpdf.com</a>
+                      Direct email inquiries: <a href="mailto:support@swiftgst.in" className="font-semibold text-indigo-600 hover:underline">support@swiftgst.in</a>
                     </span>
                   </div>
 

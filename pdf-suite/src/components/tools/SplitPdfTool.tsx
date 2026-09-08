@@ -265,7 +265,7 @@ export const SplitPdfTool: React.FC = () => {
           accept="pdf"
           multiple={false}
           title="Select a PDF to split or extract pages"
-          subtitle="All page thumbnails are rendered client-side. Zero server upload."
+          subtitle="Fast page thumbnail preview and extraction in seconds."
           onFilesSelected={handleFileSelected}
         />
       ) : (

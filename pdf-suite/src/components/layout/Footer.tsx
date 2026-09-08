@@ -25,7 +25,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenAdmin }) => {
               <span>Zero-Knowledge Guarantee</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Unlike other online PDF converters that secretly upload your documents to cloud servers, DocuShield executes 100% inside your browser&apos;s memory.
+              Unlike other online PDF converters that upload your documents to cloud servers, SwiftGST PDF executes directly inside your browser.
             </p>
             <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -37,7 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenAdmin }) => {
           <div className="space-y-3 md:col-span-1">
             <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
               <Cpu className="w-5 h-5 text-indigo-600" />
-              <span>Client-Side Technology</span>
+              <span>Modern Web Technology</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
               Powered by standard industry engines compiled for modern web standards: <strong>pdf-lib</strong>, <strong>pdfjs-dist</strong>, <strong>jsPDF</strong>, and <strong>JSZip</strong>.
@@ -104,7 +104,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenAdmin }) => {
 
         {/* Copyright and Legal Line */}
         <div className="pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} DocuShield PDF. All processing is 100% private and in-browser.</p>
+          <p>© {new Date().getFullYear()} SwiftGST PDF Tools. In-browser document processing.</p>
           <div className="flex items-center gap-4">
             <button
               onClick={() => onOpenLegal('privacy')}
