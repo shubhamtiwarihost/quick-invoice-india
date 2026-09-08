@@ -13,8 +13,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  // Use relative base so assets load correctly on Hostinger public_html or any subdirectory
-  base: './',
+  // Use root base by default so SPA sub-routes (/merge, /split, etc.) load assets cleanly
+  base: process.env.VITE_BASE_PATH || '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

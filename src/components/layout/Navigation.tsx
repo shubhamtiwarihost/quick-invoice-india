@@ -22,7 +22,7 @@ export const TOOLS_CONFIG: ToolMetadata[] = [
   },
   {
     id: 'split',
-    title: 'Split / Extract',
+    title: 'Split / Extract Pages',
     shortDesc: 'Visually select page thumbnails or ranges to export new PDFs',
     iconName: 'Scissors',
   },
