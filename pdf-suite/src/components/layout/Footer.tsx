@@ -5,10 +5,10 @@ import { AdBanner } from '../ads/AdBanner';
 
 interface FooterProps {
   onOpenLegal: (pageId: LegalPageId) => void;
-  onOpenAdmin: () => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenAdmin }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenLegal }) => {
   return (
     <footer className="mt-auto bg-white border-t border-slate-200">
       {/* Footer Top Ad Placement (CLS Safe) */}
@@ -125,15 +125,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenAdmin }) => {
               className="hover:text-slate-800 transition-colors cursor-pointer"
             >
               Contact
-            </button>
-            <span>•</span>
-            <button
-              onClick={onOpenAdmin}
-              className="text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer flex items-center gap-1"
-              title="Internal Admin Telemetry Console"
-            >
-              <Lock className="w-2.5 h-2.5" />
-              <span>Admin</span>
             </button>
           </div>
         </div>

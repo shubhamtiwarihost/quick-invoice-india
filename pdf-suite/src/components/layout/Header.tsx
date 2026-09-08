@@ -6,7 +6,6 @@ import {
   ChevronDown,
   Menu,
   X,
-  Shield,
   Layers,
   Scissors,
   RotateCw,
@@ -28,7 +27,7 @@ interface HeaderProps {
   onSelectTool: (id: PdfToolId) => void;
   onGoHome?: () => void;
   onOpenLegal: (pageId: LegalPageId) => void;
-  onOpenAdmin: () => void;
+  onOpenAdmin?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -241,16 +240,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               Images to PDF
             </button>
-
-            {/* Direct Admin Dashboard Link */}
-            <button
-              onClick={onOpenAdmin}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors cursor-pointer"
-              title="Admin Dashboard"
-            >
-              <Shield className="w-4 h-4 text-slate-400 group-hover:text-indigo-600" />
-              <span>Admin</span>
-            </button>
           </nav>
 
           {/* Right Action Icons & Badges */}
@@ -338,22 +327,20 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
-                onOpenAdmin();
-              }}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-indigo-600"
-            >
-              <Shield className="w-4 h-4 text-indigo-600" />
-              <span>Admin Dashboard</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
                 onOpenLegal('privacy');
               }}
               className="text-xs text-slate-500 hover:text-slate-800"
             >
               Privacy Policy
+            </button>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenLegal('terms');
+              }}
+              className="text-xs text-slate-500 hover:text-slate-800"
+            >
+              Terms of Service
             </button>
           </div>
         </div>
