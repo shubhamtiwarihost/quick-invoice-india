@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Navbar, Footer } from "@/components/shared/Navbar";
 import { NativeBottomNav } from "@/components/mobile/NativeBottomNav";
 import { BackOfficeShell } from "@/components/layout/BackOfficeShell";
+import { AIAssistantModal } from "@/components/AIAssistantModal";
 
 export function AppLayoutManager({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -13,7 +14,12 @@ export function AppLayoutManager({ children }: { children: React.ReactNode }) {
   // 1. Fullscreen POS Terminal Mode
   const isPos = pathname === "/pos" || pathname.startsWith("/pos/");
   if (isPos) {
-    return <main className="min-h-screen bg-slate-100">{children}</main>;
+    return (
+      <main className="min-h-screen bg-slate-100">
+        {children}
+        <AIAssistantModal />
+      </main>
+    );
   }
 
   // 2. SaaS Back-Office Shell (Dashboard, Inventory, Customers/Khata, Reports/Analytics, Settings)
@@ -25,7 +31,12 @@ export function AppLayoutManager({ children }: { children: React.ReactNode }) {
     pathname.startsWith("/settings");
 
   if (isBackOffice) {
-    return <BackOfficeShell>{children}</BackOfficeShell>;
+    return (
+      <BackOfficeShell>
+        {children}
+        <AIAssistantModal />
+      </BackOfficeShell>
+    );
   }
 
   // 3. Clean Onboarding & Auth Flow (Login, Register)
