@@ -1,8 +1,18 @@
-# robots.txt for SwiftGST
-# https://swiftgst.in
-
+# robots.txt for SwiftGST (https://swiftgst.in)
 User-agent: *
 Allow: /
+Allow: /invoice
+Allow: /about
+Allow: /privacy
+Allow: /terms
 
-# Direct search engines to the XML sitemap
+# Disallow private back-office routes from Googlebot
+Disallow: /admin
+Disallow: /pos
+Disallow: /inventory
+Disallow: /customers
+Disallow: /settings
+Disallow: /api/
+
 Sitemap: https://swiftgst.in/sitemap.xml
+

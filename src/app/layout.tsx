@@ -27,18 +27,50 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://swiftgst.in"),
-  title: "SwiftGST - Free POS, Khata & GST Invoicing",
+  title: {
+    default: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
+    template: "%s | SwiftGST",
+  },
   description:
-    "Free retail POS billing counter, inventory stock tracking, customer Khata ledger, and GST invoice generator. 100% offline-ready client-side PWA.",
+    "Superfast, mobile-friendly GST billing software for Indian retail, kirana, and clothing stores. Free POS, barcode inventory & customer ledger.",
+  keywords: [
+    "GST billing software",
+    "free POS billing software India",
+    "barcode inventory billing",
+    "kirana store billing software",
+    "retail POS system India",
+    "customer Khata ledger app",
+    "free GST invoice generator",
+    "thermal printer billing app",
+    "offline POS software",
+  ],
+  alternates: {
+    canonical: "./",
+  },
   manifest: "/manifest.json",
   openGraph: {
-    title: "SwiftGST - Free POS, Khata & GST Invoicing",
+    title: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
     description:
-      "Free retail POS billing counter, inventory stock tracking, customer Khata ledger, and GST invoice generator. 100% offline-ready client-side PWA.",
+      "Superfast, mobile-friendly GST billing software for Indian retail, kirana, and clothing stores. Free POS, barcode inventory & customer ledger.",
     url: "https://swiftgst.in",
     siteName: "SwiftGST",
     locale: "en_IN",
     type: "website",
+    images: [
+      {
+        url: "/icon.svg",
+        width: 512,
+        height: 512,
+        alt: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
+    description:
+      "Superfast, mobile-friendly GST billing software for Indian retail, kirana, and clothing stores. Free POS, barcode inventory & customer ledger.",
+    images: ["/icon.svg"],
   },
   appleWebApp: {
     capable: true,
