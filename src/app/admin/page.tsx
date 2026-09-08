@@ -71,7 +71,12 @@ export default function SuperAdminPage() {
     setErrorMsg("");
 
     try {
-      const res = await fetch(`/api/stats.php?key=${encodeURIComponent(key)}`);
+      const res = await fetch("/api/stats.php", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${key}`,
+        },
+      });
       const json = await res.json();
 
       if (!res.ok || json.status !== "success") {

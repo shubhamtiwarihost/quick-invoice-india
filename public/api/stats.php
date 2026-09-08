@@ -1,9 +1,33 @@
 <?php
 // public/api/stats.php - Admin Telemetry & Activity Metrics
 require_once 'db.php';
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
-$adminKey = $_GET['key'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+if (!$authHeader && function_exists('apache_request_headers')) {
+    $headers = apache_request_headers();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+}
+if (!$authHeader && function_exists('getallheaders')) {
+    $headers = getallheaders();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+}
+
+$adminKey = '';
+if (preg_match('/Bearer\s+(\S+)/i', $authHeader, $matches)) {
+    $adminKey = $matches[1];
+} elseif (!empty($_GET['key'])) {
+    $adminKey = trim($_GET['key']);
+}
+
 // Secret Admin Key
 if ($adminKey !== 'swift_master_2026') {
     http_response_code(403);

@@ -1,18 +1,20 @@
 import { formatDateIN } from "@/lib/format";
-import { clientBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
+import { clientBlock, cleanTerms, formatCurrency, sanitizeImageUrl, sellerBlock, type TemplateProps } from "./shared";
 
 export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
   const { seller, client, items, meta, config } = draft;
   const gst = config.gstMode === "gst";
   const color = config.accentColor;
+  const safeLogo = sanitizeImageUrl(seller.logo);
+  const safeSignature = sanitizeImageUrl(seller.signatureImage);
 
   return (
     <div className="flex min-h-[1122px] flex-col bg-white text-slate-800">
       <header className="flex items-start justify-between gap-4 border-b-4 pb-5" style={{ borderColor: color }}>
         <div className="flex items-start gap-3">
-          {seller.logo ? (
+          {safeLogo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={seller.logo} alt="" width={56} height={56} className="h-14 w-14 aspect-square rounded-lg object-cover" />
+            <img src={safeLogo} alt="" width={56} height={56} className="h-14 w-14 aspect-square rounded-lg object-cover" />
           ) : (
             <div
               className="flex h-14 w-14 items-center justify-center rounded-lg text-lg font-bold text-white"
@@ -159,9 +161,9 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             {cleanTerms(meta.terms)}
           </pre>
           <div className="mt-6 text-right">
-            {seller.signatureImage ? (
+            {safeSignature ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={seller.signatureImage} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
+              <img src={safeSignature} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
             ) : null}
             <p className="font-medium">{seller.signatoryName}</p>
             <p className="text-slate-400">Authorised signatory</p>

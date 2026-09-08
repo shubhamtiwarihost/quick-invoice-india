@@ -18,16 +18,30 @@ export function PageViewTracker() {
     });
 
     try {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([body], { type: "application/json" });
-        navigator.sendBeacon("/api/track.php", blob);
-      } else {
+      const adminToken =
+        typeof window !== "undefined"
+          ? sessionStorage.getItem("swift_admin_secret_key") ||
+            localStorage.getItem("swiftgst_auth_token")
+          : null;
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (adminToken) {
+        headers["Authorization"] = `Bearer ${adminToken}`;
+      }
+
+      if (adminToken || !navigator.sendBeacon) {
         fetch("/api/track.php", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body,
           keepalive: true,
         }).catch(() => {});
+      } else {
+        const blob = new Blob([body], { type: "application/json" });
+        navigator.sendBeacon("/api/track.php", blob);
       }
     } catch {
       // Non-blocking fire-and-forget

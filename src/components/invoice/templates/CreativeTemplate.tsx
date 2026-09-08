@@ -1,10 +1,11 @@
 import { formatDateIN } from "@/lib/format";
-import { clientBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
+import { clientBlock, cleanTerms, formatCurrency, sellerBlock, sanitizeImageUrl, type TemplateProps } from "./shared";
 
 export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
   const { seller, client, items, meta, config } = draft;
   const gst = config.gstMode === "gst";
   const color = config.accentColor;
+  const safeSignature = sanitizeImageUrl(seller.signatureImage);
 
   return (
     <div className="flex min-h-[1122px] flex-col overflow-hidden bg-white text-slate-800">
@@ -142,9 +143,9 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
       <footer className="mt-auto flex items-end justify-between px-5 py-6 text-[10px]">
         <pre className="max-w-xs whitespace-pre-wrap font-sans text-slate-500">{cleanTerms(meta.terms)}</pre>
         <div className="text-right">
-          {seller.signatureImage ? (
+          {safeSignature ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={seller.signatureImage} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
+            <img src={safeSignature} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
           ) : null}
           <p className="font-semibold">{seller.signatoryName}</p>
           <p className="text-slate-400">Authorised signatory</p>

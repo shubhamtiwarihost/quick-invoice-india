@@ -3,6 +3,14 @@ import { persist } from "zustand/middleware";
 import type { Client, InvoiceConfig, InvoiceDraft, LineItem, Seller } from "@/types/invoice";
 import type { QuotationDraft, QuotationMeta } from "@/types/quotation";
 import { addDaysISO, newItemId, todayISO } from "@/lib/format";
+import {
+  sanitizeBankDetails,
+  sanitizeClient,
+  sanitizeLineItem,
+  sanitizeMultilineText,
+  sanitizeSeller,
+  sanitizeText,
+} from "@/lib/sanitize";
 
 const today = todayISO();
 
@@ -137,10 +145,14 @@ export const useQuotationStore = create<QuotationStore>()(
       ...defaultQuotationDraft,
       hydrated: false,
       setHydrated: (v) => set({ hydrated: v }),
-      setSeller: (patch) => set({ seller: { ...get().seller, ...patch } }),
+      setSeller: (patch) =>
+        set({ seller: sanitizeSeller({ ...get().seller, ...patch }) }),
       setBank: (patch) =>
         set({
-          seller: { ...get().seller, bank: { ...get().seller.bank, ...patch } },
+          seller: {
+            ...get().seller,
+            bank: sanitizeBankDetails({ ...get().seller.bank, ...patch }),
+          },
         }),
       setClient: (patch) => {
         const client = { ...get().client, ...patch };
@@ -151,10 +163,30 @@ export const useQuotationStore = create<QuotationStore>()(
           client.shippingState = client.billingState;
           client.shippingStateCode = client.billingStateCode;
         }
-        set({ client });
+        set({ client: sanitizeClient(client) });
       },
       setMeta: (patch) => {
-        const updated = { ...get().meta, ...patch };
+        const current = get().meta;
+        const updated = {
+          ...current,
+          ...patch,
+          quotationNo:
+            patch.quotationNo !== undefined
+              ? sanitizeText(patch.quotationNo, 64)
+              : current.quotationNo,
+          subject:
+            patch.subject !== undefined
+              ? sanitizeText(patch.subject, 200)
+              : current.subject,
+          notes:
+            patch.notes !== undefined
+              ? sanitizeMultilineText(patch.notes, 2000)
+              : current.notes,
+          terms:
+            patch.terms !== undefined
+              ? sanitizeMultilineText(patch.terms, 3000)
+              : current.terms,
+        };
         if (patch.quotationDate && !patch.validUntil) {
           updated.validUntil = addDaysISO(patch.quotationDate, updated.validityDays);
         }
@@ -165,7 +197,7 @@ export const useQuotationStore = create<QuotationStore>()(
         set({
           meta: {
             ...get().meta,
-            validityDays: days,
+            validityDays: Math.max(1, Math.min(365, Number(days) || 15)),
             validUntil: addDaysISO(quoteDate, days),
           },
         });
@@ -191,7 +223,7 @@ export const useQuotationStore = create<QuotationStore>()(
       updateItem: (id, patch) =>
         set({
           items: get().items.map((item) =>
-            item.id === id ? { ...item, ...patch } : item,
+            item.id === id ? sanitizeLineItem({ ...item, ...patch }) : item,
           ),
         }),
       removeItem: (id) =>

@@ -5,6 +5,7 @@ import type { QuotationDraft } from "@/types/quotation";
 import type { InvoiceSummary } from "@/types/invoice";
 import { formatDateIN, formatCurrency } from "@/lib/format";
 import { upiQrDataUrl } from "@/components/invoice/BankDetailsForm";
+import { sanitizeImageUrl } from "@/lib/sanitize";
 import { Calendar, ShieldCheck } from "lucide-react";
 
 export function QuotationPreview({
@@ -18,6 +19,8 @@ export function QuotationPreview({
   const { seller, client, items, meta, config } = draft;
   const gst = config.gstMode === "gst";
   const color = config.accentColor;
+  const safeLogo = sanitizeImageUrl(seller.logo);
+  const safeSignature = sanitizeImageUrl(seller.signatureImage);
 
   const payee = seller.bank.accountHolder || seller.businessName;
   const upi = seller.bank.upiId;
@@ -47,10 +50,10 @@ export function QuotationPreview({
         {/* Header Block */}
         <header className="flex items-start justify-between gap-6 border-b border-slate-200 pb-5">
           <div className="flex items-start gap-4">
-            {seller.logo ? (
+            {safeLogo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={seller.logo}
+                src={safeLogo}
                 alt=""
                 width={64}
                 height={64}
@@ -387,10 +390,10 @@ export function QuotationPreview({
             <p className="font-bold uppercase tracking-wider text-slate-400">
               For {seller.businessName || "Service Provider"}
             </p>
-            {seller.signatureImage ? (
+            {safeSignature ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={seller.signatureImage}
+                src={safeSignature}
                 alt="Signature"
                 height={40}
                 className="mt-2 h-10 max-w-[160px] object-contain"

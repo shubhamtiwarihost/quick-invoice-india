@@ -16,6 +16,9 @@ export async function downloadInvoicePdf(
     backgroundColor: "#ffffff",
     logging: false,
     onclone: (clonedDoc) => {
+      // Defensive removal of any potentially dangerous executable elements
+      clonedDoc.querySelectorAll("script, iframe, object, embed").forEach((node) => node.remove());
+
       const clonedEl = clonedDoc.getElementById(element.id || "invoice-a4");
       if (clonedEl) {
         clonedEl.style.transform = "none";

@@ -1,7 +1,30 @@
 <?php
 // public_html/api/track.php
 require_once 'db.php';
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+if (!$authHeader && function_exists('apache_request_headers')) {
+    $headers = apache_request_headers();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+}
+if (!$authHeader && function_exists('getallheaders')) {
+    $headers = getallheaders();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+}
+
+$bearerToken = null;
+if (preg_match('/Bearer\s+(\S+)/i', $authHeader, $matches)) {
+    $bearerToken = $matches[1];
+}
 
 $input = json_decode(file_get_contents('php://input'), true);
 

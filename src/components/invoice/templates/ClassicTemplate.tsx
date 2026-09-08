@@ -1,10 +1,12 @@
 import { formatDateIN } from "@/lib/format";
-import { clientBlock, clientShippingBlock, cleanTerms, formatCurrency, sellerBlock, type TemplateProps } from "./shared";
+import { clientBlock, clientShippingBlock, cleanTerms, formatCurrency, sanitizeImageUrl, sellerBlock, type TemplateProps } from "./shared";
 
 export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
   const { seller, client, items, meta, config } = draft;
   const gst = config.gstMode === "gst";
   const color = config.accentColor;
+  const safeLogo = sanitizeImageUrl(seller.logo);
+  const safeSignature = sanitizeImageUrl(seller.signatureImage);
 
   return (
     <div className="flex min-h-[1122px] flex-col bg-white p-1 text-slate-900">
@@ -17,9 +19,9 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
         </div>
         <div className="grid grid-cols-2 gap-3 border-b px-4 py-3 text-[11px]">
           <div>
-            {seller.logo ? (
+            {safeLogo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={seller.logo} alt="" height={48} className="mb-2 h-12 max-w-[140px] object-contain" />
+              <img src={safeLogo} alt="" height={48} className="mb-2 h-12 max-w-[140px] object-contain" />
             ) : null}
             <p>{sellerBlock(draft)}</p>
             <p>Phone: {seller.phone}</p>
@@ -136,9 +138,9 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
             </div>
             <div className="mt-8 text-right">
               <p>For {seller.businessName}</p>
-              {seller.signatureImage ? (
+              {safeSignature ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={seller.signatureImage} alt="" height={40} className="ml-auto mt-2 h-10 max-w-[160px] object-contain" />
+                <img src={safeSignature} alt="" height={40} className="ml-auto mt-2 h-10 max-w-[160px] object-contain" />
               ) : (
                 <div className="h-10" />
               )}

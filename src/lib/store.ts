@@ -10,6 +10,14 @@ import type {
 } from "@/types/invoice";
 import { addDaysISO, newItemId, todayISO } from "@/lib/format";
 import { nextInvoiceNumber } from "@/lib/gstEngine";
+import {
+  sanitizeBankDetails,
+  sanitizeClient,
+  sanitizeInvoiceDraft,
+  sanitizeLineItem,
+  sanitizeMeta,
+  sanitizeSeller,
+} from "@/lib/sanitize";
 
 const today = todayISO();
 
@@ -142,23 +150,27 @@ export const useInvoiceStore = create<InvoiceStore>()(
       ...defaultDraft,
       hydrated: false,
       setHydrated: (v) => set({ hydrated: v }),
-      setSeller: (patch) => set({ seller: { ...get().seller, ...patch } }),
+      setSeller: (patch) =>
+        set({ seller: sanitizeSeller({ ...get().seller, ...patch }) }),
       setBank: (patch) =>
         set({
-          seller: { ...get().seller, bank: { ...get().seller.bank, ...patch } },
+          seller: {
+            ...get().seller,
+            bank: sanitizeBankDetails({ ...get().seller.bank, ...patch }),
+          },
         }),
       setClient: (patch) => {
-        const client = { ...get().client, ...patch };
-        if (client.shippingSameAsBilling) {
-          client.shippingAddress = client.billingAddress;
-          client.shippingCity = client.billingCity;
-          client.shippingPincode = client.billingPincode;
-          client.shippingState = client.billingState;
-          client.shippingStateCode = client.billingStateCode;
+        const raw = { ...get().client, ...patch };
+        if (raw.shippingSameAsBilling) {
+          raw.shippingAddress = raw.billingAddress;
+          raw.shippingCity = raw.billingCity;
+          raw.shippingPincode = raw.billingPincode;
+          raw.shippingState = raw.billingState;
+          raw.shippingStateCode = raw.billingStateCode;
         }
-        set({ client });
+        set({ client: sanitizeClient(raw) });
       },
-      setMeta: (patch) => set({ meta: { ...get().meta, ...patch } }),
+      setMeta: (patch) => set({ meta: sanitizeMeta({ ...get().meta, ...patch }) }),
       setConfig: (patch) => set({ config: { ...get().config, ...patch } }),
       addItem: () =>
         set({
@@ -180,20 +192,14 @@ export const useInvoiceStore = create<InvoiceStore>()(
       updateItem: (id, patch) =>
         set({
           items: get().items.map((item) =>
-            item.id === id ? { ...item, ...patch } : item,
+            item.id === id ? sanitizeLineItem({ ...item, ...patch }) : item,
           ),
         }),
       removeItem: (id) =>
         set({ items: get().items.filter((item) => item.id !== id) }),
       resetDraft: () => set({ ...defaultDraft }),
       loadDraft: (draft: InvoiceDraft) =>
-        set({
-          seller: draft.seller,
-          client: draft.client,
-          items: draft.items,
-          meta: draft.meta,
-          config: draft.config,
-        }),
+        set(sanitizeInvoiceDraft(draft)),
       newInvoice: () => {
         const counter = get().meta.invoiceCounter + 1;
         set({
