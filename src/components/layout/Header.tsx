@@ -5,19 +5,26 @@ import type { PdfToolId } from '../../types';
 import type { LegalPageId } from '../legal/legalContent';
 
 interface HeaderProps {
-  activeTool: PdfToolId;
+  activeTool: PdfToolId | null;
   onSelectTool: (id: PdfToolId) => void;
+  onGoHome?: () => void;
   onOpenLegal: (pageId: LegalPageId) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTool, onSelectTool, onOpenLegal }) => {
+export const Header: React.FC<HeaderProps> = ({ activeTool, onSelectTool, onGoHome, onOpenLegal }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo & Title */}
           <div
-            onClick={() => onSelectTool('merge')}
+            onClick={() => {
+              if (onGoHome) {
+                onGoHome();
+              } else {
+                onSelectTool('merge');
+              }
+            }}
             className="flex items-center gap-3 cursor-pointer group select-none"
           >
             <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-linear-to-tr from-indigo-600 to-indigo-700 text-white flex items-center justify-center shadow-md shadow-indigo-100 group-hover:scale-105 transition-transform">
