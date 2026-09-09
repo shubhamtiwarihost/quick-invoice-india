@@ -354,8 +354,27 @@ export async function POST(req: Request) {
       },
     };
 
+    interface GeminiApiResponse {
+      candidates?: Array<{
+        content?: {
+          parts?: Array<{
+            text?: string;
+            functionCall?: {
+              name: string;
+              args?: Record<string, unknown>;
+            };
+          }>;
+        };
+      }>;
+      error?: {
+        code?: number;
+        status?: string;
+        message?: string;
+      };
+    }
+
     let geminiRes: Response | null = null;
-    let geminiData: Record<string, any> | null = null;
+    let geminiData: GeminiApiResponse | null = null;
     let successfulModel = "";
 
     for (const model of modelsToTry) {

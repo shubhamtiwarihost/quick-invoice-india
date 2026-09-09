@@ -25,6 +25,7 @@ import {
   CheckCircle2,
   ScanBarcode,
   Clock,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import {
@@ -391,6 +392,21 @@ export function BackOfficeShell({ children }: { children: React.ReactNode }) {
                 <span>Launch POS</span>
               </Link>
             )}
+
+            {/* AI Co-Pilot Quick Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("open-ai-agent"));
+                }
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition shadow-2xs cursor-pointer"
+              title="Open AI Merchant Co-Pilot (Cmd+J)"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
+              <span className="hidden xl:inline">AI Co-Pilot</span>
+            </button>
 
             {/* Cashier Quick-Lock Button */}
             <button

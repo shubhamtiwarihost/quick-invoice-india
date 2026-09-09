@@ -95,4 +95,22 @@ test.describe("AI Merchant Co-Pilot API & Tools", () => {
     expect(json.functionCall.name).toBe("pos_action");
     expect(json.functionCall.args.action).toBe("create_bill");
   });
+
+  test("AI Co-Pilot button is visible on public homepage (/) and opens modal on click", async ({ page }) => {
+    await page.goto("/");
+    const agentButton = page.locator("button[aria-label='Open AI Merchant Co-Pilot']").first();
+    await expect(agentButton).toBeVisible();
+    await expect(agentButton).toContainText("AI Co-Pilot");
+
+    // Click to open modal
+    await agentButton.click();
+    const modalTitle = page.locator("text=SwiftGST AI Co-Pilot");
+    await expect(modalTitle.first()).toBeVisible();
+  });
+
+  test("AI Co-Pilot button is visible on POS counter page (/pos)", async ({ page }) => {
+    await page.goto("/pos");
+    const agentButton = page.locator("button[aria-label='Open AI Merchant Co-Pilot']").first();
+    await expect(agentButton).toBeVisible();
+  });
 });

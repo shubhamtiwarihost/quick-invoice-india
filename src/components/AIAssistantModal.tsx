@@ -89,6 +89,13 @@ export function AIAssistantModal() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
+  // 1b. Custom Event listener to open modal from anywhere (Navbar, drawers, shortcuts)
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener("open-ai-agent", handleOpen);
+    return () => window.removeEventListener("open-ai-agent", handleOpen);
+  }, []);
+
   // Focus input on open
   useEffect(() => {
     if (isOpen) {
@@ -610,21 +617,21 @@ export function AIAssistantModal() {
   return (
     <>
       {/* Floating Emerald Action Button (Bottom-Right) */}
-      <div className="fixed bottom-6 right-6 z-40 sm:bottom-6">
+      <div className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-40">
         <button
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center gap-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 px-4 py-3 text-white shadow-xl shadow-emerald-600/30 transition-all duration-200 hover:scale-105 hover:from-emerald-500 hover:to-teal-600 active:scale-95 ring-4 ring-emerald-500/20 cursor-pointer"
+          className="group relative flex items-center gap-2 sm:gap-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 px-3.5 py-2.5 sm:px-4 sm:py-3 text-white shadow-xl shadow-emerald-600/30 transition-all duration-200 hover:scale-105 hover:from-emerald-500 hover:to-teal-600 active:scale-95 ring-4 ring-emerald-500/20 cursor-pointer"
           title="Open AI Merchant Co-Pilot (Ctrl + J)"
           aria-label="Open AI Merchant Co-Pilot"
         >
           <div className="relative">
-            <Sparkles className="h-5 w-5 animate-pulse text-amber-300" />
+            <Sparkles className="h-4.5 w-4.5 sm:h-5 sm:w-5 animate-pulse text-amber-300" />
             <span className="absolute -top-1 -right-1 flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
             </span>
           </div>
-          <span className="text-sm font-bold tracking-tight hidden sm:inline">
+          <span className="text-xs sm:text-sm font-bold tracking-tight">
             AI Co-Pilot
           </span>
           <kbd className="hidden md:inline-flex items-center rounded-md bg-white/20 px-1.5 py-0.5 text-[10px] font-mono font-medium text-emerald-50">
@@ -635,7 +642,7 @@ export function AIAssistantModal() {
 
       {/* Global AI Command Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150">
           <div
             className="w-full sm:max-w-xl rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] sm:max-h-[85vh]"
             onClick={(e) => e.stopPropagation()}

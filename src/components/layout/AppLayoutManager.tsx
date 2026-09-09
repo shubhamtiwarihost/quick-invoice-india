@@ -56,13 +56,14 @@ export function AppLayoutManager({ children }: { children: React.ReactNode }) {
     return <main className="min-h-screen bg-slate-950 text-slate-100">{children}</main>;
   }
 
-  // 4. Public Website & Standalone Tools (/, /about-us, /contact-us, /gst-calculator, etc.)
+  // 5. Public Website & Standalone Tools (/, /about-us, /contact-us, /gst-calculator, etc.)
   return (
     <>
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
       <NativeBottomNav />
+      <AIAssistantModal />
     </>
   );
 }

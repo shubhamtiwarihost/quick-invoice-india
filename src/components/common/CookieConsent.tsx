@@ -58,7 +58,7 @@ export function CookieConsent() {
     <aside
       aria-label="Cookie and privacy consent banner"
       role="dialog"
-      className="no-print fixed bottom-4 right-4 left-4 sm:left-auto z-50 max-w-md rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 shadow-2xl select-none will-change-transform transform-gpu animate-in fade-in duration-200"
+      className="no-print fixed bottom-4 left-4 right-4 sm:right-auto sm:left-4 z-50 max-w-md rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-md p-4 shadow-2xl select-none will-change-transform transform-gpu animate-in fade-in duration-200"
     >
       <div className="flex items-start justify-between gap-2.5">
         <div className="flex items-center gap-2">

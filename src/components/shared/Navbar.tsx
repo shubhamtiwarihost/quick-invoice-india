@@ -243,6 +243,24 @@ export function Navbar() {
             </span>
           </Link>
 
+          {/* AI Co-Pilot Assistant Trigger */}
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("open-ai-agent"));
+              }
+            }}
+            className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 hover:text-emerald-900 transition font-bold border border-emerald-200 shadow-2xs cursor-pointer"
+            title="Open AI Merchant Co-Pilot (Ctrl + J)"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
+            <span>AI Co-Pilot</span>
+            <span className="rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-extrabold text-white uppercase tracking-wider">
+              AI
+            </span>
+          </button>
+
           {/* All Tools Hub Link */}
           <Link
             href="/pdf-tools/"
@@ -486,6 +504,31 @@ export function Navbar() {
               </Link>
             </div>
           )}
+
+          {/* AI Merchant Co-Pilot Mobile Trigger */}
+          <button
+            type="button"
+            onClick={() => {
+              closeAllMenus();
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("open-ai-agent"));
+              }
+            }}
+            className="flex w-full items-center justify-between rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200/90 p-3 text-xs font-bold text-emerald-950 mb-2.5 shadow-2xs text-left cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-xs">
+                <Sparkles className="h-4 w-4 text-amber-300 animate-pulse" />
+              </div>
+              <div>
+                <p className="font-extrabold text-slate-900 leading-tight">AI Merchant Co-Pilot</p>
+                <p className="text-[11px] text-emerald-700 font-medium">Voice billing &amp; instant Khata</p>
+              </div>
+            </div>
+            <span className="text-[10px] rounded-full bg-emerald-600 text-white px-2 py-0.5 font-extrabold uppercase tracking-wider shadow-2xs">
+              Launch
+            </span>
+          </button>
 
           {/* Featured Tools Hub Link */}
           <Link
