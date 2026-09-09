@@ -83,7 +83,7 @@ test.describe("Loyverse POS UX Flow Test Suite", () => {
     await expect(page.getByTestId("cart-item")).toBeVisible();
 
     // Click cart item row to trigger modifier sheet
-    await page.getByTestId("cart-item").first().click();
+    await page.getByTestId("cart-item").first().click({ position: { x: 20, y: 15 } });
 
     // Verify modifier sheet is open
     const modifierSheet = page.getByTestId("modifier-sheet");

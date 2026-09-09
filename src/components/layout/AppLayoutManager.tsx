@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { Navbar, Footer } from "@/components/shared/Navbar";
 import { NativeBottomNav } from "@/components/mobile/NativeBottomNav";
 import { BackOfficeShell } from "@/components/layout/BackOfficeShell";
-import { AIAssistantModal } from "@/components/AIAssistantModal";
 
 export function AppLayoutManager({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,7 +16,6 @@ export function AppLayoutManager({ children }: { children: React.ReactNode }) {
     return (
       <main className="min-h-screen bg-slate-100">
         {children}
-        <AIAssistantModal />
       </main>
     );
   }
@@ -34,7 +32,6 @@ export function AppLayoutManager({ children }: { children: React.ReactNode }) {
     return (
       <BackOfficeShell>
         {children}
-        <AIAssistantModal />
       </BackOfficeShell>
     );
   }
@@ -63,7 +60,6 @@ export function AppLayoutManager({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
       <Footer />
       <NativeBottomNav />
-      <AIAssistantModal />
     </>
   );
 }
