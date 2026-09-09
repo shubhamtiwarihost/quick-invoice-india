@@ -302,6 +302,53 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       },
     ],
   },
+  {
+    category: "Software Comparisons & POS Guides",
+    tagline: "Save thousands of rupees every year with transparent, white-label alternatives to paid billing apps",
+    icon: ShieldCheck,
+    tools: [
+      {
+        title: "Vyapar Free Alternative (PC & Mobile)",
+        href: "/vyapar-free-alternative",
+        badge: "Zero Subscription",
+        badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
+        description:
+          "Save ₹3,000-₹7,000/yr. Print thermal bills, manage stock, and scan barcodes with zero watermark and zero app download.",
+        icon: Store,
+        features: ["Zero Annual Fee", "No Watermark", "PWA Offline Mode"],
+      },
+      {
+        title: "Free Retail POS Software Guide",
+        href: "/retail-pos-software",
+        badge: "High-Speed Counter",
+        badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
+        description:
+          "Fast retail point of sale counter with USB/Bluetooth barcode scanning, 58mm/80mm thermal receipts, and dynamic UPI QR.",
+        icon: Store,
+        features: ["Barcode Auto-Focus", "Thermal Printing", "UPI Intent QR"],
+      },
+      {
+        title: "ClearTax Free Alternative",
+        href: "/cleartax-free-alternative",
+        badge: "No Phone Signup",
+        badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
+        description:
+          "Generate GST tax bills with zero phone number required, zero spam sales calls, and instant A4 PDF export.",
+        icon: ShieldCheck,
+        features: ["No Phone Login", "Zero Sales Spam", "1-Click PDF"],
+      },
+      {
+        title: "myBillBook Free Alternative",
+        href: "/mybillbook-free-alternative",
+        badge: "0 MB Install",
+        badgeColor: "bg-purple-50 text-purple-800 border-purple-200",
+        description:
+          "Browser-based GST billing without installing 100MB mobile apps, paying monthly plans, or getting locked out.",
+        icon: FileText,
+        features: ["Runs in Any Browser", "No Heavy App", "White-Label Bills"],
+      },
+    ],
+  },
 ];
 
 export function ToolsHub() {

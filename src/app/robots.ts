@@ -6,17 +6,14 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: ["/", "/invoice", "/about", "/privacy", "/terms"],
+      allow: "/",
       disallow: [
-        "/admin",
-        "/pos",
-        "/inventory",
-        "/customers",
-        "/settings",
+        "/admin/",
         "/api/",
+        "/dashboard/",
+        "/settings/",
       ],
     },
     sitemap: "https://swiftgst.in/sitemap.xml",
   };
 }
-

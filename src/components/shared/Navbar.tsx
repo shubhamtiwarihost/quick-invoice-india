@@ -832,6 +832,11 @@ export function Footer() {
                 </Link>
               </li>
               <li className="pt-2 border-t border-slate-100">
+                <Link href="/vyapar-free-alternative" className="hover:text-teal-700 font-semibold text-teal-800">
+                  Vyapar Free Alternative (PC &amp; Mobile)
+                </Link>
+              </li>
+              <li>
                 <Link href="/cleartax-free-alternative" className="hover:text-teal-700 font-medium text-slate-700">
                   ClearTax Free Alternative
                 </Link>
@@ -839,6 +844,11 @@ export function Footer() {
               <li>
                 <Link href="/mybillbook-free-alternative" className="hover:text-teal-700 font-medium text-slate-700">
                   myBillBook Free Alternative
+                </Link>
+              </li>
+              <li>
+                <Link href="/retail-pos-software" className="hover:text-teal-700 font-medium text-slate-700">
+                  Retail POS Billing Software
                 </Link>
               </li>
             </ul>

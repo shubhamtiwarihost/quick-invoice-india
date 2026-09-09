@@ -14,7 +14,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/invoice`,
+      url: `${baseUrl}/retail-pos-software/`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/vyapar-free-alternative/`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/cleartax-free-alternative/`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/mybillbook-free-alternative/`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/invoice/`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -26,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/freelancer-invoice-generator/`,
+      url: `${baseUrl}/kirana-store-bill-maker/`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -38,7 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/kirana-store-bill-maker/`,
+      url: `${baseUrl}/freelancer-invoice-generator/`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -51,18 +75,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/quotation-maker/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/cleartax-free-alternative/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/mybillbook-free-alternative/`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -92,12 +104,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/freelance-rate-calculator/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/eway-bill-checker/`,
       lastModified: now,
       changeFrequency: "monthly",
@@ -105,6 +111,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/composition-calculator/`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/freelance-rate-calculator/`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
