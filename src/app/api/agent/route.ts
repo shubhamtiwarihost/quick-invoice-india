@@ -325,12 +325,11 @@ export async function POST(req: Request) {
     }
 
     // 4. Call Google Gemini API with Function Calling
-    // Uses gemini-3.6-flash as primary (Google's active Flash model for v1beta),
-    // with automatic fallback to older or alternate model tags if needed.
+    // Uses gemini-3.7-flash as primary, with automatic fallback to 3.6-flash / 3.5-flash if needed.
     const modelsToTry = [
-      process.env.GEMINI_MODEL?.trim() || "gemini-3.6-flash",
-      "gemini-2.5-flash",
-      "gemini-1.5-flash",
+      process.env.GEMINI_MODEL?.trim() || "gemini-3.7-flash",
+      "gemini-3.6-flash",
+      "gemini-3.5-flash",
     ].filter((m, i, arr) => Boolean(m) && arr.indexOf(m) === i);
 
     const geminiPayload = {
@@ -384,7 +383,7 @@ export async function POST(req: Request) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(geminiPayload),
-          signal: AbortSignal.timeout(12000),
+          signal: AbortSignal.timeout(8000),
         });
 
         // Friendly Handling for HTTP 429 / Quota Exhausted from Google
