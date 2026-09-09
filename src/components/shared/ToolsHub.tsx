@@ -45,18 +45,18 @@ interface ToolCategory {
 const TOOL_CATEGORIES: ToolCategory[] = [
   {
     category: "SwiftGST PDF Utilities Suite",
-    tagline: "Free in-browser PDF tools: Merge, Split, Rotate, Delete pages, Convert images & Protect PDFs",
-    icon: Scissors,
+    tagline: "Free in-browser PDF tools: Merge, Rotate, Delete pages, Convert images & Protect PDFs",
+    icon: Layers,
     tools: [
       {
-        title: "All 8 PDF Utilities Suite",
+        title: "All PDF Utilities Suite",
         href: "/pdf-tools/",
-        badge: "8 Free Tools",
+        badge: "Free Tools",
         badgeColor: "bg-indigo-50 text-indigo-800 border-indigo-200",
         description:
-          "Launch our full suite of 8 PDF utilities. Work with files directly in your browser without sending private documents anywhere.",
+          "Launch our suite of in-browser PDF utilities. Work with files directly in your browser without sending private documents anywhere.",
         icon: Sparkles,
-        features: ["Merge & Split PDFs", "Images to PDF / PDF to Img", "Watermark & AES Protect"],
+        features: ["Merge PDFs", "Images to PDF / PDF to Img", "Watermark & AES Protect"],
       },
       {
         title: "Merge Multiple PDFs",
@@ -67,16 +67,6 @@ const TOOL_CATEGORIES: ToolCategory[] = [
           "Combine and reorder multiple PDF documents into a single consolidated file with interactive drag-and-drop.",
         icon: Layers,
         features: ["Drag & Drop Order", "Unlimited Files", "Preserves Bookmarks"],
-      },
-      {
-        title: "Split / Extract PDF Pages",
-        href: "/pdf-tools/#split",
-        badge: "Visual Picker",
-        badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
-        description:
-          "Select individual page thumbnails or type custom page ranges (e.g. 1-5, 8) to extract cleanly into a new PDF.",
-        icon: Scissors,
-        features: ["Thumbnail Selector", "Custom Page Ranges", "Lossless Export"],
       },
     ],
   },

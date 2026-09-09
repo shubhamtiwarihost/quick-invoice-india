@@ -107,7 +107,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
               <div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">1. Information We Do NOT Collect</h3>
                 <p>
-                  SwiftGST PDF does not require user registration, logins, or payment details. Because file processing (merging, splitting, rotating, deleting pages, watermarking, converting, and password encryption) executes in your local browser tab, <strong>we have zero access to:</strong>
+                  SwiftGST PDF does not require user registration, logins, or payment details. Because file processing (merging, rotating, deleting pages, watermarking, converting, and password encryption) executes in your local browser tab, <strong>we have zero access to:</strong>
                 </p>
                 <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
                   <li>Your PDF documents, pages, or textual content.</li>

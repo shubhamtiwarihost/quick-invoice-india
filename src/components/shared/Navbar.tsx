@@ -39,9 +39,9 @@ export const ALL_TOOLS = [
   },
   {
     href: "/pdf-tools/",
-    label: "PDF Tools Suite (8 Tools)",
+    label: "PDF Tools Suite",
     shortLabel: "PDF Tools",
-    desc: "100% private client-side PDF suite: Merge, Split, Rotate, Delete pages, Convert images & Protect.",
+    desc: "100% private client-side PDF suite: Merge, Rotate, Delete pages, Convert images & Protect.",
     icon: Sparkles,
   },
   {
@@ -234,7 +234,7 @@ export function Navbar() {
           <Link
             href="/pdf-tools/"
             className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 hover:text-indigo-900 transition font-bold border border-indigo-200 shadow-2xs"
-            title="Open 8-Tool PDF Suite (Merge, Split, Rotate, Convert & Protect)"
+            title="Open Free PDF Suite (Merge, Rotate, Convert & Protect)"
           >
             <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
             <span>PDF Tools</span>

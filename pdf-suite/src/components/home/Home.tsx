@@ -135,7 +135,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
         </h1>
 
         <p className="mt-4 text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          Merge, split, rotate, delete pages, watermark, encrypt, and convert PDFs directly inside
+          Merge, rotate, delete pages, watermark, encrypt, and convert PDFs directly inside
           your browser memory. Your confidential documents never leave your computer.
         </p>
 
