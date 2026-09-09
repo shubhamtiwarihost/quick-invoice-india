@@ -255,7 +255,7 @@ export default function SuperAdminPage() {
         </header>
 
         {/* Dashboard Main Workspace */}
-        <main className="flex-1 p-4 sm:p-8 max-w-[1600px] w-full mx-auto space-y-6">
+        <main className="flex-1 p-4 sm:p-8 max-w-[1850px] 2xl:max-w-[2100px] w-full mx-auto space-y-6">
           {/* Top Metrics Row */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Card 1: Today's Unique Visitors */}

@@ -1080,7 +1080,7 @@ export default function PosCounterPage() {
 
       {/* POS Top Header */}
       <header className="no-print sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-2xs will-change-transform transform-gpu">
-        <div className="mx-auto max-w-[1600px] px-4 py-2.5">
+        <div className="mx-auto max-w-[1850px] 2xl:max-w-[2100px] w-full px-4 sm:px-6 lg:px-8 py-2.5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Title & Brand */}
             <div className="flex items-center gap-3">
@@ -1215,7 +1215,7 @@ export default function PosCounterPage() {
       </header>
 
       {/* POS Workspace: Split 65% Catalog / 35% Cart */}
-      <main className="no-print mx-auto max-w-[1600px] px-4 pt-3.5">
+      <main className="no-print mx-auto max-w-[1850px] 2xl:max-w-[2100px] w-full px-4 sm:px-6 lg:px-8 pt-3.5">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-start">
           {/* LEFT 65%: Product Catalog & Search Grid */}
           <section className="lg:col-span-8 space-y-3">

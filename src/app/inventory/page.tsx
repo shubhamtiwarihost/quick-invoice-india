@@ -364,7 +364,7 @@ export default function InventoryPage() {
 
       {/* Top Banner & Header */}
       <header className="border-b border-slate-200 bg-white shadow-2xs">
-        <div className="mx-auto max-w-[1600px] px-4 py-4 md:py-6">
+        <div className="mx-auto max-w-[1850px] 2xl:max-w-[2100px] w-full px-4 sm:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -479,7 +479,7 @@ export default function InventoryPage() {
       </header>
 
       {/* Main Workspace */}
-      <main className="mx-auto max-w-[1600px] px-4 pt-6">
+      <main className="mx-auto max-w-[1850px] 2xl:max-w-[2100px] w-full px-4 sm:px-6 lg:px-8 pt-6">
         {/* Search, Filter & Quick Toggles */}
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-md">

@@ -87,7 +87,7 @@ export function RetailSuiteShowcase() {
       <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
-      <div className="mx-auto max-w-7xl relative z-10">
+      <div className="mx-auto max-w-[1850px] 2xl:max-w-[2100px] w-full relative z-10">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 rounded-full bg-teal-500/10 border border-teal-500/30 px-3.5 py-1 text-xs font-semibold text-teal-300 mb-4 shadow-sm">

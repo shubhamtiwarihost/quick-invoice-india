@@ -83,9 +83,9 @@ export function QuotationWorkspace({
 
   if (!quoteStore.hydrated) {
     return (
-      <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col pb-16 md:pb-0 min-h-[850px]">
+      <div className="mx-auto flex w-full max-w-[1850px] 2xl:max-w-[2100px] flex-1 flex-col pb-16 md:pb-0 min-h-[850px]">
         {/* Placeholder Top Action Bar */}
-        <div className="no-print flex items-center justify-between border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 py-2 sm:py-3 h-[57px]">
+        <div className="no-print flex items-center justify-between border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 xl:px-10 py-2 sm:py-3 h-[57px]">
           <div className="h-5 w-48 rounded-md bg-slate-100 animate-pulse" />
           <div className="hidden sm:flex items-center gap-2">
             <div className="h-8 w-24 rounded-lg bg-slate-100 animate-pulse" />
@@ -94,17 +94,17 @@ export function QuotationWorkspace({
         </div>
 
         {/* Placeholder Workspace Grid */}
-        <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1 min-h-[750px]">
-          {/* Left Editor Skeleton (46%) */}
-          <div className="no-print w-full lg:w-[46%] shrink-0 min-h-[600px] rounded-2xl border border-slate-200 bg-white p-5 space-y-4 animate-pulse">
+        <div className="invoice-workspace-grid w-full max-w-[1850px] 2xl:max-w-[2100px] mx-auto px-3 sm:px-4 lg:px-8 xl:px-10 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1 min-h-[750px]">
+          {/* Left Editor Skeleton (44%) */}
+          <div className="no-print w-full lg:w-[47%] xl:w-[45%] 2xl:w-[44%] shrink-0 min-h-[600px] rounded-2xl border border-slate-200 bg-white p-5 space-y-4 animate-pulse">
             <div className="h-6 w-1/3 bg-slate-100 rounded-md" />
             <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
             <div className="h-10 w-full bg-slate-50 rounded-xl border border-slate-100" />
             <div className="h-28 w-full bg-slate-50 rounded-xl border border-slate-100" />
           </div>
 
-          {/* Right Preview Skeleton (54%) */}
-          <div className="invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 min-h-[600px] flex justify-center">
+          {/* Right Preview Skeleton (56%) */}
+          <div className="invoice-preview-section w-full lg:w-[53%] xl:w-[55%] 2xl:w-[56%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 min-h-[600px] flex justify-center">
             <div className="w-full flex justify-center min-h-[600px]">
               <div className="bg-white shadow-xl rounded-sm w-[794px] lg:w-full lg:max-w-[820px] aspect-[1/1.414] min-h-[600px] border border-slate-200/60 p-8 flex flex-col justify-between animate-pulse">
                 <div className="flex justify-between items-start">
@@ -212,7 +212,7 @@ export function QuotationWorkspace({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col pb-16 md:pb-0">
+    <div className="mx-auto flex w-full max-w-[1850px] 2xl:max-w-[2100px] flex-1 flex-col pb-16 md:pb-0">
       {/* Toast Notification */}
       {toast ? (
         <div className="no-print fixed bottom-20 right-4 z-50 flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-medium text-white shadow-xl animate-in slide-in-from-bottom-3 duration-200 md:bottom-5 md:right-5">
@@ -222,7 +222,7 @@ export function QuotationWorkspace({
       ) : null}
 
       {/* Top Action Bar */}
-      <div className="no-print flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 py-2 sm:py-3">
+      <div className="no-print flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 xl:px-10 py-2 sm:py-3">
         <div>
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-amber-900">
@@ -318,23 +318,23 @@ export function QuotationWorkspace({
       </div>
 
       {/* Workspace Grid */}
-      <div className="invoice-workspace-grid w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1 min-h-[750px]">
-        {/* Left Editor Panel (46%) */}
+      <div className="invoice-workspace-grid w-full max-w-[1850px] 2xl:max-w-[2100px] mx-auto px-3 sm:px-4 lg:px-8 xl:px-10 py-3 lg:py-6 flex flex-col lg:flex-row items-start gap-4 lg:gap-8 flex-1 min-h-[750px]">
+        {/* Left Editor Panel (44%-47%) */}
         <aside
-          className={`no-print w-full lg:w-[46%] shrink-0 pb-28 lg:pb-0 min-h-[600px] ${
+          className={`no-print w-full lg:w-[47%] xl:w-[45%] 2xl:w-[44%] shrink-0 pb-28 lg:pb-0 min-h-[600px] ${
             tab === "form" ? "block" : "hidden"
           } lg:block`}
         >
           <QuotationForm grandTotal={summary.grandTotal} />
         </aside>
 
-        {/* Right Preview Panel (54%) */}
+        {/* Right Preview Panel (53%-56%) */}
         <section
-          className={`invoice-preview-section w-full lg:w-[54%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center min-h-[600px] ${
+          className={`invoice-preview-section w-full lg:w-[53%] xl:w-[55%] 2xl:w-[56%] lg:flex-1 lg:self-stretch rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center min-h-[600px] ${
             tab === "preview" ? "block" : "hidden"
           } lg:block`}
         >
-          <div className="sticky top-6 flex justify-center w-full print:static will-change-transform transform-gpu min-h-[600px]">
+          <div className="lg:sticky lg:top-20 flex justify-center w-full print:static will-change-transform transform-gpu max-h-none lg:max-h-[calc(100vh-5.5rem)] lg:overflow-y-auto no-scrollbar">
             <div className="invoice-scale w-full flex justify-center min-h-[600px]">
               <QuotationPreview draft={draft} summary={summary} />
             </div>

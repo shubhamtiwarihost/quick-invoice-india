@@ -364,7 +364,7 @@ export function ToolsHub() {
       aria-label="Explore All Free Business & GST Utilities"
       className="w-full bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-200 scroll-mt-14"
     >
-      <div className="mx-auto max-w-[1400px]">
+      <div className="mx-auto max-w-[1850px] 2xl:max-w-[2100px] w-full">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 rounded-full bg-teal-50 border border-teal-200/80 px-3.5 py-1 text-xs font-semibold text-teal-800 mb-3 shadow-2xs">

@@ -202,7 +202,7 @@ export function Navbar() {
 
   return (
     <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md will-change-transform transform-gpu">
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-2.5">
+      <div className="mx-auto flex max-w-[1850px] 2xl:max-w-[2100px] w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-2.5">
         {/* Logo */}
         <Link
           href="/"
@@ -675,7 +675,7 @@ export function Navbar() {
 export function Footer() {
   return (
     <footer className="no-print mt-auto border-t border-slate-200 bg-white py-8 text-slate-600">
-      <div className="mx-auto max-w-[1600px] px-4">
+      <div className="mx-auto max-w-[1850px] 2xl:max-w-[2100px] w-full px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {/* Brand Col */}
           <div className="space-y-3 md:col-span-1">
