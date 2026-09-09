@@ -5,26 +5,27 @@ import { HomeComplianceGuide, HOME_FAQS } from "@/components/home/HomeCompliance
 import { RetailSuiteShowcase } from "@/components/home/RetailSuiteShowcase";
 
 export const metadata: Metadata = {
-  title: "SwiftGST — Free GST Invoice Generator India (PDF, UPI QR, GSTR-1)",
+  title: "SwiftGST - Free Retail POS & GST Billing Software",
   description:
-    "Create 100% free GST and non-GST invoices for Indian businesses in under a minute. Live A4 preview, CGST/SGST/IGST, UPI QR code, GSTR-1 CSV export & PDF download — no sign up needed.",
+    "Superfast retail POS billing counter, barcode inventory tracking, customer Khata ledger, and 100% free GST invoice generator for Indian small businesses. Live A4 preview, thermal receipts, UPI QR code & GSTR-1 export.",
   keywords: [
+    "SwiftGST",
+    "retail POS billing software",
+    "free GST billing software India",
+    "barcode inventory software",
+    "customer khata ledger app",
+    "kirana store billing software",
     "GST invoice generator India",
-    "free GST bill maker online",
-    "tax invoice format India",
-    "generate GST invoice PDF",
-    "invoice maker with UPI QR code",
-    "GSTR-1 sales CSV exporter",
-    "free invoicing software for small business",
-    "non GST bill of supply maker",
+    "thermal receipt printer software",
+    "free invoicing software small business",
   ],
   alternates: {
     canonical: "https://swiftgst.in/",
   },
   openGraph: {
-    title: "SwiftGST — Fast & Easy GST Invoicing for India",
+    title: "SwiftGST - Free Retail POS & GST Billing Software",
     description:
-      "Create GST & Non-GST invoices in seconds. Live preview, dynamic UPI payment QR code, GSTR-1 export, and instant PDF download.",
+      "Superfast retail POS billing counter, barcode inventory tracking, customer Khata ledger, and 100% free GST invoice generator for Indian small businesses.",
     url: "https://swiftgst.in/",
     siteName: "SwiftGST",
     locale: "en_IN",
@@ -32,9 +33,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SwiftGST — Free GST Invoice Generator India",
+    title: "SwiftGST - Free Retail POS & GST Billing Software",
     description:
-      "Fast, compliant GST invoicing with live A4 preview, UPI QR code, and instant PDF export.",
+      "Superfast retail POS billing counter, barcode inventory tracking, customer Khata ledger, and 100% free GST invoice generator for Indian small businesses.",
   },
 };
 

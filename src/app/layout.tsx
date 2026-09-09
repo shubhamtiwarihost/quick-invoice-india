@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://swiftgst.in"),
   title: {
-    default: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
+    default: "SwiftGST - Free Retail POS & GST Billing Software",
     template: "%s | SwiftGST",
   },
   description:
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   openGraph: {
-    title: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
+    title: "SwiftGST - Free Retail POS & GST Billing Software",
     description:
       "Superfast, mobile-friendly GST billing software for Indian retail, kirana, and clothing stores. Free POS, barcode inventory & customer ledger.",
     url: "https://swiftgst.in",
@@ -61,13 +61,13 @@ export const metadata: Metadata = {
         url: "/icon.svg",
         width: 512,
         height: 512,
-        alt: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
+        alt: "SwiftGST - Free Retail POS & GST Billing Software",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SwiftGST - 100% Free GST Billing, Barcode POS & Khata Software",
+    title: "SwiftGST - Free Retail POS & GST Billing Software",
     description:
       "Superfast, mobile-friendly GST billing software for Indian retail, kirana, and clothing stores. Free POS, barcode inventory & customer ledger.",
     images: ["/icon.svg"],
