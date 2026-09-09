@@ -243,16 +243,6 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* All Tools Hub Link */}
-          <Link
-            href="/pdf-tools/"
-            className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition font-medium"
-            title="All Tools & Utilities"
-          >
-            <LayoutGrid className="h-3.5 w-3.5 text-teal-700" />
-            <span>All Tools</span>
-          </Link>
-
           {/* More Tools Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button

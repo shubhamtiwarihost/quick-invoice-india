@@ -421,9 +421,9 @@ export function InvoiceWorkspace({
 
         {/* Right Preview Panel (53%-56%) */}
         <section
-          className={`invoice-preview-section w-full lg:w-[53%] xl:w-[55%] 2xl:w-[56%] lg:flex-1 lg:self-stretch rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-32 lg:pb-6 flex justify-center min-h-[600px] ${tab === "preview" ? "block" : "hidden"} lg:block`}
+          className={`invoice-preview-section w-full lg:w-[53%] xl:w-[55%] 2xl:w-[56%] lg:flex-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 p-3 sm:p-4 lg:p-6 pb-12 flex justify-center min-h-[600px] ${tab === "preview" ? "block" : "hidden"} lg:block`}
         >
-          <div className="lg:sticky lg:top-20 flex justify-center w-full print:static will-change-transform transform-gpu max-h-none lg:max-h-[calc(100vh-5.5rem)] lg:overflow-y-auto no-scrollbar">
+          <div className="sticky top-20 flex justify-center w-full print:static will-change-transform transform-gpu min-h-[600px]">
             <div className="invoice-scale w-full flex justify-center min-h-[600px]">
               <InvoicePreview draft={draft} summary={summary} />
             </div>
