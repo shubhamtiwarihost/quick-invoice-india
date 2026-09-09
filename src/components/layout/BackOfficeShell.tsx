@@ -393,7 +393,7 @@ export function BackOfficeShell({ children }: { children: React.ReactNode }) {
               </Link>
             )}
 
-            {/* AI Co-Pilot Quick Button */}
+            {/* Swift AI Quick Button */}
             <button
               type="button"
               onClick={() => {
@@ -402,10 +402,10 @@ export function BackOfficeShell({ children }: { children: React.ReactNode }) {
                 }
               }}
               className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-2.5 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition shadow-2xs cursor-pointer"
-              title="Open AI Merchant Co-Pilot (Cmd+J)"
+              title="Open Swift AI Assistant (Cmd+J)"
             >
               <Sparkles className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
-              <span className="hidden xl:inline">AI Co-Pilot</span>
+              <span className="hidden xl:inline">Swift AI</span>
             </button>
 
             {/* Cashier Quick-Lock Button */}

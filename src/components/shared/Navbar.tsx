@@ -243,7 +243,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* AI Co-Pilot Assistant Trigger */}
+          {/* Swift AI Assistant Trigger */}
           <button
             type="button"
             onClick={() => {
@@ -252,10 +252,10 @@ export function Navbar() {
               }
             }}
             className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 hover:text-emerald-900 transition font-bold border border-emerald-200 shadow-2xs cursor-pointer"
-            title="Open AI Merchant Co-Pilot (Ctrl + J)"
+            title="Open Swift AI Assistant (Ctrl + J)"
           >
             <Sparkles className="h-3.5 w-3.5 text-emerald-600 animate-pulse" />
-            <span>AI Co-Pilot</span>
+            <span>Swift AI</span>
             <span className="rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-extrabold text-white uppercase tracking-wider">
               AI
             </span>
@@ -505,7 +505,7 @@ export function Navbar() {
             </div>
           )}
 
-          {/* AI Merchant Co-Pilot Mobile Trigger */}
+          {/* Swift AI Assistant Mobile Trigger */}
           <button
             type="button"
             onClick={() => {
@@ -521,12 +521,12 @@ export function Navbar() {
                 <Sparkles className="h-4 w-4 text-amber-300 animate-pulse" />
               </div>
               <div>
-                <p className="font-extrabold text-slate-900 leading-tight">AI Merchant Co-Pilot</p>
+                <p className="font-extrabold text-slate-900 leading-tight">Swift AI Assistant</p>
                 <p className="text-[11px] text-emerald-700 font-medium">Voice billing &amp; instant Khata</p>
               </div>
             </div>
             <span className="text-[10px] rounded-full bg-emerald-600 text-white px-2 py-0.5 font-extrabold uppercase tracking-wider shadow-2xs">
-              Launch
+              Open AI
             </span>
           </button>
 

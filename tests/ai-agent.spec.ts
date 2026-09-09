@@ -96,21 +96,25 @@ test.describe("AI Merchant Co-Pilot API & Tools", () => {
     expect(json.functionCall.args.action).toBe("create_bill");
   });
 
-  test("AI Co-Pilot button is visible on public homepage (/) and opens modal on click", async ({ page }) => {
+  test("Swift AI button is visible on public homepage (/) and opens modal on click", async ({ page }) => {
     await page.goto("/");
-    const agentButton = page.locator("button[aria-label='Open AI Merchant Co-Pilot']").first();
+    const agentButton = page.locator("button[aria-label='Open Swift AI Assistant']").first();
     await expect(agentButton).toBeVisible();
-    await expect(agentButton).toContainText("AI Co-Pilot");
+    await expect(agentButton).toContainText("Swift AI");
 
     // Click to open modal
     await agentButton.click();
-    const modalTitle = page.locator("text=SwiftGST AI Co-Pilot");
+    const modalTitle = page.locator("text=Swift AI Assistant");
     await expect(modalTitle.first()).toBeVisible();
+
+    // Verify "Gemini 1.5 Flash Free" badge is NOT rendered
+    const unwantedBadge = page.locator("text=Gemini 1.5 Flash Free");
+    await expect(unwantedBadge).toHaveCount(0);
   });
 
-  test("AI Co-Pilot button is visible on POS counter page (/pos)", async ({ page }) => {
+  test("Swift AI button is visible on POS counter page (/pos)", async ({ page }) => {
     await page.goto("/pos");
-    const agentButton = page.locator("button[aria-label='Open AI Merchant Co-Pilot']").first();
+    const agentButton = page.locator("button[aria-label='Open Swift AI Assistant']").first();
     await expect(agentButton).toBeVisible();
   });
 });

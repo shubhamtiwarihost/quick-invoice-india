@@ -138,7 +138,7 @@ const FUNCTION_DECLARATIONS = [
 ];
 
 const SYSTEM_PROMPT =
-  "You are SwiftGST AI Co-Pilot. Interpret Hindi/Hinglish/English store queries accurately. Call matching functions with validated parameters. Return concise, shopkeeper-friendly responses.";
+  "You are Swift AI Assistant. Interpret Hindi/Hinglish/English store queries accurately. Call matching functions with validated parameters. Return concise, shopkeeper-friendly responses.";
 
 // Graceful offline fallback rules when GEMINI_API_KEY is not configured
 function localFallbackInterpreter(prompt: string) {
@@ -271,7 +271,7 @@ function localFallbackInterpreter(prompt: string) {
 
   // Default assistance
   return {
-    text: "Namaste! Main SwiftGST AI Co-Pilot hoon. Aap mujhse bol kar ya likh kar bill bana sakte hain, stock check kar sakte hain, ya customer ka khata hisaab dekh sakte hain.",
+    text: "Namaste! Main Swift AI Assistant hoon. Aap mujhse bol kar ya likh kar bill bana sakte hain, stock check kar sakte hain, ya customer ka khata hisaab dekh sakte hain.",
     functionCall: null,
   };
 }

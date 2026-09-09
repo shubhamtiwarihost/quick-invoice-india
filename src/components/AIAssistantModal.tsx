@@ -621,8 +621,8 @@ export function AIAssistantModal() {
         <button
           onClick={() => setIsOpen(true)}
           className="group relative flex items-center gap-2 sm:gap-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 px-3.5 py-2.5 sm:px-4 sm:py-3 text-white shadow-xl shadow-emerald-600/30 transition-all duration-200 hover:scale-105 hover:from-emerald-500 hover:to-teal-600 active:scale-95 ring-4 ring-emerald-500/20 cursor-pointer"
-          title="Open AI Merchant Co-Pilot (Ctrl + J)"
-          aria-label="Open AI Merchant Co-Pilot"
+          title="Open Swift AI Assistant (Ctrl + J)"
+          aria-label="Open Swift AI Assistant"
         >
           <div className="relative">
             <Sparkles className="h-4.5 w-4.5 sm:h-5 sm:w-5 animate-pulse text-amber-300" />
@@ -632,7 +632,7 @@ export function AIAssistantModal() {
             </span>
           </div>
           <span className="text-xs sm:text-sm font-bold tracking-tight">
-            AI Co-Pilot
+            Swift AI
           </span>
           <kbd className="hidden md:inline-flex items-center rounded-md bg-white/20 px-1.5 py-0.5 text-[10px] font-mono font-medium text-emerald-50">
             ⌘J
@@ -656,10 +656,11 @@ export function AIAssistantModal() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-base font-bold text-slate-900">
-                      SwiftGST AI Co-Pilot
+                      Swift AI Assistant
                     </h2>
-                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">
-                      Gemini 1.5 Flash Free
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Online
                     </span>
                   </div>
                   <p className="text-xs text-slate-500">

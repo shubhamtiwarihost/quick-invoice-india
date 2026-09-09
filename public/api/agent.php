@@ -91,7 +91,7 @@ function localFallback($p) {
         ];
     }
     return [
-        'text' => 'Namaste! Main SwiftGST AI Co-Pilot hoon. Aap mujhse bol kar ya likh kar bill bana sakte hain, stock check kar sakte hain, ya customer ka khata dekh sakte hain.',
+        'text' => 'Namaste! Main Swift AI Assistant hoon. Aap mujhse bol kar ya likh kar bill bana sakte hain, stock check kar sakte hain, ya customer ka khata dekh sakte hain.',
         'functionCall' => null
     ];
 }
@@ -112,7 +112,7 @@ $model = getenv('GEMINI_MODEL') ?: 'gemini-3.6-flash';
 $url = "https://generativelanguage.googleapis.com/v1beta/models/" . urlencode($model) . ":generateContent?key=" . urlencode($apiKey);
 $payload = [
     'system_instruction' => [
-        'parts' => [['text' => 'You are SwiftGST AI Co-Pilot. Interpret Hindi/Hinglish/English store queries accurately. Call matching functions with validated parameters. Return concise, shopkeeper-friendly responses.']]
+        'parts' => [['text' => 'You are Swift AI Assistant. Interpret Hindi/Hinglish/English store queries accurately. Call matching functions with validated parameters. Return concise, shopkeeper-friendly responses.']]
     ],
     'contents' => [
         ['role' => 'user', 'parts' => [['text' => $prompt]]]
