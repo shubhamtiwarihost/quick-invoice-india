@@ -20,6 +20,7 @@ import {
   recordActionTimestamp,
   HONEYPOT_FIELD_NAME,
 } from "@/lib/security";
+import { InstagramIcon } from "@/components/shared/Navbar";
 
 export function ContactClient() {
   const [name, setName] = useState("");
@@ -179,6 +180,25 @@ export function ContactClient() {
                       <Copy className="h-3.5 w-3.5" />
                     )}
                   </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-pink-50 text-pink-600">
+                <InstagramIcon className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-xs font-medium text-slate-500">Official Instagram</p>
+                <div className="mt-0.5 flex items-center gap-2">
+                  <a
+                    href="https://www.instagram.com/swiftgst.in/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-pink-600 hover:underline"
+                  >
+                    @swiftgst.in
+                  </a>
                 </div>
               </div>
             </div>

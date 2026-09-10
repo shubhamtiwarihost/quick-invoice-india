@@ -38,10 +38,10 @@ export function InvoicePreview({
   }, [draft.config.template]);
 
   return (
-    <div className="invoice-print-root flex justify-center w-full min-h-[600px]">
+    <div className="invoice-print-root flex justify-center w-full">
       <div
         id="invoice-a4"
-        className="invoice-a4 origin-top bg-white shadow-2xl rounded-sm w-[794px] lg:w-full lg:max-w-[820px] aspect-[1/1.414] min-h-[600px]"
+        className="invoice-a4 origin-top bg-white shadow-2xl rounded-sm w-[794px] min-w-[794px] max-w-[794px] min-h-[1123px] box-border"
         style={{ padding: "32px 36px" }}
       >
         <Template draft={draft} summary={summary} qrDataUrl={qr} />

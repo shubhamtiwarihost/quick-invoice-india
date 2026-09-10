@@ -56,30 +56,29 @@ textarea,
 }
 
 @media (max-width: 480px) {
-  .invoice-scale {
+  .invoice-scale:not([style*="transform"]) {
     transform: scale(0.44);
     transform-origin: top center;
   }
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-  .invoice-scale {
+  .invoice-scale:not([style*="transform"]) {
     transform: scale(0.58);
     transform-origin: top center;
   }
 }
 
 @media (min-width: 769px) and (max-width: 1023px) {
-  .invoice-scale {
+  .invoice-scale:not([style*="transform"]) {
     transform: scale(0.72);
     transform-origin: top center;
   }
 }
 
 @media (min-width: 1024px) {
-  .invoice-scale {
-    transform: none !important;
-    width: 100% !important;
+  .invoice-scale:not([style*="transform"]) {
+    width: 100%;
     display: flex;
     justify-content: center;
   }

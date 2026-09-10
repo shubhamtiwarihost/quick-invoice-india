@@ -297,11 +297,20 @@ export default function AboutUsPage() {
             please reach out directly to our engineering team at{" "}
             <a href="mailto:support@swiftgst.in" className="text-teal-700 font-bold hover:underline">
               support@swiftgst.in
-            </a>{" "}
-            or visit our{" "}
+            </a>
+            , visit our{" "}
             <Link href="/contact-us" className="text-teal-700 font-bold hover:underline">
               Contact Us page
             </Link>
+            , or message us on Instagram at{" "}
+            <a
+              href="https://www.instagram.com/swiftgst.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-pink-600 font-bold hover:underline"
+            >
+              @swiftgst.in
+            </a>
             . We typically respond within 24–48 business hours.
           </p>
         </section>

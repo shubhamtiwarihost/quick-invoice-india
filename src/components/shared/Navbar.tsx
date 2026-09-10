@@ -29,6 +29,25 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 
+export function InstagramIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
 export const ALL_TOOLS = [
   {
     href: "/",
@@ -608,10 +627,20 @@ export function Navbar() {
             <Link
               href="/disclaimer"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium col-span-2 sm:col-span-1"
+              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
             >
               Legal Disclaimer
             </Link>
+            <a
+              href="https://www.instagram.com/swiftgst.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeAllMenus}
+              className="rounded-lg p-2 text-pink-600 hover:bg-pink-50 font-semibold inline-flex items-center gap-1.5"
+            >
+              <InstagramIcon className="h-3.5 w-3.5" />
+              <span>Instagram</span>
+            </a>
           </div>
         </div>
       ) : null}
@@ -641,6 +670,18 @@ export function Footer() {
             <div className="flex items-center gap-2 text-[11px] text-teal-700 font-medium">
               <ShieldCheck className="h-3.5 w-3.5" />
               <span>Private & Client-Side Secure</span>
+            </div>
+            <div className="pt-1">
+              <a
+                href="https://www.instagram.com/swiftgst.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-pink-200 bg-pink-50/70 px-3 py-1.5 text-xs font-semibold text-pink-700 hover:bg-pink-100 hover:border-pink-300 hover:text-pink-800 transition shadow-2xs group"
+                title="Follow SwiftGST on Instagram @swiftgst.in"
+              >
+                <InstagramIcon className="h-3.5 w-3.5 text-pink-600 transition-transform group-hover:scale-110" />
+                <span>Follow @swiftgst.in</span>
+              </a>
             </div>
           </div>
 
@@ -810,6 +851,15 @@ export function Footer() {
             © {new Date().getFullYear()} SwiftGST · Free open invoicing tool for Indian businesses, creators &amp; freelancers.
           </div>
           <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+            <a
+              href="https://www.instagram.com/swiftgst.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-pink-600 hover:text-pink-700 font-semibold transition"
+            >
+              <InstagramIcon className="h-3.5 w-3.5" />
+              <span>Instagram</span>
+            </a>
             <Link href="/about-us" className="hover:text-teal-700">
               About
             </Link>
