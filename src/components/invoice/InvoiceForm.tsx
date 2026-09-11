@@ -25,7 +25,7 @@ import { BankDetailsForm } from "./BankDetailsForm";
 import { LineItemsTable } from "./LineItemsTable";
 import { SignatureDrawPad } from "./SignatureDrawPad";
 
-const ACCENTS = ["#DEBA5F", "#1d4ed8", "#b45309", "#be123c", "#5b21b6", "#0f172a"];
+const ACCENTS = ["#DEBA5F", "#059669", "#1d4ed8", "#f59e0b", "#5b21b6", "#0f172a"];
 
 type MobileModalType = "items" | "settings" | "client" | "seller" | "bank" | "notes" | null;
 

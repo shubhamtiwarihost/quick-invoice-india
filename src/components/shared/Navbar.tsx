@@ -235,18 +235,24 @@ export function Navbar() {
   return (
     <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md will-change-transform transform-gpu">
       <div className="mx-auto flex max-w-[1850px] 2xl:max-w-[2100px] w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-2.5">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0"
-        >
-          <img
-            src="/logo.png"
-            alt="SwiftGST Logo"
-            className="h-8 w-8 object-contain select-none"
-          />
-          <span className="text-base tracking-tight select-none">SwiftGST</span>
-        </Link>
+        {/* Logo & Trust Badge */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0"
+          >
+            <img
+              src="/logo.png"
+              alt="SwiftGST Logo"
+              className="h-8 w-8 object-contain select-none"
+            />
+            <span className="text-base tracking-tight font-extrabold select-none">Swift<span className="text-indigo-600">GST</span></span>
+          </Link>
+          <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 select-none">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            100% Free &amp; Private
+          </span>
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-1 md:flex text-xs font-medium">
@@ -256,7 +262,7 @@ export function Navbar() {
               href={item.href}
               className={`rounded-xl px-3 py-2 transition ${
                 pathname === item.href
-                  ? "bg-teal-700 text-white shadow-xs font-semibold"
+                  ? "bg-slate-900 text-white shadow-xs font-semibold"
                   : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               }`}
             >
