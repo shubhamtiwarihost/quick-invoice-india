@@ -379,16 +379,15 @@ function generateWordFreelancer() {
 <title>Freelancer Invoice Template</title>
 <style>
   body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; margin: 40px; color: #1e293b; }
-  .header { border-bottom: 3px solid #0f766e; padding-bottom: 12px; margin-bottom: 24px; }
-  .title { font-size: 24px; font-weight: bold; color: #0f766e; margin: 0; }
-  .subtitle { font-size: 12px; color: #64748b; margin-top: 4px; }
-  .meta-table { width: 100%; margin-bottom: 24px; }
-  .meta-table td { vertical-align: top; font-size: 13px; }
-  .box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
-  .items-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-  .items-table th { background: #0f766e; color: white; text-align: left; padding: 10px; font-size: 12px; }
-  .items-table td { border-bottom: 1px solid #e2e8f0; padding: 10px; font-size: 13px; }
-  .total-row td { font-weight: bold; font-size: 15px; color: #0f766e; border-top: 2px solid #0f766e; }
+  .header { border-bottom: 3px solid #DEBA5F; padding-bottom: 12px; margin-bottom: 24px; }
+  .title { font-size: 24px; font-weight: bold; color: #DEBA5F; margin: 0; }
+  .badge { display: inline-block; background: #DEBA5F; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+  .party-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 16px; }
+  .party-title { font-weight: bold; font-size: 11px; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
+  .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .items-table th { background: #DEBA5F; color: white; text-align: left; padding: 10px; font-size: 12px; }
+  .items-table td { padding: 9px 10px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
+  .total-row td { font-weight: bold; font-size: 15px; color: #DEBA5F; border-top: 2px solid #DEBA5F; }
   .bank-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; font-size: 12px; }
 </style>
 </head>

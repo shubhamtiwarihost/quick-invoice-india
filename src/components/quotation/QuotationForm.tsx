@@ -10,7 +10,7 @@ import type { CurrencyCode, GstSlab, ItemUnit } from "@/types/invoice";
 import { BankDetailsForm } from "@/components/invoice/BankDetailsForm";
 import { SignatureDrawPad } from "@/components/invoice/SignatureDrawPad";
 
-const ACCENTS = ["#0f766e", "#1d4ed8", "#b45309", "#be123c", "#5b21b6", "#0f172a"];
+const ACCENTS = ["#DEBA5F", "#1d4ed8", "#b45309", "#be123c", "#5b21b6", "#0f172a"];
 const UNITS: ItemUnit[] = ["Nos", "Hrs", "Pcs", "Mtrs", "Bags", "Kgs"];
 const SLABS: GstSlab[] = [0, 5, 12, 18, 28];
 

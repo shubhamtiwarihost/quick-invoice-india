@@ -91,9 +91,11 @@ function LoginForm() {
 
         {/* Header */}
         <div className="mb-6 text-center">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-700 text-white shadow-md shadow-teal-700/20 mb-3">
-            <Store className="h-6 w-6" />
-          </div>
+          <img
+            src="/logo.png"
+            alt="SwiftGST Logo"
+            className="mx-auto h-14 w-14 object-contain mb-3"
+          />
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             Sign In to Your Store
           </h1>

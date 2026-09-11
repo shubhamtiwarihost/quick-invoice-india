@@ -130,6 +130,11 @@ export default function RegisterPage() {
 
         {/* Onboarding Header */}
         <div className="mb-6 text-center">
+          <img
+            src="/logo.png"
+            alt="SwiftGST Logo"
+            className="mx-auto h-14 w-14 object-contain mb-3"
+          />
           <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 text-xs font-semibold text-emerald-800 shadow-2xs">
             <Zap className="h-3.5 w-3.5 text-emerald-600" />
             <span>Free Store Setup &bull; Billing, Stock &amp; Khata in 60s</span>

@@ -11,6 +11,56 @@
   --font-sans: var(--font-geist-sans);
 }
 
+@theme {
+  --color-gold-50: #faf7ee;
+  --color-gold-100: #f4ecce;
+  --color-gold-200: #ecdda4;
+  --color-gold-300: #e2c974;
+  --color-gold-400: #deb952;
+  --color-gold-500: #deba5f;
+  --color-gold-600: #c89e3a;
+  --color-gold-700: #a27b22;
+  --color-gold-800: #7b5b19;
+  --color-gold-900: #523b12;
+  --color-gold-950: #332307;
+
+  --color-teal-50: #faf7ee;
+  --color-teal-100: #f4ecce;
+  --color-teal-200: #ecdda4;
+  --color-teal-300: #e2c974;
+  --color-teal-400: #deb952;
+  --color-teal-500: #deba5f;
+  --color-teal-600: #c89e3a;
+  --color-teal-700: #a27b22;
+  --color-teal-800: #7b5b19;
+  --color-teal-900: #523b12;
+  --color-teal-950: #332307;
+
+  --color-emerald-50: #faf7ee;
+  --color-emerald-100: #f4ecce;
+  --color-emerald-200: #ecdda4;
+  --color-emerald-300: #e2c974;
+  --color-emerald-400: #deb952;
+  --color-emerald-500: #deba5f;
+  --color-emerald-600: #c89e3a;
+  --color-emerald-700: #a27b22;
+  --color-emerald-800: #7b5b19;
+  --color-emerald-900: #523b12;
+  --color-emerald-950: #332307;
+
+  --color-green-50: #faf7ee;
+  --color-green-100: #f4ecce;
+  --color-green-200: #ecdda4;
+  --color-green-300: #e2c974;
+  --color-green-400: #deb952;
+  --color-green-500: #deba5f;
+  --color-green-600: #c89e3a;
+  --color-green-700: #a27b22;
+  --color-green-800: #7b5b19;
+  --color-green-900: #523b12;
+  --color-green-950: #332307;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

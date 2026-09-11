@@ -117,7 +117,7 @@ const defaultConfig: InvoiceConfig = {
   autoRoundOff: true,
   manualRoundOff: 0,
   template: "modern",
-  accentColor: "#0f766e",
+  accentColor: "#DEBA5F",
 };
 
 export const defaultDraft: InvoiceDraft = {

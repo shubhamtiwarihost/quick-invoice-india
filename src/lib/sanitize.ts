@@ -208,7 +208,7 @@ export function sanitizeInvoiceDraft(draft: InvoiceDraft): InvoiceDraft {
       ...draft.config,
       accentColor: /^#[0-9a-fA-F]{3,8}$/.test(draft.config?.accentColor || "")
         ? draft.config.accentColor
-        : "#0f766e",
+        : "#DEBA5F",
     },
   };
 }

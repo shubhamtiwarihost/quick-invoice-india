@@ -22,7 +22,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#059669",
+  themeColor: "#DEBA5F",
 };
 
 export const metadata: Metadata = {
@@ -58,9 +58,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/icon.svg",
-        width: 512,
-        height: 512,
+        url: "/logo.png",
+        width: 968,
+        height: 968,
         alt: "SwiftGST - Free Retail POS & GST Billing Software",
       },
     ],
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     title: "SwiftGST - Free Retail POS & GST Billing Software",
     description:
       "Superfast, mobile-friendly GST billing software for Indian retail, kirana, and clothing stores. Free POS, barcode inventory & customer ledger.",
-    images: ["/icon.svg"],
+    images: ["/logo.png"],
   },
   appleWebApp: {
     capable: true,
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     title: "SwiftGST",
   },
   icons: {
-    icon: "/icon.svg",
+    icon: "/logo.png",
     apple: "/icon-192.png",
   },
   verification: {

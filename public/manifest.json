@@ -7,7 +7,7 @@
   "id": "/pos",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#059669",
+  "theme_color": "#DEBA5F",
   "background_color": "#ffffff",
   "categories": ["business", "finance", "productivity", "utilities"],
   "icons": [
@@ -36,9 +36,9 @@
       "purpose": "maskable"
     },
     {
-      "src": "/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/logo.png",
+      "sizes": "968x968",
+      "type": "image/png",
       "purpose": "any"
     }
   ],

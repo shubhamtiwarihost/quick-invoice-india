@@ -438,7 +438,7 @@ export const b2bPreset: InvoiceDraft = {
     autoRoundOff: true,
     manualRoundOff: 0,
     template: "modern",
-    accentColor: "#0f766e",
+    accentColor: "#DEBA5F",
   },
 };
 

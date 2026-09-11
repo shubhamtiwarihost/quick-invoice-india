@@ -46,7 +46,7 @@ export default function AboutUsPage() {
     "@type": "Organization",
     name: "SwiftGST",
     url: "https://swiftgst.in",
-    logo: "https://swiftgst.in/icon.svg",
+    logo: "https://swiftgst.in/logo.png",
     description:
       "Free, private, browser-based GST compliance and invoicing tools for Indian small businesses, freelancers, and enterprises.",
     founder: {

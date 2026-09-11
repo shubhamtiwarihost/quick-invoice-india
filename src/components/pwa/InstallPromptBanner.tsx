@@ -89,13 +89,13 @@ export function InstallPromptBanner() {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-emerald-600 shadow-sm">
+          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-transparent">
             <Image
               src="/icon-192.png"
               alt="SwiftGST Logo"
               width={48}
               height={48}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
               priority
             />
           </div>

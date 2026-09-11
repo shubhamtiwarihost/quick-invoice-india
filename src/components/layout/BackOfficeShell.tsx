@@ -177,9 +177,11 @@ export function BackOfficeShell({ children }: { children: React.ReactNode }) {
           {/* Brand & Store Header */}
           <div className="border-b border-slate-800/80 px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-md shadow-emerald-950/40">
-                <Store className="h-5 w-5" />
-              </span>
+              <img
+                src="/logo.png"
+                alt="SwiftGST"
+                className="h-10 w-10 object-contain shrink-0"
+              />
               {!isCollapsed && (
                 <div className="min-w-0 flex-1 animate-in fade-in duration-200">
                   <h2 className="text-sm font-extrabold tracking-tight text-white truncate">
@@ -485,10 +487,12 @@ export function BackOfficeShell({ children }: { children: React.ReactNode }) {
               <Menu className="h-5 w-5" />
             </button>
 
-            {/* Store Initial / Avatar */}
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-extrabold text-sm shadow-sm shadow-emerald-950/20">
-              {(user?.businessName || "S").charAt(0).toUpperCase()}
-            </div>
+            {/* Store Logo */}
+            <img
+              src="/logo.png"
+              alt="SwiftGST"
+              className="h-9 w-9 object-contain shrink-0"
+            />
 
             <div className="min-w-0">
               <div className="flex items-center gap-1">
@@ -646,9 +650,11 @@ export function BackOfficeShell({ children }: { children: React.ReactNode }) {
             <div>
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white font-extrabold">
-                    {(user?.businessName || "S").charAt(0).toUpperCase()}
-                  </span>
+                  <img
+                    src="/logo.png"
+                    alt="SwiftGST"
+                    className="h-9 w-9 object-contain"
+                  />
                   <div className="truncate max-w-[160px]">
                     <h3 className="text-xs font-bold truncate">{user?.businessName || "Store"}</h3>
                     <p className="text-[10px] text-emerald-400">Merchant Workspace</p>

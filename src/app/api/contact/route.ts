@@ -73,7 +73,7 @@ export async function POST(req: Request) {
       text: `New contact form submission from ${name} (${email}):\n\nSubject: ${subject}\n\nMessage:\n${message}`,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1e293b; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px;">
-          <h2 style="color: #0f766e; margin-top: 0; font-size: 20px;">New Contact Form Message</h2>
+          <h2 style="color: #a27b22; margin-top: 0; font-size: 20px;">New Contact Form Message</h2>
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;">
             <tr>
               <td style="padding: 6px 0; font-weight: 600; width: 90px; color: #64748b;">From:</td>
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
             </tr>
             <tr>
               <td style="padding: 6px 0; font-weight: 600; width: 90px; color: #64748b;">Reply-To:</td>
-              <td style="padding: 6px 0;"><a href="mailto:${email}" style="color: #0f766e;">${email}</a></td>
+              <td style="padding: 6px 0;"><a href="mailto:${email}" style="color: #a27b22;">${email}</a></td>
             </tr>
             <tr>
               <td style="padding: 6px 0; font-weight: 600; width: 90px; color: #64748b;">Subject:</td>
