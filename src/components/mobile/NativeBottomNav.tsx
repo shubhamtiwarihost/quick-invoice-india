@@ -57,7 +57,7 @@ export function NativeBottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all duration-150 active:scale-90 touch-manipulation ${
+              className={`flex flex-col items-center justify-center min-h-[48px] min-w-[48px] py-1 px-3 rounded-2xl transition-all duration-150 active:scale-90 touch-manipulation ${
                 isActive
                   ? "text-emerald-700 font-bold"
                   : "text-slate-500 hover:text-slate-900 active:text-slate-800"

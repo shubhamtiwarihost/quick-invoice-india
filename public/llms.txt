@@ -1,0 +1,63 @@
+# SwiftGST
+
+> Superfast, 100% free, privacy-first web-based retail POS, GST billing software, barcode inventory management, customer Khata ledger, and private PDF tools for Indian small businesses, kirana stores, and freelancers.
+
+SwiftGST (https://swiftgst.in) eliminates subscription paywalls and telemarketing for Indian micro, small, and medium enterprises (MSMEs). All calculations, invoice rendering, thermal receipt printing, barcode lookups, and PDF generation execute privately in the user's browser with zero server data harvesting.
+
+## Core Applications & Workspaces
+
+- [GST Invoice Generator](https://swiftgst.in/): Professional GST tax invoice and bill of supply maker. Supports CGST, SGST, IGST auto-splitting, dynamic UPI payment QR codes, A4 live preview, custom branding, and 1-click PDF download without watermarks.
+- [POS Billing Counter](https://swiftgst.in/pos/): Ergonomic retail Point-of-Sale counter for supermarkets, kirana shops, and boutiques. Supports USB/Bluetooth barcode scanners, quick product category tiles, cash/UPI/card split payments, cash drawer reconciliation, and 58mm/80mm thermal receipt printing.
+- [Inventory & Stock Manager](https://swiftgst.in/inventory/): Full inventory control with real-time stock deductions on checkout, low-stock threshold alert badges, purchase cost vs. selling price margin tracking, and bulk CSV catalog import/export.
+- [Customer Khata & Udhaar CRM](https://swiftgst.in/customers/): Digital credit ledger (Udhaar Khata) for retail store accounts. Tracks balances, records partial payment settlements, issues customer loyalty points, and sends 1-click WhatsApp payment reminders with dynamic UPI links.
+- [Profit Analytics & GSTR-1 Hub](https://swiftgst.in/analytics/): Real-time retail gross profit analytics, daily sales volume, top seller leaderboards, cash drawer reconciliation (Z-Report), and 1-click GSTR-1 Table 4 (B2B supplies) CSV export for CA filing.
+
+## Free PDF Tools Suite
+
+- [PDF Tools Suite Hub](https://swiftgst.in/pdf-tools/): Client-side, privacy-first PDF utility suite running WebAssembly and HTML5 Canvas. Files never leave the browser.
+- [Merge PDF](https://swiftgst.in/pdf-tools/#merge): Combine multiple PDF documents, tax challans, or invoices into a single unified file.
+- [Split & Extract Pages](https://swiftgst.in/pdf-tools/#split): Extract specific invoice pages or split multi-page PDF documents.
+- [Rotate & Delete Pages](https://swiftgst.in/pdf-tools/#organize): Reorient upside-down scanned bills and remove unwanted blank pages.
+- [Image to PDF Converter](https://swiftgst.in/pdf-tools/#img2pdf): Convert JPG, PNG, and WebP bill receipts into standardized A4 PDF documents.
+- [Compress PDF](https://swiftgst.in/pdf-tools/#compress): Shrink file size for easy uploading to the official GST Portal and income tax filings.
+- [Protect & Encrypt PDF](https://swiftgst.in/pdf-tools/#protect): Apply AES password encryption to payroll and commercial invoice records.
+
+## Free Business & Tax Calculators
+
+- [Estimate & Quotation Maker](https://swiftgst.in/quotation-maker/): Create professional price quotes, estimates, and proforma bills with validity dates and 1-click conversion to GST Tax Invoices.
+- [GST Calculator](https://swiftgst.in/gst-calculator/): Real-time forward and reverse GST tax calculator for 0%, 5%, 12%, 18%, and 28% slabs with CGST/SGST/IGST breakdown.
+- [HSN & SAC Code Finder](https://swiftgst.in/hsn-finder/): Searchable directory of Indian Harmonized System of Nomenclature (HSN) and Service Accounting Codes (SAC) with applicable GST rates.
+- [GSTIN Checksum Validator](https://swiftgst.in/gstin-validator/): Instant MOD 36 checksum verification for 15-digit Indian Goods and Services Tax Identification Numbers.
+- [GST State Codes Directory](https://swiftgst.in/gst-state-codes/): Complete list of all 37 Indian States and Union Territories with 2-digit GST state codes and Place of Supply rules.
+- [Composition Scheme Calculator](https://swiftgst.in/composition-calculator/): Compare flat 1%, 5%, and 6% turnover tax under Section 10 against Regular GST with Input Tax Credit (ITC).
+- [E-Way Bill Value Threshold Checker](https://swiftgst.in/eway-bill-checker/): State-wise consignment threshold limits (₹50,000 / ₹1,00,000) under Rule 138 of CGST Rules.
+- [Freelance Rate & Retainer Calculator](https://swiftgst.in/freelance-rate-calculator/): Calculate hourly rates, monthly project retainers, and GST liability for independent Indian contractors.
+
+## Industry-Specific Bill Formats
+
+- [Kirana Store Bill Maker](https://swiftgst.in/kirana-store-bill-maker/): Retail grocery cash memos pre-configured with 0% and 5% FMCG staples.
+- [Freelancer & Consultant Bill Maker](https://swiftgst.in/freelancer-invoice-generator/): Pre-loaded with SAC 998314 software consultancy, hourly billing, and LUT export support.
+- [Boutique & Tailoring Bill Maker](https://swiftgst.in/boutique-invoice-generator/): Pre-configured for tailoring SAC 998822 and 5%/12% dual apparel GST slabs.
+- [Free GST Invoice Templates](https://swiftgst.in/gst-invoice-templates/): Downloadable Excel, Word, and printable PDF invoice templates.
+
+## Competitive Alternatives & Advantages
+
+- [Vyapar Free Alternative](https://swiftgst.in/vyapar-free-alternative/): Permanent 100% free alternative to Vyapar. No ₹2,999/yr subscription fee, no 100MB download, zero watermarks on bills.
+- [ClearTax Free Alternative](https://swiftgst.in/cleartax-free-alternative/): Browser-based alternative to ClearTax with private on-device processing and GSTR-1 CSV export.
+- [myBillBook Free Alternative](https://swiftgst.in/mybillbook-free-alternative/): Mobile and desktop web billing alternative with zero signup requirement and free WhatsApp sharing.
+- [Retail POS Billing Software India](https://swiftgst.in/retail-pos-software/): Guide to modern browser POS counters, thermal printers, and barcode scanners.
+
+## Statutory & Regulatory Compliance
+
+- Invoices adhere to all 16 mandatory particulars under **Rule 46 of the CGST Rules, 2017**.
+- Dynamic UPI QR codes conform to **Rule 46(q)** interoperable scan-to-pay standards (GPay, PhonePe, Paytm, BHIM).
+- Supports B2B GSTR-1 Table 4 CSV format matching the official GST Offline Tool schema.
+- Compliant with **Notification No. 78/2020 - Central Tax** 4-digit and 6-digit HSN reporting thresholds.
+
+## Technical Architecture & Privacy
+
+- **On-Device Execution**: Calculations, HTML5 Canvas PDF rendering, and barcode matching run entirely on the client device.
+- **Zero Data Harvesting**: Business records, customer numbers, cost margins, and invoices are never stored on external servers.
+- **Offline Capable**: Progressive Web App (PWA) with HTML5 IndexedDB storage ensures uninterrupted counter billing during internet outages.
+- **Canonical Domain**: https://swiftgst.in
+- **Sitemap**: https://swiftgst.in/sitemap.xml

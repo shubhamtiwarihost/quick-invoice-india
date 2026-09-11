@@ -21,9 +21,21 @@ import { gstinHint } from "@/lib/gstin";
 import { useInvoiceStore } from "@/lib/store";
 import { formatCurrency } from "@/lib/format";
 import type { CurrencyCode, InvoiceTemplate } from "@/types/invoice";
+import dynamic from "next/dynamic";
 import { BankDetailsForm } from "./BankDetailsForm";
 import { LineItemsTable } from "./LineItemsTable";
-import { SignatureDrawPad } from "./SignatureDrawPad";
+
+const SignatureDrawPad = dynamic(
+  () => import("./SignatureDrawPad").then((m) => m.SignatureDrawPad),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-32 w-full rounded-xl border border-dashed border-slate-200 bg-slate-50 flex items-center justify-center text-xs text-slate-400">
+        Loading signature pad…
+      </div>
+    ),
+  }
+);
 
 const ACCENTS = ["#DEBA5F", "#059669", "#1d4ed8", "#f59e0b", "#5b21b6", "#0f172a"];
 

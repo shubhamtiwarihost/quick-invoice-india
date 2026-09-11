@@ -2120,7 +2120,7 @@ export default function PosCounterPage() {
                     onClick={() => handleKeypadPress(k === "⌫" ? "backspace" : k)}
                     aria-label={k === "⌫" ? "Backspace" : k}
                     data-testid={k === "⌫" ? "keypad-backspace" : undefined}
-                    className={`h-11 rounded-xl text-base font-bold transition active:scale-95 flex items-center justify-center ${
+                    className={`min-h-[44px] min-w-[44px] h-11 rounded-xl text-base font-bold transition active:scale-95 flex items-center justify-center select-none touch-manipulation ${
                       k === "C"
                         ? "bg-amber-100 text-amber-900 hover:bg-amber-200"
                         : k === "⌫"

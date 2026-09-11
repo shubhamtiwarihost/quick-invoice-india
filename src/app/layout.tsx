@@ -14,13 +14,24 @@ const geistSans = Geist({
   subsets: ["latin"],
   display: "swap",
   preload: true,
+  fallback: [
+    "system-ui",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif",
+  ],
+  adjustFontFallback: true,
 });
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   viewportFit: "cover",
   themeColor: "#DEBA5F",
 };
@@ -93,7 +104,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-slate-100 font-sans text-slate-900">
+      <body className={`${geistSans.className} flex min-h-full flex-col bg-slate-100 font-sans text-slate-900`}>
         <AuthProvider>
           <PersistHydration />
           <PageViewTracker />

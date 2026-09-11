@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   FileText,
@@ -233,17 +234,20 @@ export function Navbar() {
   );
 
   return (
-    <header className="no-print sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-md will-change-transform transform-gpu">
+    <header className="no-print sticky top-0 z-30 min-h-[57px] border-b border-slate-200 bg-white/95 backdrop-blur-md will-change-transform transform-gpu">
       <div className="mx-auto flex max-w-[1850px] 2xl:max-w-[2100px] w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-2.5">
         {/* Logo & Trust Badge */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <Link
             href="/"
-            className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0"
+            className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0 shrink-0"
           >
-            <img
+            <Image
               src="/logo.png"
               alt="SwiftGST Logo"
+              width={32}
+              height={32}
+              priority
               className="h-8 w-8 object-contain select-none"
             />
             <span className="text-base tracking-tight font-extrabold select-none">Swift<span className="text-indigo-600">GST</span></span>
@@ -288,6 +292,8 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setToolsOpen((prev) => !prev)}
+              aria-label="More Tools"
+              aria-expanded={toolsOpen}
               className={`inline-flex items-center gap-1 rounded-xl px-3 py-2 transition ${
                 toolsOpen || secondaryLinks.some((l) => l.href === pathname)
                   ? "bg-slate-100 text-slate-900 font-semibold"
@@ -437,7 +443,8 @@ export function Navbar() {
               type="button"
               onClick={lockScreen}
               title="Lock POS Counter"
-              className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-2 text-slate-700 hover:bg-slate-100 shadow-2xs"
+              aria-label="Lock POS Counter"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-slate-200 bg-white p-2.5 text-slate-700 hover:bg-slate-100 shadow-2xs active:scale-95 transition"
             >
               <Lock className="h-4 w-4 text-amber-600" />
             </button>
@@ -445,7 +452,9 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100"
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl p-2.5 text-slate-600 hover:bg-slate-100 active:scale-95 transition"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -620,35 +629,35 @@ export function Navbar() {
             <Link
               href="/about-us"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+              className="flex min-h-[44px] items-center rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-50 font-medium active:scale-98 transition"
             >
               About SwiftGST
             </Link>
             <Link
               href="/contact-us"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+              className="flex min-h-[44px] items-center rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-50 font-medium active:scale-98 transition"
             >
               Contact Us
             </Link>
             <Link
               href="/privacy-policy"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+              className="flex min-h-[44px] items-center rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-50 font-medium active:scale-98 transition"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms-of-service"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+              className="flex min-h-[44px] items-center rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-50 font-medium active:scale-98 transition"
             >
               Terms of Service
             </Link>
             <Link
               href="/disclaimer"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-slate-700 hover:bg-slate-50 font-medium"
+              className="flex min-h-[44px] items-center rounded-xl px-3 py-2 text-slate-700 hover:bg-slate-50 font-medium active:scale-98 transition"
             >
               Legal Disclaimer
             </Link>
@@ -657,9 +666,9 @@ export function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-pink-600 hover:bg-pink-50 font-semibold inline-flex items-center gap-1.5"
+              className="flex min-h-[44px] items-center rounded-xl px-3 py-2 text-pink-600 hover:bg-pink-50 font-semibold gap-1.5 active:scale-98 transition"
             >
-              <InstagramIcon className="h-3.5 w-3.5" />
+              <InstagramIcon className="h-4 w-4" />
               <span>Instagram</span>
             </a>
             <a
@@ -667,9 +676,9 @@ export function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeAllMenus}
-              className="rounded-lg p-2 text-blue-600 hover:bg-blue-50 font-semibold inline-flex items-center gap-1.5"
+              className="flex min-h-[44px] items-center rounded-xl px-3 py-2 text-blue-600 hover:bg-blue-50 font-semibold gap-1.5 active:scale-98 transition col-span-2 sm:col-span-1"
             >
-              <FacebookIcon className="h-3.5 w-3.5" />
+              <FacebookIcon className="h-4 w-4" />
               <span>Facebook</span>
             </a>
           </div>
@@ -688,11 +697,13 @@ export function Footer() {
           <div className="space-y-3 md:col-span-1">
             <Link
               href="/"
-              className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0"
+              className="flex items-center gap-2 font-bold text-slate-900 select-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 active:outline-none active:ring-0 shrink-0"
             >
-              <img
+              <Image
                 src="/logo.png"
                 alt="SwiftGST Logo"
+                width={28}
+                height={28}
                 className="h-7 w-7 object-contain select-none"
               />
               <span className="select-none">SwiftGST</span>

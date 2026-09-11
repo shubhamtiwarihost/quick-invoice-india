@@ -298,7 +298,7 @@ export function InvoiceWorkspace({
       ) : null}
 
       {/* Top Action Bar (Desktop / Tablet) */}
-      <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 xl:px-10 py-2.5 sm:py-3.5 shadow-2xs">
+      <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 xl:px-10 py-2.5 sm:py-3.5 shadow-2xs min-h-[60px]">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[220px] sm:max-w-none">
@@ -329,9 +329,10 @@ export function InvoiceWorkspace({
           <button
             type="button"
             onClick={() => setSavedDrawerOpen(true)}
-            className="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs font-semibold text-slate-700 active:scale-95 transition"
+            aria-label="View saved invoices"
+            className="flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 active:scale-95 transition"
           >
-            <History className="h-3.5 w-3.5 text-slate-500" />
+            <History className="h-4 w-4 text-slate-500" />
             <span>Saved</span>
             {savedCount > 0 ? (
               <span className="rounded-full bg-emerald-100 px-1.5 text-[10px] font-bold text-emerald-800">
@@ -343,9 +344,10 @@ export function InvoiceWorkspace({
             type="button"
             onClick={() => store.newInvoice()}
             title="Start New Invoice"
-            className="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 active:scale-95 transition"
+            aria-label="Start New Invoice"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 active:scale-95 transition"
           >
-            <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+            <Sparkles className="h-4 w-4 text-emerald-600" />
           </button>
         </div>
 
@@ -432,7 +434,7 @@ export function InvoiceWorkspace({
       </div>
 
       {/* Modern Fintech Hero & Conversion Hooks Strip */}
-      <div className="no-print border-b border-slate-800/80 bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 px-3.5 sm:px-6 lg:px-8 py-3 text-white shadow-xs">
+      <div className="no-print border-b border-slate-800/80 bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 px-3.5 sm:px-6 lg:px-8 py-3 text-white shadow-xs min-h-[44px]">
         <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
           {/* Left: Authority & Trust Tagline */}
           <div className="flex flex-wrap items-center gap-2.5 text-center md:text-left">
@@ -464,7 +466,7 @@ export function InvoiceWorkspace({
       </div>
 
       {/* Social Proof Bar (Stripe-Style) */}
-      <div className="no-print border-b border-slate-200/70 bg-white px-4 sm:px-6 lg:px-8 py-2">
+      <div className="no-print border-b border-slate-200/70 bg-white px-4 sm:px-6 lg:px-8 py-2 min-h-[37px]">
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
           <div className="flex items-center gap-4 sm:gap-7 flex-wrap">
             <div className="flex items-center gap-1.5">
@@ -542,7 +544,8 @@ export function InvoiceWorkspace({
                     type="button"
                     onClick={handleZoomOut}
                     title="Zoom out"
-                    className="flex h-6 w-6 items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 transition"
+                    aria-label="Zoom out"
+                    className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 transition"
                   >
                     <ZoomOut className="h-3.5 w-3.5" />
                   </button>
@@ -550,7 +553,8 @@ export function InvoiceWorkspace({
                     type="button"
                     onClick={handleZoomFit}
                     title="Click to reset to Fit"
-                    className="px-1.5 text-[10px] font-semibold text-slate-700 min-w-[36px] text-center hover:text-indigo-600"
+                    aria-label="Reset zoom to fit"
+                    className="px-2 py-1 text-[10px] font-semibold text-slate-700 min-w-[36px] text-center hover:text-indigo-600"
                   >
                     {zoomMode === "fit" ? "Fit" : `${Math.round(currentScale * 100)}%`}
                   </button>
@@ -558,7 +562,8 @@ export function InvoiceWorkspace({
                     type="button"
                     onClick={handleZoomIn}
                     title="Zoom in"
-                    className="flex h-6 w-6 items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 transition"
+                    aria-label="Zoom in"
+                    className="flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-slate-900 transition"
                   >
                     <ZoomIn className="h-3.5 w-3.5" />
                   </button>
