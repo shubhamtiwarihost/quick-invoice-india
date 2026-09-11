@@ -21,7 +21,7 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           <div>
             {safeLogo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={safeLogo} alt="" height={48} className="mb-2 h-12 max-w-[140px] object-contain" />
+              <img src={safeLogo} alt="Business logo" width={140} height={48} className="mb-2 h-12 max-w-[140px] object-contain" />
             ) : null}
             <p>{sellerBlock(draft)}</p>
             <p>Phone: {seller.phone}</p>
@@ -140,7 +140,7 @@ export function ClassicTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
               <p>For {seller.businessName}</p>
               {safeSignature ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={safeSignature} alt="" height={40} className="ml-auto mt-2 h-10 max-w-[160px] object-contain" />
+                <img src={safeSignature} alt="Authorized signature" width={160} height={40} className="ml-auto mt-2 h-10 max-w-[160px] object-contain" />
               ) : (
                 <div className="h-10" />
               )}

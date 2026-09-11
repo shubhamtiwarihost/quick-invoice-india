@@ -14,7 +14,7 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
         <div className="flex items-start gap-3">
           {safeLogo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={safeLogo} alt="" width={56} height={56} className="h-14 w-14 aspect-square rounded-lg object-cover" />
+            <img src={safeLogo} alt="Business logo" width={56} height={56} className="h-14 w-14 aspect-square rounded-lg object-cover" />
           ) : (
             <div
               className="flex h-14 w-14 items-center justify-center rounded-lg text-lg font-bold text-white"
@@ -163,7 +163,7 @@ export function ModernTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
           <div className="mt-6 text-right">
             {safeSignature ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={safeSignature} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
+              <img src={safeSignature} alt="Authorized signature" width={160} height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
             ) : null}
             <p className="font-medium">{seller.signatoryName}</p>
             <p className="text-slate-400">Authorised signatory</p>

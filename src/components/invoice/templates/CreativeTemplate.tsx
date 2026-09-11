@@ -145,7 +145,7 @@ export function CreativeTemplate({ draft, summary, qrDataUrl }: TemplateProps) {
         <div className="text-right">
           {safeSignature ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={safeSignature} alt="" height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
+            <img src={safeSignature} alt="Authorized signature" width={160} height={40} className="ml-auto h-10 max-w-[160px] object-contain" />
           ) : null}
           <p className="font-semibold">{seller.signatoryName}</p>
           <p className="text-slate-400">Authorised signatory</p>
