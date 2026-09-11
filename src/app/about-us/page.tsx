@@ -47,6 +47,10 @@ export default function AboutUsPage() {
     name: "SwiftGST",
     url: "https://swiftgst.in",
     logo: "https://swiftgst.in/logo.png",
+    sameAs: [
+      "https://www.instagram.com/swiftgst.in/",
+      "https://www.facebook.com/people/Swiftgstin/61594169346217/"
+    ],
     description:
       "Free, private, browser-based GST compliance and invoicing tools for Indian small businesses, freelancers, and enterprises.",
     founder: {
@@ -302,7 +306,7 @@ export default function AboutUsPage() {
             <Link href="/contact-us" className="text-teal-700 font-bold hover:underline">
               Contact Us page
             </Link>
-            , or message us on Instagram at{" "}
+            , message us on Instagram at{" "}
             <a
               href="https://www.instagram.com/swiftgst.in/"
               target="_blank"
@@ -310,6 +314,15 @@ export default function AboutUsPage() {
               className="text-pink-600 font-bold hover:underline"
             >
               @swiftgst.in
+            </a>
+            , or connect on Facebook at{" "}
+            <a
+              href="https://www.facebook.com/people/Swiftgstin/61594169346217/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 font-bold hover:underline"
+            >
+              Swiftgstin
             </a>
             . We typically respond within 24–48 business hours.
           </p>

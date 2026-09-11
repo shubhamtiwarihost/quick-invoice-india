@@ -67,6 +67,10 @@ export default function HomePage() {
     name: "SwiftGST",
     url: "https://swiftgst.in/",
     logo: "https://swiftgst.in/logo.png",
+    sameAs: [
+      "https://www.instagram.com/swiftgst.in/",
+      "https://www.facebook.com/people/Swiftgstin/61594169346217/"
+    ],
     description:
       "Free, private, browser-based GST compliance and invoicing tools for Indian businesses.",
     founder: {

@@ -48,6 +48,19 @@ export function InstagramIcon({ className = "h-4 w-4" }: { className?: string })
   );
 }
 
+export function FacebookIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  );
+}
+
 export const ALL_TOOLS = [
   {
     href: "/",
@@ -643,6 +656,16 @@ export function Navbar() {
               <InstagramIcon className="h-3.5 w-3.5" />
               <span>Instagram</span>
             </a>
+            <a
+              href="https://www.facebook.com/people/Swiftgstin/61594169346217/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeAllMenus}
+              className="rounded-lg p-2 text-blue-600 hover:bg-blue-50 font-semibold inline-flex items-center gap-1.5"
+            >
+              <FacebookIcon className="h-3.5 w-3.5" />
+              <span>Facebook</span>
+            </a>
           </div>
         </div>
       ) : null}
@@ -675,7 +698,7 @@ export function Footer() {
               <ShieldCheck className="h-3.5 w-3.5" />
               <span>Private & Client-Side Secure</span>
             </div>
-            <div className="pt-1">
+            <div className="pt-1 flex flex-wrap items-center gap-2">
               <a
                 href="https://www.instagram.com/swiftgst.in/"
                 target="_blank"
@@ -685,6 +708,16 @@ export function Footer() {
               >
                 <InstagramIcon className="h-3.5 w-3.5 text-pink-600 transition-transform group-hover:scale-110" />
                 <span>Follow @swiftgst.in</span>
+              </a>
+              <a
+                href="https://www.facebook.com/people/Swiftgstin/61594169346217/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50/70 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-800 transition shadow-2xs group"
+                title="Follow SwiftGST on Facebook"
+              >
+                <FacebookIcon className="h-3.5 w-3.5 text-blue-600 transition-transform group-hover:scale-110" />
+                <span>Facebook</span>
               </a>
             </div>
           </div>
@@ -863,6 +896,15 @@ export function Footer() {
             >
               <InstagramIcon className="h-3.5 w-3.5" />
               <span>Instagram</span>
+            </a>
+            <a
+              href="https://www.facebook.com/people/Swiftgstin/61594169346217/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 font-semibold transition"
+            >
+              <FacebookIcon className="h-3.5 w-3.5" />
+              <span>Facebook</span>
             </a>
             <Link href="/about-us" className="hover:text-teal-700">
               About

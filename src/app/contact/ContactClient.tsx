@@ -20,7 +20,7 @@ import {
   recordActionTimestamp,
   HONEYPOT_FIELD_NAME,
 } from "@/lib/security";
-import { InstagramIcon } from "@/components/shared/Navbar";
+import { InstagramIcon, FacebookIcon } from "@/components/shared/Navbar";
 
 export function ContactClient() {
   const [name, setName] = useState("");
@@ -198,6 +198,25 @@ export function ContactClient() {
                     className="text-sm font-semibold text-pink-600 hover:underline"
                   >
                     @swiftgst.in
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <FacebookIcon className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-xs font-medium text-slate-500">Official Facebook</p>
+                <div className="mt-0.5 flex items-center gap-2">
+                  <a
+                    href="https://www.facebook.com/people/Swiftgstin/61594169346217/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-blue-600 hover:underline"
+                  >
+                    Swiftgstin
                   </a>
                 </div>
               </div>
