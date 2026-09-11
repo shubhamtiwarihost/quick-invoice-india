@@ -4,7 +4,7 @@ import AboutUsPage from "@/app/about-us/page";
 export const metadata: Metadata = {
   title: "About Us — SwiftGST Mission, Team & Compliance Standards",
   description:
-    "Learn about SwiftGST (swiftgst.in) — our founding mission, editorial standards, creator background, and commitment to 100% private, client-side Indian GST invoicing and compliance.",
+    "Learn about SwiftGST (swiftgst.in) — our founding mission, editorial standards, creator background, and commitment to 100% private, fast Indian GST invoicing and compliance.",
   alternates: {
     canonical: "https://swiftgst.in/about-us/",
   },

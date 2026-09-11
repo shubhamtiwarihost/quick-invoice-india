@@ -99,7 +99,7 @@ const COMPARISON_ROWS = [
   {
     feature: "Financial Data Privacy",
     vyapar: "Data synced to cloud servers with corporate access",
-    swiftgst: "100% Private — stored client-side in your own browser",
+    swiftgst: "100% Private — stored securely on your own device",
     swiftAdvantage: true,
   },
 ];
@@ -128,7 +128,7 @@ const VYAPAR_FAQS: FaqItem[] = [
   {
     question: "Is my business customer data secure on SwiftGST?",
     answer:
-      "Yes. Your customer ledger, product prices, invoices, and sales transactions are saved privately in your browser's encrypted local storage. Unlike proprietary software providers that hold your business data hostage on remote servers, your records remain completely in your control.",
+      "Yes. Your customer ledger, product prices, invoices, and sales transactions are saved privately and securely on your device. Unlike proprietary software providers that hold your business data on remote servers, your records remain completely in your control.",
   },
 ];
 

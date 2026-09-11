@@ -73,7 +73,7 @@ export const ALL_TOOLS = [
     href: "/pdf-tools/",
     label: "PDF Tools Suite",
     shortLabel: "PDF Tools",
-    desc: "100% private client-side PDF suite: Merge, Rotate, Delete pages, Convert images & Protect.",
+    desc: "Free, private PDF suite: Merge, Rotate, Delete pages, Convert images & Protect.",
     icon: Sparkles,
   },
   {
@@ -702,7 +702,7 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-2 text-[11px] text-teal-700 font-medium">
               <ShieldCheck className="h-3.5 w-3.5" />
-              <span>Private & Client-Side Secure</span>
+              <span>100% Safe, Private &amp; Secure</span>
             </div>
             <div className="pt-1 flex flex-wrap items-center gap-2">
               <a

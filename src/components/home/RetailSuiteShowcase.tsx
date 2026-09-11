@@ -99,17 +99,17 @@ export function RetailSuiteShowcase() {
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
             Run your store with high-speed POS billing, automated stock tracking, customer credit ledgers,
-            and real-time profit analytics — 100% free, client-side secure, zero monthly subscription fees.
+            and real-time profit analytics — 100% free, completely private, zero monthly subscription fees.
           </p>
 
           <div className="mt-5 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
             <div className="flex items-center gap-1.5">
               <Zap className="h-3.5 w-3.5 text-teal-400" />
-              <span>Offline-First (IndexedDB)</span>
+              <span>Works Offline &amp; Online</span>
             </div>
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Zero Cloud Data Tracking</span>
+              <span>100% Private &amp; Secure</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="h-3.5 w-3.5 text-teal-400" />

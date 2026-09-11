@@ -89,7 +89,7 @@ export default function CustomersKhataPage() {
       setCustomers(list);
     } catch (err) {
       console.error("Failed to load customers:", err);
-      showToast("Unable to load customers from local storage.");
+      showToast("Unable to load customers.");
     } finally {
       setLoading(false);
     }

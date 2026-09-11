@@ -66,7 +66,7 @@ export function CookieConsent() {
             🍪
           </span>
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
-            <span>Privacy &amp; Local Storage</span>
+            <span>Privacy &amp; Preferences</span>
             <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 text-[9px] font-semibold text-emerald-800 normal-case">
               <ShieldCheck className="h-3 w-3 text-emerald-600" />
               100% Private
@@ -84,7 +84,7 @@ export function CookieConsent() {
       </div>
 
       <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-        SwiftGST does not track or sell your data. We use browser local storage solely to save your invoices and preferences on this device.
+        SwiftGST does not track or sell your data. Your invoices and preferences are stored privately and securely on this device.
       </p>
 
       <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">

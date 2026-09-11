@@ -19,13 +19,13 @@ import {
 export const metadata: Metadata = {
   title: "About Us — SwiftGST Mission, Team & Compliance Standards",
   description:
-    "Learn about SwiftGST (swiftgst.in) — our founding mission, editorial standards, creator background, and commitment to 100% private, client-side Indian GST invoicing and compliance.",
+    "Learn about SwiftGST (swiftgst.in) — our founding mission, editorial standards, creator background, and commitment to 100% private, fast Indian GST invoicing and compliance.",
   keywords: [
     "about SwiftGST",
     "SwiftGST mission",
     "GST invoicing India",
     "Indian tax compliance software",
-    "client-side invoice privacy",
+    "private GST invoicing",
     "swiftgst.in about",
   ],
   alternates: {
@@ -115,8 +115,8 @@ export default function AboutUsPage() {
             <p>
               <strong>SwiftGST (swiftgst.in) was founded on a simple premise:</strong> Basic tax invoicing, GST state code lookups,
               and tax calculations are fundamental commercial utilities that should be fast, completely free, and strictly private.
-              By leveraging modern client-side web technologies, SwiftGST executes all calculations, PDF document generation, and UPI payment
-              QR codes directly inside your browser without transmitting your sensitive client records to any server.
+              By leveraging modern privacy-first web technologies, SwiftGST executes all calculations, PDF document generation, and UPI payment
+              QR codes directly on your device without transmitting your sensitive client records to any server.
             </p>
           </div>
         </section>
@@ -144,7 +144,7 @@ export default function AboutUsPage() {
                 </span>
               </div>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Shubham Tiwari founded SwiftGST with the objective of eliminating friction in Indian commercial invoicing and GST compliance. Recognizing the privacy risks, subscription costs, and unsolicited telemarketing common with legacy accounting platforms, he built SwiftGST as an open, client-side web suite where calculations, invoice generation, and tax filing utilities run directly in the browser with zero data harvesting.
+                Shubham Tiwari founded SwiftGST with the objective of eliminating friction in Indian commercial invoicing and GST compliance. Recognizing the privacy risks, subscription costs, and unsolicited telemarketing common with legacy accounting platforms, he built SwiftGST as an open, private web suite where calculations, invoice generation, and tax filing utilities run directly on your device with complete data privacy.
               </p>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function AboutUsPage() {
           </div>
         </section>
 
-        {/* 100% Client-Side Privacy Pillar */}
+        {/* 100% Privacy Pillar */}
         <section className="rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 to-white p-6 md:p-10 shadow-xs">
           <div className="flex items-center gap-3.5">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 shadow-2xs">
@@ -206,8 +206,8 @@ export default function AboutUsPage() {
           </div>
           <p className="mt-4 text-sm sm:text-base text-emerald-900/90 leading-relaxed">
             Unlike commercial CRM and cloud invoicing apps, <strong>SwiftGST does not require you to create an account, enter a mobile number, or store invoices on our servers</strong>.
-            All PDF rendering and mathematical computations happen inside your web browser via HTML5 Canvas and WebAssembly.
-            Your local draft is preserved using standard browser <code className="rounded bg-emerald-100 px-1.5 py-0.5 text-xs font-mono font-semibold text-emerald-900">localStorage</code>,
+            All PDF rendering and mathematical computations happen privately on your device.
+            Your draft is preserved safely and privately on your device,
             meaning neither SwiftGST nor any third party has access to your client lists, billing amounts, or bank details.
           </p>
         </section>

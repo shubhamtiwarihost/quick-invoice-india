@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Privacy Policy — SwiftGST Data Protection & Cookie Disclosure",
     description:
-      "SwiftGST processes all billing and calculations client-side in your browser. Read our comprehensive data protection and cookie disclosures.",
+      "SwiftGST processes all billing and calculations privately on your device. Read our comprehensive data protection and cookie disclosures.",
     url: "https://swiftgst.in/privacy-policy/",
     type: "website",
   },
@@ -59,13 +59,13 @@ export default function PrivacyPolicyPage() {
             https://swiftgst.in
           </a>
           ), your privacy and data security are foundational principles. This document transparently explains
-          what data is processed, how client-side LocalStorage operates, how third-party advertising cookies function,
+          what data is processed, how secure device storage operates, how third-party advertising cookies function,
           and your rights under Indian and international privacy regulations.
         </p>
       </div>
 
       <div className="mt-10 space-y-8 text-slate-700 leading-relaxed text-sm sm:text-base">
-        {/* 1. Core Architecture: Client-Side Zero Server Retention */}
+        {/* 1. Core Architecture: On-Device Privacy */}
         <section className="rounded-2xl border border-slate-200 bg-white p-6 md:p-10 shadow-xs space-y-4">
           <div className="flex items-center gap-3.5">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 border border-teal-100 text-teal-700 shadow-2xs">
@@ -73,15 +73,14 @@ export default function PrivacyPolicyPage() {
             </span>
             <div>
               <h2 className="text-xl font-bold text-slate-900">
-                1. Core Architectural Principle: Client-Side Processing
+                1. Core Architectural Principle: On-Device Processing
               </h2>
               <p className="text-xs text-slate-500">Your commercial invoice data never reaches our web servers</p>
             </div>
           </div>
           <p>
             The primary functionality of SwiftGST — including GST invoice generation, quotation drafting, reverse tax calculations,
-            UPI QR code generation, and PDF file rendering — executes entirely within your client web browser (via client-side JavaScript,
-            Canvas API, and HTML5 WebAssembly).
+            UPI QR code generation, and PDF file rendering — executes privately on your device.
           </p>
           <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 text-xs sm:text-sm text-emerald-950 font-medium">
             <div className="flex items-center gap-2 font-bold text-emerald-900 mb-1">

@@ -438,7 +438,7 @@ export function InvoiceWorkspace({
           <div className="flex flex-wrap items-center gap-2.5 text-center md:text-left">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              100% Browser-Side Private
+              100% Free &amp; Secure
             </span>
             <span className="font-semibold text-slate-200">
               High-Speed GST Invoicing for Indian SMBs, Stores &amp; Freelancers
@@ -485,7 +485,7 @@ export function InvoiceWorkspace({
           </div>
           <div className="hidden xl:flex items-center gap-2 text-[11px] font-semibold text-slate-500">
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            <span>Client-Side Local Storage &bull; Zero Server Data Retention</span>
+            <span>Fast, Private &amp; Free Forever</span>
           </div>
         </div>
       </div>

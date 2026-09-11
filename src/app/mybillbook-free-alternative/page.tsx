@@ -91,9 +91,9 @@ const COMPARISON_ROWS = [
     swiftAdvantage: true,
   },
   {
-    feature: "Data Privacy & Local Storage",
+    feature: "Complete Data Privacy",
     mybillbook: "Business ledger data synchronized to company servers",
-    swiftgst: "100% Private — all data saved locally in browser",
+    swiftgst: "100% Private — all data saved safely on your device",
     swiftAdvantage: true,
   },
 ];

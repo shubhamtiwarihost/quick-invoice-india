@@ -252,7 +252,7 @@ export function ContactClient() {
             <span>Encrypted & Privacy Protected</span>
           </div>
           <p className="mt-1 text-xs text-teal-800/90 leading-relaxed">
-            All messages are sanitized and processed client-side. We never sell or
+            All messages are sanitized and protected securely. We never sell or
             store your email address in third-party marketing databases.
           </p>
         </div>

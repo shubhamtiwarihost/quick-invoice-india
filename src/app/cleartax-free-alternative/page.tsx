@@ -121,7 +121,7 @@ const CLEARTAX_FAQS: FaqItem[] = [
   {
     question: "Where is my business and customer data stored?",
     answer:
-      "Unlike ClearTax which uploads your customer list and turnover figures to remote servers, SwiftGST processes and stores everything locally inside your browser's private local storage. Your financial data never leaves your device.",
+      "Unlike ClearTax which uploads your customer list and turnover figures to remote servers, SwiftGST processes and stores everything safely on your own device. Your financial data never leaves your device.",
   },
 ];
 

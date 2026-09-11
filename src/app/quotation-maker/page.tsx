@@ -5,7 +5,7 @@ import { QuotationComplianceGuide, QUOTATION_FAQS } from "@/components/quotation
 export const metadata: Metadata = {
   title: "Free Estimate & Quotation Maker (GST Compliant) — SwiftGST",
   description:
-    "Generate professional price quotations and estimates with validity dates, client payment terms, and 1-click conversion to GST Tax Invoice. Free, client-side, zero sign-up.",
+    "Generate professional price quotations and estimates with validity dates, client payment terms, and 1-click conversion to GST Tax Invoice. Free, 100% private, zero sign-up.",
   keywords: [
     "quotation maker",
     "estimate generator",

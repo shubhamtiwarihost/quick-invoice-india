@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Inventory & Stock Management Software — SwiftGST",
     description:
-      "Manage product catalogs, real-time stock levels, low-stock alerts, and CSV import/export with client-side privacy.",
+      "Manage product catalogs, real-time stock levels, low-stock alerts, and CSV import/export with complete privacy.",
     url: "https://swiftgst.in/inventory/",
     siteName: "SwiftGST",
     locale: "en_IN",

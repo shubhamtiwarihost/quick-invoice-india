@@ -253,7 +253,7 @@ export default function GstInvoiceTemplatesPage() {
           </Link>
           <div className="flex items-center gap-2 text-xs text-teal-200/90 font-medium">
             <CheckCircle2 className="h-4 w-4 text-teal-400" />
-            <span>Zero Sign-up · Client-Side Private · Auto UPI QR</span>
+            <span>Zero Sign-up · 100% Private · Auto UPI QR</span>
           </div>
         </div>
       </div>
@@ -387,9 +387,9 @@ export default function GstInvoiceTemplatesPage() {
                 <td className="px-4 py-3 text-teal-700 font-medium">1-Click WhatsApp direct message with UPI link</td>
               </tr>
               <tr>
-                <td className="px-4 py-3 font-semibold text-slate-800">Data Privacy & Security</td>
+                <td className="px-4 py-3 font-semibold text-slate-800">Data Privacy &amp; Security</td>
                 <td className="px-4 py-3 text-slate-500">Files stored on single computer with risk of loss</td>
-                <td className="px-4 py-3 text-teal-700 font-medium">Local browser storage + zero server tracking</td>
+                <td className="px-4 py-3 text-teal-700 font-medium">100% Private — Your Data Stays With You</td>
               </tr>
             </tbody>
           </table>

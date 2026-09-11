@@ -72,7 +72,7 @@ export default function InventoryPage() {
       setProducts(list);
     } catch (err) {
       console.error("Failed to load inventory:", err);
-      showToast("Unable to load inventory from local storage.");
+      showToast("Unable to load inventory.");
     } finally {
       setLoading(false);
     }

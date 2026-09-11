@@ -366,7 +366,7 @@ export function ToolsHub() {
           </h2>
           <p className="mt-2.5 text-sm sm:text-base text-slate-600 leading-relaxed">
             Everything you need to create GST invoices, calculate reverse taxes, verify GSTIN checksums,
-            and stay fully compliant with CBIC regulations — all client-side, zero sign-up, and zero tracking.
+            and stay fully compliant with CBIC regulations — 100% free, zero sign-up, and completely secure.
           </p>
 
           {/* Quick Stats Pills */}

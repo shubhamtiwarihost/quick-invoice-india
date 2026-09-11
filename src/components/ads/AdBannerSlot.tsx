@@ -75,7 +75,7 @@ export function AdBannerSlot({
                 SwiftGST Free Retail Suite
               </span>
               <span className="text-[11px] text-slate-400">
-                100% Free &amp; Client-Side Secure · Zero Subscription Fees
+                100% Free &amp; Private · Zero Subscription Fees
               </span>
             </div>
           )}

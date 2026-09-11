@@ -39,7 +39,7 @@ export const INVENTORY_FAQS: FaqItem[] = [
   {
     question: "Is inventory data stored securely without cloud exposure?",
     answer:
-      "Yes. All product records, cost prices, stock counts, and barcode mappings are stored client-side in your web browser using HTML5 IndexedDB storage. No product catalogs or sensitive supplier cost data are uploaded to third-party cloud servers or shared externally.",
+      "Yes. All product records, cost prices, stock counts, and barcode mappings are stored privately and safely on your device. No product catalogs or sensitive supplier cost data are uploaded to third-party cloud servers or shared externally.",
   },
 ];
 
