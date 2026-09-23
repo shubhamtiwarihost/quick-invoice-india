@@ -40,38 +40,55 @@ jobs:
           NEXT_TELEMETRY_DISABLED: 1
 
       # Deploy static build directly to swiftgst.in on Hostinger
-      - name: Deploy Build to Hostinger via SCP
+      - name: Deploy Build to Hostinger
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
+          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
           SSHPASS: ${{ secrets.HOSTINGER_PASSWORD }}
           HOST: '82.25.125.141'
           USER: ${{ secrets.HOSTINGER_USER || 'u932835494' }}
           PORT: '65002'
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
-          if [ -z "$SSHPASS" ]; then
-            echo "::error::HOSTINGER_PASSWORD secret is empty or not set in GitHub repository settings!"
-            exit 1
+          shopt -s dotglob
+
+          # Priority 1: Deploy using SSH Key if configured
+          if [ -n "$SSH_KEY" ]; then
+            echo "Deploying via SSH Key to $HOST:$PORT as user $USER..."
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            printf "%s\n" "$SSH_KEY" > ~/.ssh/deploy_key
+            chmod 600 ~/.ssh/deploy_key
+            for i in 1 2 3; do
+              echo "Deployment attempt $i/3 (SSH Key)..."
+              if rsync -avz -e "ssh -i ~/.ssh/deploy_key -p $PORT -o StrictHostKeyChecking=no -o ConnectTimeout=30" out/ "$USER@$HOST:domains/swiftgst.in/public_html/"; then
+                echo "Deployment succeeded via SSH Key on attempt $i!"
+                exit 0
+              fi
+              echo "Attempt $i failed. Retrying in 5 seconds..."
+              sleep 5
+            done
           fi
 
-          echo "Deploying to Hostinger host $HOST:$PORT as user $USER..."
-          shopt -s dotglob
-          for i in 1 2 3 4; do
-            echo "Deployment attempt $i/4..."
-            if sshpass -e scp -P "$PORT" \
-              -o StrictHostKeyChecking=no \
-              -o UserKnownHostsFile=/dev/null \
-              -o PreferredAuthentications=password \
-              -o PubkeyAuthentication=no \
-              -o ConnectTimeout=30 \
-              -o ServerAliveInterval=15 \
-              -o ConnectionAttempts=3 \
-              -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"; then
-              echo "Deployment succeeded on attempt $i!"
-              exit 0
-            fi
-            echo "Attempt $i failed. Retrying in 10 seconds..."
-            sleep 10
-          done
-          echo "::error::Deployment failed after 4 attempts to $HOST:$PORT."
+          # Priority 2: Fallback to sshpass password authentication
+          if [ -n "$SSHPASS" ]; then
+            echo "Deploying via password (sshpass)..."
+            sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+            for i in 1 2 3; do
+              echo "Deployment attempt $i/3 (password)..."
+              if sshpass -e scp -P "$PORT" \
+                -o StrictHostKeyChecking=no \
+                -o UserKnownHostsFile=/dev/null \
+                -o PreferredAuthentications=password \
+                -o PubkeyAuthentication=no \
+                -o ConnectTimeout=30 \
+                -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"; then
+                echo "Deployment succeeded via password on attempt $i!"
+                exit 0
+              fi
+              echo "Attempt $i failed. Retrying in 5 seconds..."
+              sleep 5
+            done
+          fi
+
+          echo "::error::Deployment failed: No valid credentials or connection failed."
           exit 1
