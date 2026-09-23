@@ -49,15 +49,29 @@ jobs:
           PORT: '65002'
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+          if [ -z "$SSHPASS" ]; then
+            echo "::error::HOSTINGER_PASSWORD secret is empty or not set in GitHub repository settings!"
+            exit 1
+          fi
+
+          echo "Deploying to Hostinger host $HOST:$PORT as user $USER..."
           shopt -s dotglob
-          for i in 1 2 3; do
-            echo "Deployment attempt $i/3..."
-            if sshpass -e scp -P "$PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ConnectionAttempts=3 -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"; then
-              echo "Deployment succeeded!"
+          for i in 1 2 3 4; do
+            echo "Deployment attempt $i/4..."
+            if sshpass -e scp -P "$PORT" \
+              -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              -o PreferredAuthentications=password \
+              -o PubkeyAuthentication=no \
+              -o ConnectTimeout=30 \
+              -o ServerAliveInterval=15 \
+              -o ConnectionAttempts=3 \
+              -r out/* "$USER@$HOST:domains/swiftgst.in/public_html/"; then
+              echo "Deployment succeeded on attempt $i!"
               exit 0
             fi
-            echo "Attempt $i failed. Retrying in 5 seconds..."
-            sleep 5
+            echo "Attempt $i failed. Retrying in 10 seconds..."
+            sleep 10
           done
-          echo "Deployment failed after 3 attempts."
+          echo "::error::Deployment failed after 4 attempts to $HOST:$PORT."
           exit 1
