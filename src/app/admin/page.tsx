@@ -18,6 +18,9 @@ import {
   Code2,
   Users,
   Eye,
+  Calendar,
+  Clock,
+  Layers,
 } from "lucide-react";
 
 interface ActivityLog {
@@ -38,6 +41,7 @@ interface StatsMetrics {
   totalStores: number;
   publicInvoices: number;
   posBills: number;
+  pdfTools?: number;
 }
 
 const STORAGE_KEY = "swift_admin_master_key";
@@ -56,11 +60,14 @@ export default function SuperAdminPage() {
     totalStores: 0,
     publicInvoices: 0,
     posBills: 0,
+    pdfTools: 0,
   });
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
-  const [filterTab, setFilterTab] = useState<"all" | "pos" | "invoice">("all");
+  const [filterTab, setFilterTab] = useState<"all" | "pos" | "invoice" | "pdf">("all");
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "yesterday" | "7days" | "custom">("all");
+  const [customDate, setCustomDate] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedLog, setSelectedLog] = useState<ActivityLog | null>(null);
 
@@ -83,7 +90,7 @@ export default function SuperAdminPage() {
         throw new Error(json.message || "Failed to load telemetry stats");
       }
 
-      setMetrics(json.data.metrics || { totalStores: 0, publicInvoices: 0, posBills: 0 });
+      setMetrics(json.data.metrics || { totalStores: 0, publicInvoices: 0, posBills: 0, pdfTools: 0 });
       setLogs(json.data.logs || []);
       setLastUpdated(new Date());
       setIsAuthenticated(true);
@@ -143,6 +150,31 @@ export default function SuperAdminPage() {
       // Tab filter
       if (filterTab === "pos" && log.feature_used !== "pos_counter") return false;
       if (filterTab === "invoice" && log.feature_used !== "public_invoice") return false;
+      if (filterTab === "pdf" && !(log.feature_used === "pdf_tools" || log.feature_used?.startsWith("pdf_"))) return false;
+
+      // Date filter
+      if (dateFilter !== "all") {
+        const logDate = new Date(log.created_at);
+        if (!isNaN(logDate.getTime())) {
+          const pad = (n: number) => String(n).padStart(2, "0");
+          const logDateStr = `${logDate.getFullYear()}-${pad(logDate.getMonth() + 1)}-${pad(logDate.getDate())}`;
+          const now = new Date();
+          const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+          if (dateFilter === "today" && logDateStr !== todayStr) return false;
+          if (dateFilter === "yesterday") {
+            const yDate = new Date();
+            yDate.setDate(yDate.getDate() - 1);
+            const yStr = `${yDate.getFullYear()}-${pad(yDate.getMonth() + 1)}-${pad(yDate.getDate())}`;
+            if (logDateStr !== yStr) return false;
+          }
+          if (dateFilter === "7days") {
+            const diffMs = now.getTime() - logDate.getTime();
+            if (diffMs < 0 || diffMs > 7 * 24 * 60 * 60 * 1000) return false;
+          }
+          if (dateFilter === "custom" && customDate && logDateStr !== customDate) return false;
+        }
+      }
 
       // Text search
       if (!searchQuery.trim()) return true;
@@ -154,7 +186,7 @@ export default function SuperAdminPage() {
 
       return store.includes(q) || ip.includes(q) || event.includes(q) || details.includes(q);
     });
-  }, [logs, filterTab, searchQuery]);
+  }, [logs, filterTab, dateFilter, customDate, searchQuery]);
 
   // Parsed detail helper
   function formatDetailsSummary(detailsJson?: string | null) {
@@ -170,6 +202,11 @@ export default function SuperAdminPage() {
       if (d.template) parts.push(`Theme: ${d.template}`);
       if (d.clientName) parts.push(`Client: ${d.clientName}`);
       if (d.action) parts.push(`Action: ${d.action}`);
+      if (d.tool) parts.push(`Tool: ${String(d.tool).replace(/_/g, " ")}`);
+      if (d.pageCount !== undefined) parts.push(`${d.pageCount} pages`);
+      if (d.fileCount !== undefined && Number(d.fileCount) > 1) parts.push(`${d.fileCount} files`);
+      if (d.durationMs !== undefined) parts.push(`${d.durationMs}ms`);
+      if (d.status) parts.push(d.status === "success" ? "Success" : `Failed: ${d.errorMessage || ""}`);
 
       return parts.length > 0 ? parts.join(" • ") : detailsJson;
     } catch {
@@ -257,7 +294,7 @@ export default function SuperAdminPage() {
         {/* Dashboard Main Workspace */}
         <main className="flex-1 p-4 sm:p-8 max-w-[1850px] 2xl:max-w-[2100px] w-full mx-auto space-y-6">
           {/* Top Metrics Row */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             {/* Card 1: Today's Unique Visitors */}
             <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-slate-900/90 to-slate-900/60 p-5 shadow-xl shadow-indigo-950/20 flex flex-col justify-between">
               <div className="flex items-center justify-between">
@@ -362,12 +399,33 @@ export default function SuperAdminPage() {
                 </div>
               </div>
             </div>
+
+            {/* Card 6: PDF Tools Executions */}
+            <div className="rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-950/40 via-slate-900/90 to-slate-900/60 p-5 shadow-xl shadow-purple-950/20 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-purple-300">
+                  PDF Tools Used
+                </span>
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                  <Layers className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="mt-4">
+                <div className="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
+                  {(metrics.pdfTools || 0).toLocaleString()}
+                </div>
+                <div className="mt-1 flex items-center gap-1.5 text-xs text-purple-200/70">
+                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400" />
+                  <span>Suite Operations</span>
+                </div>
+              </div>
+            </div>
           </section>
 
           {/* Live Activity Feed Table Card */}
           <section className="rounded-3xl border border-slate-800 bg-slate-900/70 p-5 sm:p-6 shadow-2xl space-y-4">
             {/* Header & Filter Controls */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-2 border-b border-slate-800">
               <div>
                 <h2 className="text-base font-extrabold text-white flex items-center gap-2">
                   <span>Live Activity Stream</span>
@@ -376,14 +434,14 @@ export default function SuperAdminPage() {
                   </span>
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Real-time events captured via /api/track.php
+                  Real-time events captured via /api/track.php with date &amp; time tracking
                 </p>
               </div>
 
-              {/* Tabs and Search Bar */}
-              <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+              {/* Tabs, Date Filter, and Search Bar */}
+              <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
                 {/* Search Input */}
-                <div className="relative flex-1 md:w-64">
+                <div className="relative flex-1 sm:w-56">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
                   <input
                     type="text"
@@ -394,7 +452,74 @@ export default function SuperAdminPage() {
                   />
                 </div>
 
-                {/* Filter Tabs */}
+                {/* Date Filter Quick Pills */}
+                <div className="flex items-center rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setDateFilter("all")}
+                    className={`rounded-lg px-2.5 py-1 transition ${
+                      dateFilter === "all" ? "bg-teal-600 text-white shadow-xs" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    All Dates
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDateFilter("today")}
+                    className={`rounded-lg px-2.5 py-1 transition ${
+                      dateFilter === "today" ? "bg-teal-600 text-white shadow-xs" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    Today
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDateFilter("yesterday")}
+                    className={`rounded-lg px-2.5 py-1 transition ${
+                      dateFilter === "yesterday" ? "bg-teal-600 text-white shadow-xs" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    Yesterday
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDateFilter("7days")}
+                    className={`rounded-lg px-2.5 py-1 transition ${
+                      dateFilter === "7days" ? "bg-teal-600 text-white shadow-xs" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    7 Days
+                  </button>
+                </div>
+
+                {/* Date Picker Input */}
+                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-950 border border-slate-800 rounded-xl text-xs">
+                  <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                  <input
+                    type="date"
+                    value={customDate}
+                    onChange={(e) => {
+                      setCustomDate(e.target.value);
+                      setDateFilter("custom");
+                    }}
+                    className="bg-transparent text-slate-200 outline-none text-xs cursor-pointer font-mono"
+                    title="Select a specific date to filter"
+                  />
+                  {dateFilter === "custom" && (
+                    <button
+                      onClick={() => {
+                        setCustomDate("");
+                        setDateFilter("all");
+                      }}
+                      className="text-[10px] text-slate-400 hover:text-white font-bold ml-1 cursor-pointer"
+                      title="Clear date"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+
+                {/* Feature Filter Tabs */}
                 <div className="flex items-center rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-semibold">
                   <button
                     type="button"
@@ -429,6 +554,17 @@ export default function SuperAdminPage() {
                   >
                     Public Invoices ({logs.filter((l) => l.feature_used === "public_invoice").length})
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setFilterTab("pdf")}
+                    className={`rounded-lg px-3 py-1 transition ${
+                      filterTab === "pdf"
+                        ? "bg-purple-600 text-white shadow-xs"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    PDF Tools ({logs.filter((l) => l.feature_used === "pdf_tools" || l.feature_used?.startsWith("pdf_")).length})
+                  </button>
                 </div>
               </div>
             </div>
@@ -438,7 +574,7 @@ export default function SuperAdminPage() {
               <table className="w-full text-left text-xs text-slate-300">
                 <thead className="bg-slate-950/70 uppercase text-[10px] font-bold tracking-wider text-slate-400 border-b border-slate-800">
                   <tr>
-                    <th className="px-4 py-3">Time</th>
+                    <th className="px-4 py-3">Date &amp; Time</th>
                     <th className="px-4 py-3">Store / User</th>
                     <th className="px-4 py-3">Feature</th>
                     <th className="px-4 py-3">Event Type</th>
@@ -458,22 +594,36 @@ export default function SuperAdminPage() {
                     filteredLogs.map((log) => {
                       const isPos = log.feature_used === "pos_counter";
                       const isInvoice = log.feature_used === "public_invoice";
+                      const isPdf = log.feature_used === "pdf_tools" || log.feature_used?.startsWith("pdf_");
 
                       return (
                         <tr
                           key={log.id}
                           className="hover:bg-slate-800/40 transition-colors"
                         >
-                          {/* Time */}
-                          <td className="px-4 py-3 whitespace-nowrap font-mono text-[11px] text-slate-400">
-                            {new Date(log.created_at).toLocaleString("en-IN", {
-                              day: "2-digit",
-                              month: "short",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              second: "2-digit",
-                              hour12: true,
-                            })}
+                          {/* Date & Time */}
+                          <td className="px-4 py-3 whitespace-nowrap font-mono text-[11px]">
+                            <div className="font-bold text-white flex items-center gap-1.5">
+                              <Calendar className="h-3 w-3 text-teal-400 shrink-0" />
+                              <span>
+                                {new Date(log.created_at).toLocaleDateString("en-IN", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                })}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 pl-4">
+                              <Clock className="h-2.5 w-2.5 text-slate-500 shrink-0" />
+                              <span>
+                                {new Date(log.created_at).toLocaleTimeString("en-IN", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  second: "2-digit",
+                                  hour12: true,
+                                })}
+                              </span>
+                            </div>
                           </td>
 
                           {/* Store / User */}
@@ -497,6 +647,10 @@ export default function SuperAdminPage() {
                             ) : isInvoice ? (
                               <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/15 border border-sky-500/30 px-2 py-0.5 text-[10px] font-bold text-sky-400">
                                 Public Invoice
+                              </span>
+                            ) : isPdf ? (
+                              <span className="inline-flex items-center gap-1 rounded-md bg-purple-500/15 border border-purple-500/30 px-2 py-0.5 text-[10px] font-bold text-purple-400">
+                                PDF Tools
                               </span>
                             ) : (
                               <span className="inline-flex items-center gap-1 rounded-md bg-slate-800 border border-slate-700 px-2 py-0.5 text-[10px] font-bold text-slate-300">

@@ -51,9 +51,16 @@ try {
     $totalStores = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
     $totalInvoices = $pdo->query("SELECT COUNT(*) FROM activity_logs WHERE feature_used = 'public_invoice'")->fetchColumn();
     $totalPosBills = $pdo->query("SELECT COUNT(*) FROM activity_logs WHERE feature_used = 'pos_counter'")->fetchColumn();
+    $totalPdfTools = $pdo->query("SELECT COUNT(*) FROM activity_logs WHERE feature_used = 'pdf_tools' OR feature_used LIKE 'pdf_%'")->fetchColumn();
 
-    // 3. Recent Activity Logs
-    $logsStmt = $pdo->query("SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 50");
+    // 3. Activity Logs (Supports optional ?date=YYYY-MM-DD filter, default latest 300)
+    $filterDate = !empty($_GET['date']) ? trim($_GET['date']) : null;
+    if ($filterDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $filterDate)) {
+        $logsStmt = $pdo->prepare("SELECT * FROM activity_logs WHERE DATE(created_at) = ? ORDER BY created_at DESC LIMIT 300");
+        $logsStmt->execute([$filterDate]);
+    } else {
+        $logsStmt = $pdo->query("SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 300");
+    }
     $recentLogs = $logsStmt->fetchAll();
 
     echo json_encode([
@@ -64,7 +71,8 @@ try {
                 "todayPageHits" => (int)$hitCount,
                 "totalStores" => (int)$totalStores,
                 "publicInvoices" => (int)$totalInvoices,
-                "posBills" => (int)$totalPosBills
+                "posBills" => (int)$totalPosBills,
+                "pdfTools" => (int)$totalPdfTools
             ],
             "logs" => $recentLogs
         ]

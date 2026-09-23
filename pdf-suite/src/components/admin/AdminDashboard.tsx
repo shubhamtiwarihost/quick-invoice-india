@@ -17,6 +17,8 @@ import {
   Filter,
   RefreshCw,
   Cpu,
+  Calendar,
+  CalendarDays,
 } from 'lucide-react';
 import {
   getStoredEvents,
@@ -31,6 +33,9 @@ interface AdminDashboardProps {
 }
 
 const AUTH_SESSION_KEY = 'swiftgst_admin_auth';
+const MASTER_KEY_STORAGE = 'swift_admin_master_key';
+
+type DateFilter = 'all' | 'today' | 'yesterday' | '7days' | '30days' | 'custom';
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -44,10 +49,72 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'success' | 'error'>('all');
+  const [dateFilter, setDateFilter] = useState<DateFilter>('all');
+  const [customDate, setCustomDate] = useState<string>('');
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [dataSource, setDataSource] = useState<'cloud' | 'local'>('local');
 
-  const refreshData = () => {
-    const data = getStoredEvents();
-    setEvents(data);
+  const refreshData = async () => {
+    setIsRefreshing(true);
+    const localData = getStoredEvents();
+    const adminKey = sessionStorage.getItem(MASTER_KEY_STORAGE) || 'swift_master_2026';
+
+    try {
+      const res = await fetch('/api/stats.php', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminKey}`,
+        },
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json.status === 'success' && Array.isArray(json.data?.logs)) {
+          const serverEvents: AnalyticsEvent[] = json.data.logs
+            .filter((l: any) => l.feature_used === 'pdf_tools' || (l.feature_used && l.feature_used.startsWith('pdf_')))
+            .map((l: any) => {
+              let details: any = {};
+              try {
+                details = l.details_json ? JSON.parse(l.details_json) : {};
+              } catch {}
+              return {
+                id: `srv-${l.id}`,
+                timestamp: l.created_at,
+                timeMs: new Date(l.created_at).getTime(),
+                tool: details.tool || l.event_type.replace(/^PDF_/, '').toLowerCase(),
+                status: (details.status || (l.event_type.includes('ERROR') ? 'error' : 'success')) as 'success' | 'error',
+                durationMs: Number(details.durationMs) || 0,
+                pageCount: details.pageCount,
+                fileCount: details.fileCount,
+                errorMessage: details.errorMessage,
+              };
+            });
+
+          if (serverEvents.length > 0) {
+            const seen = new Set<string>();
+            const combined: AnalyticsEvent[] = [];
+            for (const ev of [...serverEvents, ...localData]) {
+              const key = `${ev.tool}-${ev.timestamp}-${ev.durationMs}`;
+              if (!seen.has(key)) {
+                seen.add(key);
+                combined.push(ev);
+              }
+            }
+            combined.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+            setEvents(combined);
+            setDataSource('cloud');
+            setIsRefreshing(false);
+            return;
+          }
+        }
+      }
+    } catch {
+      // Offline fallback
+    }
+
+    setEvents(localData);
+    setDataSource('local');
+    setIsRefreshing(false);
   };
 
   useEffect(() => {
@@ -63,6 +130,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
 
     if (input === 'admin123' || input === 'swift_master_2026' || (envPass && input === envPass)) {
       sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
+      sessionStorage.setItem(MASTER_KEY_STORAGE, input);
       setIsAuthenticated(true);
       setAuthError(null);
     } else {
@@ -72,6 +140,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
 
   const handleLogout = () => {
     sessionStorage.removeItem(AUTH_SESSION_KEY);
+    sessionStorage.removeItem(MASTER_KEY_STORAGE);
     setIsAuthenticated(false);
     setPasswordInput('');
   };
@@ -83,19 +152,62 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
     }
   };
 
+  const isEventMatchingDate = (timestamp: string): boolean => {
+    if (dateFilter === 'all') return true;
+    const evDate = new Date(timestamp);
+    if (isNaN(evDate.getTime())) return false;
+
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const evDateStr = `${evDate.getFullYear()}-${pad(evDate.getMonth() + 1)}-${pad(evDate.getDate())}`;
+
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+    if (dateFilter === 'today') {
+      return evDateStr === todayStr;
+    }
+    if (dateFilter === 'yesterday') {
+      const yDate = new Date();
+      yDate.setDate(yDate.getDate() - 1);
+      const yStr = `${yDate.getFullYear()}-${pad(yDate.getMonth() + 1)}-${pad(yDate.getDate())}`;
+      return evDateStr === yStr;
+    }
+    if (dateFilter === '7days') {
+      const diffMs = now.getTime() - evDate.getTime();
+      return diffMs >= 0 && diffMs <= 7 * 24 * 60 * 60 * 1000;
+    }
+    if (dateFilter === '30days') {
+      const diffMs = now.getTime() - evDate.getTime();
+      return diffMs >= 0 && diffMs <= 30 * 24 * 60 * 60 * 1000;
+    }
+    if (dateFilter === 'custom') {
+      if (!customDate) return true;
+      return evDateStr === customDate;
+    }
+    return true;
+  };
+
+  const eventsByDate = useMemo(() => {
+    return events.filter((ev) => isEventMatchingDate(ev.timestamp));
+  }, [events, dateFilter, customDate]);
+
   const metrics = useMemo(() => {
-    return getAggregatedMetrics();
-  }, [events]);
+    return getAggregatedMetrics(eventsByDate);
+  }, [eventsByDate]);
 
   const filteredEvents = useMemo(() => {
-    return events.filter((ev) => {
+    return eventsByDate.filter((ev) => {
       const matchesSearch =
         ev.tool.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (ev.errorMessage && ev.errorMessage.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesStatus = statusFilter === 'all' ? true : ev.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
-  }, [events, searchQuery, statusFilter]);
+  }, [eventsByDate, searchQuery, statusFilter]);
+
+  const handleExportCsv = () => {
+    exportEventsToCsv(filteredEvents.length > 0 ? filteredEvents : eventsByDate);
+  };
 
   // If not authenticated, render secure login gate
   if (!isAuthenticated) {
@@ -170,23 +282,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
             <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
               Zero-PII Mode
             </span>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+              {dataSource === 'cloud' ? 'Cloud MySQL Synced' : 'Browser Telemetry'}
+            </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Real-time client-side operational performance, tool adoption, and latency monitoring.
+            Real-time operational performance, feature usage dates, and client latency monitoring.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={refreshData}
-            className="p-2 text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors cursor-pointer"
-            title="Refresh Data"
+            disabled={isRefreshing}
+            className="p-2 text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
+            title="Refresh Data from Server and Cache"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-indigo-600' : ''}`} />
           </button>
           <button
-            onClick={exportEventsToCsv}
+            onClick={handleExportCsv}
             className="px-3.5 py-2 text-xs font-bold rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors flex items-center gap-1.5 cursor-pointer"
+            title="Export filtered records with Date and Time"
           >
             <Download className="w-3.5 h-3.5 text-indigo-600" />
             Export CSV
@@ -214,6 +331,101 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to App
           </button>
+        </div>
+      </div>
+
+      {/* Date & Time Range Filter Control Bar */}
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+            <CalendarDays className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+              Filter By Date &amp; Time
+            </span>
+            <span className="text-[11px] text-slate-500">
+              {dateFilter === 'all' && `All Time (${events.length} total operations)`}
+              {dateFilter === 'today' && `Today's Operations (${eventsByDate.length} operations)`}
+              {dateFilter === 'yesterday' && `Yesterday's Operations (${eventsByDate.length} operations)`}
+              {dateFilter === '7days' && `Last 7 Days (${eventsByDate.length} operations)`}
+              {dateFilter === '30days' && `Last 30 Days (${eventsByDate.length} operations)`}
+              {dateFilter === 'custom' && (customDate ? `Date: ${customDate} (${eventsByDate.length} operations)` : 'Select a date')}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Quick Date Pills */}
+          <div className="inline-flex rounded-xl border border-slate-200 p-0.5 bg-slate-50 text-xs">
+            <button
+              onClick={() => setDateFilter('all')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-colors cursor-pointer ${
+                dateFilter === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              All Time
+            </button>
+            <button
+              onClick={() => setDateFilter('today')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-colors cursor-pointer ${
+                dateFilter === 'today' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Today
+            </button>
+            <button
+              onClick={() => setDateFilter('yesterday')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-colors cursor-pointer ${
+                dateFilter === 'yesterday' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Yesterday
+            </button>
+            <button
+              onClick={() => setDateFilter('7days')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-colors cursor-pointer ${
+                dateFilter === '7days' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              7 Days
+            </button>
+            <button
+              onClick={() => setDateFilter('30days')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-colors cursor-pointer ${
+                dateFilter === '30days' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              30 Days
+            </button>
+          </div>
+
+          {/* Date Picker Input */}
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+            <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <input
+              type="date"
+              value={customDate}
+              onChange={(e) => {
+                setCustomDate(e.target.value);
+                setDateFilter('custom');
+              }}
+              className="bg-transparent text-slate-700 outline-none text-xs cursor-pointer font-mono"
+              title="Pick a specific date to filter"
+            />
+            {dateFilter === 'custom' && (
+              <button
+                onClick={() => {
+                  setCustomDate('');
+                  setDateFilter('all');
+                }}
+                className="text-[10px] text-slate-400 hover:text-slate-700 font-bold ml-1 cursor-pointer"
+                title="Clear date"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -253,7 +465,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
             </span>
             <div className="flex items-center gap-1 mt-2 text-xs text-indigo-600 font-semibold">
               <span>
-                {metrics.mostPopularTool ? `${metrics.mostPopularTool.percentage}% of all operations` : 'No data'}
+                {metrics.mostPopularTool ? `${metrics.mostPopularTool.percentage}% of selected operations` : 'No data'}
               </span>
             </div>
           </div>
@@ -273,7 +485,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
             </span>
             <div className="flex items-center gap-1 mt-2 text-xs text-slate-500">
               <Cpu className="w-3.5 h-3.5 text-indigo-600" />
-              <span>In-memory V8 client time</span>
+              <span>In-memory client execution</span>
             </div>
           </div>
         </div>
@@ -305,7 +517,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900">Tool Usage Distribution</h3>
-            <p className="text-xs text-slate-500">Breakdown of operational volume across all 8 tools</p>
+            <p className="text-xs text-slate-500">Breakdown of operational volume across active tools</p>
           </div>
           <span className="text-xs text-slate-400 font-mono">
             {Object.keys(metrics.toolBreakdown).length} active tools
@@ -314,20 +526,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
 
         <div className="space-y-3.5">
           {Object.entries(metrics.toolBreakdown).length === 0 ? (
-            <p className="text-xs text-slate-400 text-center py-6">No tool data recorded yet.</p>
+            <p className="text-xs text-slate-400 text-center py-6">No tool data recorded for the selected date filter.</p>
           ) : (
             Object.entries(metrics.toolBreakdown)
               .sort(([, a], [, b]) => b.count - a.count)
               .map(([toolName, stats]) => (
                 <div key={toolName} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center justify-between text-xs gap-1">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-slate-800 capitalize">
                         {toolName.replace(/_/g, ' ')}
                       </span>
                       <span className="text-slate-400 font-mono text-[11px]">
                         ({stats.count} ops • avg {stats.avgDurationMs}ms)
                       </span>
+                      {stats.lastUsedTimestamp && (
+                        <span className="inline-flex items-center gap-1 text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md font-mono border border-indigo-100">
+                          <Clock className="w-2.5 h-2.5 text-indigo-500" />
+                          <span>
+                            Last: {new Date(stats.lastUsedTimestamp).toLocaleDateString([], { day: '2-digit', month: 'short' })}, {new Date(stats.lastUsedTimestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+                          </span>
+                        </span>
+                      )}
                     </div>
                     <span className="font-extrabold text-slate-700">{stats.percentage}%</span>
                   </div>
@@ -363,7 +583,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Filter by tool..."
+                placeholder="Filter by tool or error..."
                 className="pl-8 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:border-indigo-500 outline-none w-36 sm:w-48 bg-slate-50 focus:bg-white transition-colors"
               />
             </div>
@@ -403,7 +623,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
           <table className="w-full text-left text-xs text-slate-600">
             <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold text-[10px] border-b border-slate-200">
               <tr>
-                <th className="px-5 py-3">Timestamp</th>
+                <th className="px-5 py-3">Date &amp; Time</th>
                 <th className="px-5 py-3">Tool Name</th>
                 <th className="px-5 py-3">Pages / Files</th>
                 <th className="px-5 py-3">Status</th>
@@ -414,18 +634,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
               {filteredEvents.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-5 py-8 text-center text-slate-400">
-                    No telemetry records match your filters.
+                    No telemetry records match your filters for the selected date.
                   </td>
                 </tr>
               ) : (
-                filteredEvents.slice(0, 50).map((ev) => (
+                filteredEvents.slice(0, 100).map((ev) => (
                   <tr key={ev.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-5 py-3 font-mono text-[11px] text-slate-500">
-                      {new Date(ev.timestamp).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                      })}
+                    <td className="px-5 py-3 whitespace-nowrap font-mono text-[11px]">
+                      <div className="font-bold text-slate-800 flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>
+                          {new Date(ev.timestamp).toLocaleDateString([], {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5 pl-5">
+                        <Clock className="w-3 h-3 text-slate-400" />
+                        <span>
+                          {new Date(ev.timestamp).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: true,
+                          })}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-5 py-3 font-semibold text-slate-900 capitalize">
                       {ev.tool.replace(/_/g, ' ')}
@@ -463,7 +699,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
 
         {/* Footer info */}
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-          <span>Showing {Math.min(50, filteredEvents.length)} of {filteredEvents.length} records</span>
+          <span>Showing {Math.min(100, filteredEvents.length)} of {filteredEvents.length} records</span>
           <span className="text-[11px] font-mono">Storage cap: 1,000 events</span>
         </div>
       </div>

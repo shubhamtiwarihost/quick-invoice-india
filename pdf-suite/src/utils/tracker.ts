@@ -37,6 +37,7 @@ export interface AnalyticsSummary {
       avgDurationMs: number;
       successCount: number;
       errorCount: number;
+      lastUsedTimestamp?: string | null;
     }
   >;
 }
@@ -139,6 +140,41 @@ export function trackEvent(
       console.debug('Failed to save event to localStorage', err);
     }
   }
+
+  // 3. Central server telemetry dispatch to /api/track.php for centralized date & time tracking
+  if (typeof window !== 'undefined') {
+    try {
+      const payload = {
+        event_type: `PDF_${tool.toUpperCase()}`,
+        feature: 'pdf_tools',
+        page: window.location.pathname || '/pdf-tools/',
+        details: {
+          tool,
+          status,
+          durationMs: event.durationMs,
+          pageCount: event.pageCount,
+          fileCount: event.fileCount,
+          errorMessage: event.errorMessage,
+          timestamp: event.timestamp,
+        },
+      };
+
+      const body = JSON.stringify(payload);
+      if (navigator.sendBeacon) {
+        const blob = new Blob([body], { type: 'application/json' });
+        navigator.sendBeacon('/api/track.php', blob);
+      } else {
+        fetch('/api/track.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+          keepalive: true,
+        }).catch(() => {});
+      }
+    } catch {
+      // Non-blocking telemetry
+    }
+  }
 }
 
 /**
@@ -225,8 +261,8 @@ export function clearStoredEvents(): void {
 /**
  * Compute aggregated KPI metrics across stored operational events
  */
-export function getAggregatedMetrics(): AnalyticsSummary {
-  const events = getStoredEvents();
+export function getAggregatedMetrics(customEvents?: AnalyticsEvent[]): AnalyticsSummary {
+  const events = customEvents !== undefined ? customEvents : getStoredEvents();
 
   if (events.length === 0) {
     return {
@@ -245,7 +281,7 @@ export function getAggregatedMetrics(): AnalyticsSummary {
   let errorCount = 0;
   const toolCounts: Record<
     string,
-    { count: number; totalDuration: number; successCount: number; errorCount: number }
+    { count: number; totalDuration: number; successCount: number; errorCount: number; lastUsedTimestamp?: string | null }
   > = {};
 
   for (const ev of events) {
@@ -257,8 +293,11 @@ export function getAggregatedMetrics(): AnalyticsSummary {
     }
 
     if (!toolCounts[ev.tool]) {
-      toolCounts[ev.tool] = { count: 0, totalDuration: 0, successCount: 0, errorCount: 0 };
+      toolCounts[ev.tool] = { count: 0, totalDuration: 0, successCount: 0, errorCount: 0, lastUsedTimestamp: ev.timestamp };
+    } else if (ev.timestamp && (!toolCounts[ev.tool].lastUsedTimestamp || new Date(ev.timestamp) > new Date(toolCounts[ev.tool].lastUsedTimestamp!))) {
+      toolCounts[ev.tool].lastUsedTimestamp = ev.timestamp;
     }
+
     toolCounts[ev.tool].count++;
     toolCounts[ev.tool].totalDuration += ev.durationMs || 0;
     if (ev.status === 'success') {
@@ -279,6 +318,7 @@ export function getAggregatedMetrics(): AnalyticsSummary {
       avgDurationMs: Math.round(data.totalDuration / data.count),
       successCount: data.successCount,
       errorCount: data.errorCount,
+      lastUsedTimestamp: data.lastUsedTimestamp,
     };
 
     if (!popularTool || data.count > popularTool.count) {
@@ -306,26 +346,36 @@ export function getAggregatedMetrics(): AnalyticsSummary {
 }
 
 /**
- * Export all analytics events to a clean CSV file
+ * Export analytics events to a clean CSV file with Date and Time tracking
  */
-export function exportEventsToCsv(): void {
-  const events = getStoredEvents();
+export function exportEventsToCsv(customEvents?: AnalyticsEvent[]): void {
+  const events = customEvents !== undefined ? customEvents : getStoredEvents();
   if (events.length === 0) {
     alert('No telemetry records available to export.');
     return;
   }
 
-  const headers = ['ID', 'Timestamp', 'Tool', 'Status', 'Duration (ms)', 'Page Count', 'File Count', 'Error'];
-  const rows = events.map((ev) => [
-    ev.id,
-    ev.timestamp,
-    ev.tool,
-    ev.status,
-    ev.durationMs,
-    ev.pageCount ?? '',
-    ev.fileCount ?? '',
-    ev.errorMessage ? `"${ev.errorMessage.replace(/"/g, '""')}"` : '',
-  ]);
+  const headers = ['ID', 'Date', 'Time', 'ISO Timestamp', 'Tool', 'Status', 'Duration (ms)', 'Page Count', 'File Count', 'Error'];
+  const rows = events.map((ev) => {
+    const d = new Date(ev.timestamp);
+    const dateStr = !isNaN(d.getTime()) ? d.toLocaleDateString('en-CA') : '';
+    const timeStr = !isNaN(d.getTime())
+      ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })
+      : '';
+
+    return [
+      ev.id,
+      dateStr,
+      timeStr,
+      ev.timestamp,
+      ev.tool,
+      ev.status,
+      ev.durationMs,
+      ev.pageCount ?? '',
+      ev.fileCount ?? '',
+      ev.errorMessage ? `"${ev.errorMessage.replace(/"/g, '""')}"` : '',
+    ];
+  });
 
   const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
