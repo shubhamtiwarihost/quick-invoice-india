@@ -59,9 +59,24 @@ export default function GstinValidatorPage() {
       />
       <Suspense
         fallback={
-          <div className="mx-auto flex w-full max-w-4xl flex-1 items-center justify-center p-12 text-sm text-slate-500">
-            Loading GSTIN validator…
-          </div>
+          <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">
+                  Official MOD 36 Verification
+                </div>
+                <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                  GSTIN Validator &amp; Breakdown
+                </h1>
+                <p className="mt-1 text-sm text-slate-500">
+                  Verify any 15-character Goods and Services Tax Identification Number (GSTIN) with structure decoding and check digit verification.
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500 animate-pulse">
+              Loading validator…
+            </div>
+          </main>
         }
       >
         <GstinValidatorClient />

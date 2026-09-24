@@ -5,11 +5,15 @@ import { HomeComplianceGuide, HOME_FAQS } from "@/components/home/HomeCompliance
 import { RetailSuiteShowcase } from "@/components/home/RetailSuiteShowcase";
 
 export const metadata: Metadata = {
-  title: "SwiftGST - Free Retail POS & GST Billing Software",
+  title: "SwiftGST — Free Retail POS & GST Billing Software India",
   description:
-    "Superfast retail POS billing counter, barcode inventory tracking, customer Khata ledger, and 100% free GST invoice generator for Indian small businesses. Live A4 preview, thermal receipts, UPI QR code & GSTR-1 export.",
+    "SwiftGST (Swift GST) is India's 100% free retail POS billing software, barcode inventory tracker, customer Khata ledger, and instant GST invoice generator. 100% private, offline-ready, zero sign-up required.",
   keywords: [
     "SwiftGST",
+    "Swift GST",
+    "swift gst software",
+    "swift gst billing",
+    "swiftgst.in",
     "retail POS billing software",
     "free GST billing software India",
     "barcode inventory software",
@@ -23,9 +27,9 @@ export const metadata: Metadata = {
     canonical: "https://swiftgst.in/",
   },
   openGraph: {
-    title: "SwiftGST - Free Retail POS & GST Billing Software",
+    title: "SwiftGST — Free Retail POS & GST Billing Software India",
     description:
-      "Superfast retail POS billing counter, barcode inventory tracking, customer Khata ledger, and 100% free GST invoice generator for Indian small businesses.",
+      "SwiftGST (Swift GST) is India's 100% free retail POS billing software, barcode inventory tracking, customer Khata ledger, and GST invoice generator for small businesses.",
     url: "https://swiftgst.in/",
     siteName: "SwiftGST",
     locale: "en_IN",
@@ -33,13 +37,43 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SwiftGST - Free Retail POS & GST Billing Software",
+    title: "SwiftGST — Free Retail POS & GST Billing Software India",
     description:
-      "Superfast retail POS billing counter, barcode inventory tracking, customer Khata ledger, and 100% free GST invoice generator for Indian small businesses.",
+      "SwiftGST (Swift GST) is India's 100% free retail POS billing software, barcode inventory tracking, customer Khata ledger, and GST invoice generator.",
   },
 };
 
 export default function HomePage() {
+  const jsonLdWebSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "SwiftGST",
+    alternateName: [
+      "Swift GST",
+      "SwiftGST India",
+      "swiftgst.in",
+      "Swift GST Billing Software",
+      "Swift GST POS",
+    ],
+    url: "https://swiftgst.in/",
+    description:
+      "Free retail POS billing counter, barcode inventory tracking, customer Khata ledger, and 100% free GST invoice generator for Indian small businesses.",
+    publisher: {
+      "@type": "Organization",
+      name: "SwiftGST",
+      url: "https://swiftgst.in/",
+      logo: "https://swiftgst.in/logo.png",
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: "https://swiftgst.in/hsn-finder/?q={search_term_string}",
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   const jsonLdApp = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -96,6 +130,10 @@ export default function HomePage() {
     <>
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdApp) }}
       />
       <script
@@ -107,6 +145,8 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
       />
       <InvoiceWorkspace
+        pageTitle="SwiftGST — Free Retail POS & GST Billing Software"
+        badgeText="100% Free & Private"
         childrenBelowWorkspace={
           <>
             <RetailSuiteShowcase />

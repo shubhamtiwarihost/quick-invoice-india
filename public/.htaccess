@@ -5,6 +5,10 @@
   # Pass Authorization Header to PHP on Apache / Hostinger
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+  # Canonical Domain: Force non-WWW (301 Permanent Redirect to prevent duplicate content)
+  RewriteCond %{HTTP_HOST} ^www\.swiftgst\.in$ [NC]
+  RewriteRule ^(.*)$ https://swiftgst.in/$1 [L,R=301]
+
   # Route API calls directly to PHP
   RewriteRule ^api/(.*\.php)$ api/$1 [L,QSA]
   RewriteRule ^api/contact/?$ api/contact.php [L,QSA]

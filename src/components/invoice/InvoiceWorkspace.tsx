@@ -188,9 +188,23 @@ export function InvoiceWorkspace({
   if (!store.hydrated) {
     return (
       <div className="mx-auto flex w-full max-w-[1850px] 2xl:max-w-[2100px] flex-1 flex-col pb-16 md:pb-0 min-h-[850px]">
-        {/* Placeholder Top Action Bar */}
-        <div className="no-print flex items-center justify-between border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 xl:px-10 py-2 sm:py-3 h-[57px]">
-          <div className="h-5 w-48 rounded-md bg-slate-100 animate-pulse" />
+        {/* Top Action Bar (Pre-rendered for SEO & Googlebot crawlers) */}
+        <div className="no-print flex items-center justify-between border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 xl:px-10 py-2 sm:py-3 min-h-[57px]">
+          <div className="flex items-center gap-2">
+            <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[280px] sm:max-w-none">
+              {pageTitle || "SwiftGST — Free Retail POS & GST Billing Software"}
+            </h1>
+            {badgeText ? (
+              <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-800 border border-emerald-200">
+                {badgeText}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-indigo-700 border border-indigo-200/80">
+                <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse" />
+                Live Editor
+              </span>
+            )}
+          </div>
           <div className="hidden sm:flex items-center gap-2">
             <div className="h-8 w-24 rounded-lg bg-slate-100 animate-pulse" />
             <div className="h-8 w-28 rounded-lg bg-teal-50 animate-pulse" />
@@ -301,8 +315,8 @@ export function InvoiceWorkspace({
       <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-3.5 sm:px-4 lg:px-8 xl:px-10 py-2.5 sm:py-3.5 shadow-2xs min-h-[60px]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[220px] sm:max-w-none">
-              {pageTitle || "GST & Tax Invoice Studio"}
+            <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 truncate max-w-[280px] sm:max-w-none">
+              {pageTitle || "SwiftGST — Free Retail POS & GST Billing Software"}
             </h1>
             {badgeText ? (
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-800 border border-emerald-200">
