@@ -280,7 +280,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
                 Instant Conversion
               </h4>
               <p className="text-xs text-slate-400 mt-1">
-                No server wait queues, upload delays, or artificial file size limits.
+                No server wait queues or upload delays. Works with PDFs up to 10 MB and 100 pages.
               </p>
             </div>
 

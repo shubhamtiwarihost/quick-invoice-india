@@ -1,47 +1,23 @@
 <?php
 /**
  * Database connection setup for SwiftGST / Quick Invoice India
- * Connected to Hostinger MySQL Database (u932835494_alpha)
+ * Credentials come only from the server environment or the server-side .env
+ * file (see swiftgst_env in config.php) — never hardcode them here.
  */
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+require_once __DIR__ . '/config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
+$dbHost = swiftgst_env('DB_HOST', 'localhost');
+$dbPort = intval(swiftgst_env('DB_PORT', '3306'));
+$dbName = swiftgst_env('DB_NAME');
+$dbUser = swiftgst_env('DB_USER');
+$dbPass = swiftgst_env('DB_PASS');
+
+if ($dbName === '' || $dbUser === '' || $dbPass === '') {
+    error_log('SwiftGST: database credentials missing (set DB_NAME, DB_USER, DB_PASS in the server .env)');
+    http_response_code(500);
+    echo json_encode(["status" => "error", "message" => "Server configuration error. Please try again later."]);
     exit;
-}
-
-// Default Hostinger Database Credentials
-$dbHost = getenv('DB_HOST') ?: 'localhost';
-$dbPort = intval(getenv('DB_PORT') ?: 3306);
-$dbName = getenv('DB_NAME') ?: 'u932835494_alpha';
-$dbUser = getenv('DB_USER') ?: 'u932835494_alpha';
-$dbPass = getenv('DB_PASS') ?: 'SwiftGST@2026#Secure';
-
-// Optional: Override via .env file if present
-$envFile = __DIR__ . '/../.env';
-if (!file_exists($envFile)) {
-    $envFile = dirname(__DIR__, 2) . '/.env';
-}
-
-if (file_exists($envFile)) {
-    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        $line = trim($line);
-        if (strpos($line, '#') === 0 || empty($line)) continue;
-        list($k, $v) = array_pad(explode('=', $line, 2), 2, null);
-        if ($k && $v !== null) {
-            $k = trim($k);
-            $v = trim(trim($v), '"\'');
-            if ($k === 'DB_HOST' && !empty($v)) $dbHost = $v;
-            if ($k === 'DB_PORT' && !empty($v)) $dbPort = intval($v);
-            if ($k === 'DB_NAME' && !empty($v)) $dbName = $v;
-            if ($k === 'DB_USER' && !empty($v)) $dbUser = $v;
-            if ($k === 'DB_PASS' && !empty($v)) $dbPass = $v;
-        }
-    }
 }
 
 $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset=utf8mb4";
@@ -132,10 +108,11 @@ try {
     } catch (Exception $e) {}
 
 } catch (PDOException $e) {
+    error_log('SwiftGST: database connection failed: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         "status" => "error",
-        "message" => "Database connection failed: " . $e->getMessage()
+        "message" => "Database connection failed. Please try again later."
     ]);
     exit;
 }

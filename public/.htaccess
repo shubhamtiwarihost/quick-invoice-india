@@ -1,3 +1,8 @@
+# Never serve dotfiles such as .env (credentials live there)
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
