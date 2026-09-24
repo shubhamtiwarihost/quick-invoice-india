@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Edit3,
   Layers,
   Scissors,
   RotateCw,
@@ -36,6 +37,13 @@ const TOOL_META_EXTENDED: Record<
     bullets: string[];
   }
 > = {
+  edit: {
+    themeColor: 'text-indigo-600',
+    iconBg: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white',
+    borderHover: 'hover:border-indigo-500',
+    tag: 'Full Editor',
+    bullets: ['Add text & annotations', 'Freehand pen & drawing', 'Highlighters, boxes & signatures'],
+  },
   merge: {
     themeColor: 'text-indigo-600',
     iconBg: 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white',
@@ -97,6 +105,8 @@ const TOOL_META_EXTENDED: Record<
 export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdmin }) => {
   const getToolIcon = (id: PdfToolId, className = 'w-6 h-6') => {
     switch (id) {
+      case 'edit':
+        return <Edit3 className={className} />;
       case 'merge':
         return <Layers className={className} />;
       case 'split':
@@ -114,7 +124,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
       case 'protect':
         return <Lock className={className} />;
       default:
-        return <Layers className={className} />;
+        return <Edit3 className={className} />;
     }
   };
 
@@ -163,7 +173,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-indigo-600" />
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                All 8 PDF Utilities
+                All 9 PDF Utilities &amp; Tools
               </h2>
             </div>
             <p className="text-sm text-slate-500 mt-1">
@@ -173,7 +183,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectTool, onOpenLegal, onOpenAdm
           <div className="mt-3 sm:mt-0 flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
               <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
-              8 Free Tools
+              9 Free Tools
             </span>
           </div>
         </div>

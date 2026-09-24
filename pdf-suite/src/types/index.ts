@@ -1,4 +1,5 @@
 export type PdfToolId =
+  | 'edit'
   | 'merge'
   | 'split'
   | 'rotate'
@@ -7,6 +8,56 @@ export type PdfToolId =
   | 'pdf-to-images'
   | 'watermark'
   | 'protect';
+
+export interface PdfAnnotationText {
+  id: string;
+  type: 'text';
+  pageIndex: number; // 0-based
+  x: number; // relative 0-1 or px
+  y: number;
+  text: string;
+  fontSize: number;
+  colorHex: string;
+}
+
+export interface PdfAnnotationDrawing {
+  id: string;
+  type: 'drawing';
+  pageIndex: number;
+  points: { x: number; y: number }[];
+  colorHex: string;
+  thickness: number;
+}
+
+export interface PdfAnnotationShape {
+  id: string;
+  type: 'shape';
+  pageIndex: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  colorHex: string;
+  fillOpacity: number;
+  strokeColorHex?: string;
+}
+
+export interface PdfAnnotationImage {
+  id: string;
+  type: 'image';
+  pageIndex: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  dataUrl: string;
+}
+
+export type PdfAnnotation =
+  | PdfAnnotationText
+  | PdfAnnotationDrawing
+  | PdfAnnotationShape
+  | PdfAnnotationImage;
 
 export interface ToolMetadata {
   id: PdfToolId;

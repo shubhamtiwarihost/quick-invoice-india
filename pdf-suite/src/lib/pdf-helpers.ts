@@ -303,3 +303,112 @@ export async function protectPdf(
   );
   return encryptedBytes;
 }
+
+/**
+ * Export edited PDF with text, drawings, shapes, and images burned into the PDF pages
+ */
+export async function exportEditedPdf(
+  arrayBuffer: ArrayBuffer,
+  annotations: import('../types').PdfAnnotation[],
+  pageCanvasDimensions: Map<number, { width: number; height: number }>
+): Promise<Uint8Array> {
+  const doc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const pages = doc.getPages();
+
+  for (let pageIdx = 0; pageIdx < pages.length; pageIdx++) {
+    const page = pages[pageIdx];
+    const { width: pageWidth, height: pageHeight } = page.getSize();
+    const canvasDim = pageCanvasDimensions.get(pageIdx) || { width: pageWidth, height: pageHeight };
+    const pageAnnotations = annotations.filter((a) => a.pageIndex === pageIdx);
+
+    for (const ann of pageAnnotations) {
+      if (ann.type === 'text') {
+        const c = hexToRgb(ann.colorHex);
+        const scaleX = pageWidth / canvasDim.width;
+        const scaleY = pageHeight / canvasDim.height;
+
+        const fontPdfSize = ann.fontSize * scaleY;
+        const pdfX = ann.x * scaleX;
+        // In PDF coordinates, Y=0 is bottom
+        const pdfY = pageHeight - (ann.y * scaleY) - (fontPdfSize * 0.8);
+
+        page.drawText(ann.text, {
+          x: Math.max(0, pdfX),
+          y: Math.max(0, pdfY),
+          size: Math.max(6, fontPdfSize),
+          font,
+          color: rgb(c.r, c.g, c.b),
+        });
+      } else if (ann.type === 'shape') {
+        const c = hexToRgb(ann.colorHex);
+        const scaleX = pageWidth / canvasDim.width;
+        const scaleY = pageHeight / canvasDim.height;
+
+        const pdfX = ann.x * scaleX;
+        const pdfY = pageHeight - ((ann.y + ann.height) * scaleY);
+        const pdfWidth = ann.width * scaleX;
+        const pdfHeight = ann.height * scaleY;
+
+        page.drawRectangle({
+          x: pdfX,
+          y: pdfY,
+          width: pdfWidth,
+          height: pdfHeight,
+          color: rgb(c.r, c.g, c.b),
+          opacity: ann.fillOpacity,
+        });
+      } else if (ann.type === 'drawing') {
+        if (ann.points.length < 2) continue;
+        const c = hexToRgb(ann.colorHex);
+        const scaleX = pageWidth / canvasDim.width;
+        const scaleY = pageHeight / canvasDim.height;
+        const thickness = Math.max(1, ann.thickness * scaleX);
+
+        for (let i = 0; i < ann.points.length - 1; i++) {
+          const p1 = ann.points[i];
+          const p2 = ann.points[i + 1];
+
+          const x1 = p1.x * scaleX;
+          const y1 = pageHeight - (p1.y * scaleY);
+          const x2 = p2.x * scaleX;
+          const y2 = pageHeight - (p2.y * scaleY);
+
+          page.drawLine({
+            start: { x: x1, y: y1 },
+            end: { x: x2, y: y2 },
+            thickness,
+            color: rgb(c.r, c.g, c.b),
+          });
+        }
+      } else if (ann.type === 'image') {
+        const scaleX = pageWidth / canvasDim.width;
+        const scaleY = pageHeight / canvasDim.height;
+
+        const pdfX = ann.x * scaleX;
+        const pdfY = pageHeight - ((ann.y + ann.height) * scaleY);
+        const pdfWidth = ann.width * scaleX;
+        const pdfHeight = ann.height * scaleY;
+
+        try {
+          let embeddedImg;
+          if (ann.dataUrl.startsWith('data:image/png')) {
+            embeddedImg = await doc.embedPng(ann.dataUrl);
+          } else {
+            embeddedImg = await doc.embedJpg(ann.dataUrl);
+          }
+          page.drawImage(embeddedImg, {
+            x: pdfX,
+            y: pdfY,
+            width: pdfWidth,
+            height: pdfHeight,
+          });
+        } catch (err) {
+          console.error('Failed to embed image in PDF:', err);
+        }
+      }
+    }
+  }
+
+  return await doc.save();
+}

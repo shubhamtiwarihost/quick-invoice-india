@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Edit3,
   Layers,
   Scissors,
   RotateCw,
@@ -13,6 +14,13 @@ import {
 import type { PdfToolId, ToolMetadata } from '../../types';
 
 export const TOOLS_CONFIG: ToolMetadata[] = [
+  {
+    id: 'edit',
+    title: 'Edit PDF',
+    shortDesc: 'Add text, freehand drawings, highlight boxes, and signatures to PDF pages',
+    badge: 'New Editor',
+    iconName: 'Edit3',
+  },
   {
     id: 'merge',
     title: 'Merge PDF',
@@ -74,6 +82,8 @@ interface NavigationProps {
 export const Navigation: React.FC<NavigationProps> = ({ activeTool, onSelectTool, onGoHome }) => {
   const getIcon = (id: PdfToolId, className = 'w-4 h-4') => {
     switch (id) {
+      case 'edit':
+        return <Edit3 className={className} />;
       case 'merge':
         return <Layers className={className} />;
       case 'split':
@@ -91,7 +101,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTool, onSelectTool
       case 'protect':
         return <Lock className={className} />;
       default:
-        return <Layers className={className} />;
+        return <Edit3 className={className} />;
     }
   };
 

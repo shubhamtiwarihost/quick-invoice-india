@@ -17,8 +17,10 @@ import { ImagesToPdfTool } from './components/tools/ImagesToPdfTool';
 import { PdfToImagesTool } from './components/tools/PdfToImagesTool';
 import { WatermarkPdfTool } from './components/tools/WatermarkPdfTool';
 import { ProtectPdfTool } from './components/tools/ProtectPdfTool';
+import { EditPdfTool } from './components/tools/EditPdfTool';
 import type { PdfToolId } from './types';
 import {
+  Edit3,
   Layers,
   Scissors,
   RotateCw,
@@ -33,6 +35,7 @@ import {
 } from 'lucide-react';
 
 const VALID_TOOLS: PdfToolId[] = [
+  'edit',
   'merge',
   'split',
   'rotate',
@@ -206,6 +209,8 @@ export const App: React.FC = () => {
   // Main tool renderer
   const renderToolComponent = () => {
     switch (activeTool) {
+      case 'edit':
+        return <EditPdfTool />;
       case 'merge':
         return <MergePdfTool />;
       case 'split':
@@ -229,6 +234,8 @@ export const App: React.FC = () => {
 
   const getToolIcon = (id: PdfToolId, className = 'w-5 h-5') => {
     switch (id) {
+      case 'edit':
+        return <Edit3 className={className} />;
       case 'merge':
         return <Layers className={className} />;
       case 'split':
@@ -246,7 +253,7 @@ export const App: React.FC = () => {
       case 'protect':
         return <Lock className={className} />;
       default:
-        return <Layers className={className} />;
+        return <Edit3 className={className} />;
     }
   };
 
