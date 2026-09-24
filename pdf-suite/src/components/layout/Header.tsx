@@ -103,11 +103,11 @@ export const Header: React.FC<HeaderProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">
-                  SwiftGST <span className="text-indigo-600">PDF</span>
+                  SwiftGST <span className="text-indigo-600">PDF Editor</span>
                 </span>
               </div>
               <p className="hidden md:block text-[11px] text-slate-500 font-medium">
-                Free In-Browser PDF Suite
+                Free In-Browser PDF Editor &amp; Tools Suite
               </p>
             </div>
           </div>

@@ -34,7 +34,9 @@
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Route PDF Tools SPA sub-routes directly to /pdf-tools/index.html
+  # Route PDF Tools & PDF Editor SPA sub-routes directly to /pdf-tools/index.html
+  RewriteRule ^pdf-editor/.*$ /pdf-tools/index.html [L]
+  RewriteRule ^pdf-editor/?$ /pdf-tools/ [L,R=301]
   RewriteRule ^pdf-tools/.*$ /pdf-tools/index.html [L]
   RewriteRule ^tools/?$ /pdf-tools/ [L,R=301]
 

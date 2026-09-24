@@ -46,6 +46,7 @@ const VALID_TOOLS: PdfToolId[] = [
 const getAppBasePath = (): string => {
   if (typeof window === 'undefined') return '';
   const pathname = window.location.pathname.toLowerCase();
+  if (pathname.startsWith('/pdf-editor')) return '/pdf-editor';
   if (pathname.startsWith('/pdf-tools')) return '/pdf-tools';
   if (pathname.startsWith('/tools')) return '/tools';
   return '';
@@ -61,7 +62,10 @@ const parseCurrentLocation = (): {
   }
 
   const rawPath = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
-  const pathname = rawPath.replace(/^pdf-tools\/?/, '').replace(/^tools\/?/, '');
+  const pathname = rawPath
+    .replace(/^pdf-editor\/?/, '')
+    .replace(/^pdf-tools\/?/, '')
+    .replace(/^tools\/?/, '');
   const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
 
   // 1. Admin route checks
