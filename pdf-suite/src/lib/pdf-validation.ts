@@ -122,7 +122,16 @@ export async function validatePdfFile(
         `${name} is password-protected. Please remove the password (open it and save/print a copy without one) and try again.`
       );
     }
-    return reject(file, 'corrupted', `${name} appears to be damaged or corrupted and cannot be opened.`);
+    if (errName === 'InvalidPDFException' || errName === 'FormatError') {
+      return reject(file, 'corrupted', `${name} appears to be damaged or corrupted and cannot be opened.`);
+    }
+    // Anything else (e.g. the PDF reader worker failed to load) is not the file's fault.
+    console.error('PDF reader failed while checking file', err);
+    return reject(
+      file,
+      'unreadable',
+      `The PDF reader could not start in your browser, so ${name} could not be checked. Please refresh the page and try again.`
+    );
   } finally {
     loadingTask.destroy();
   }

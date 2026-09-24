@@ -3,6 +3,12 @@
   Require all denied
 </FilesMatch>
 
+# Serve ES modules (e.g. the pdf.js worker *.mjs) as JavaScript — browsers refuse
+# to run module scripts served as text/plain, which breaks all PDF reading.
+<IfModule mod_mime.c>
+  AddType text/javascript .mjs
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
@@ -82,7 +88,7 @@
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
   # 1-year immutable caching for static assets
-  <FilesMatch "\.(js|css|webp|svg|png|jpg|jpeg|gif|ico|woff|woff2)$">
+  <FilesMatch "\.(js|mjs|css|webp|svg|png|jpg|jpeg|gif|ico|woff|woff2)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
