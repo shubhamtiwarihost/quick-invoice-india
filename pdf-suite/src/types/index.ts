@@ -37,6 +37,7 @@ export interface PdfAnnotationShape {
   y: number;
   width: number;
   height: number;
+  shapeType?: 'rectangle' | 'ellipse' | 'highlight' | 'whiteout' | 'cross' | 'check';
   colorHex: string;
   fillOpacity: number;
   strokeColorHex?: string;

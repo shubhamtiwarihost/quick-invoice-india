@@ -350,14 +350,25 @@ export async function exportEditedPdf(
         const pdfWidth = ann.width * scaleX;
         const pdfHeight = ann.height * scaleY;
 
-        page.drawRectangle({
-          x: pdfX,
-          y: pdfY,
-          width: pdfWidth,
-          height: pdfHeight,
-          color: rgb(c.r, c.g, c.b),
-          opacity: ann.fillOpacity,
-        });
+        if (ann.shapeType === 'ellipse') {
+          page.drawEllipse({
+            x: pdfX + pdfWidth / 2,
+            y: pdfY + pdfHeight / 2,
+            xScale: pdfWidth / 2,
+            yScale: pdfHeight / 2,
+            color: rgb(c.r, c.g, c.b),
+            opacity: ann.fillOpacity,
+          });
+        } else {
+          page.drawRectangle({
+            x: pdfX,
+            y: pdfY,
+            width: pdfWidth,
+            height: pdfHeight,
+            color: rgb(c.r, c.g, c.b),
+            opacity: ann.fillOpacity,
+          });
+        }
       } else if (ann.type === 'drawing') {
         if (ann.points.length < 2) continue;
         const c = hexToRgb(ann.colorHex);
