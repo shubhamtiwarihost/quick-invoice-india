@@ -193,13 +193,14 @@ export const EditPdfTool: React.FC = () => {
 
     const img = new Image();
     img.onload = () => {
-      const scale = zoomLevel / 100;
-      canvas.width = currentThumb.width * scale;
-      canvas.height = currentThumb.height * scale;
+      // Set native internal canvas resolution to match high-DPI rendered image
+      canvas.width = currentThumb.width;
+      canvas.height = currentThumb.height;
 
       ctx.save();
-      ctx.scale(scale, scale);
       ctx.clearRect(0, 0, currentThumb.width, currentThumb.height);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, 0, 0);
 
       // Render page annotations
@@ -1029,23 +1030,39 @@ export const EditPdfTool: React.FC = () => {
               ref={containerRef}
               className="flex-1 p-8 overflow-auto flex items-center justify-center relative min-h-[550px]"
             >
-              <div className="relative shadow-2xl rounded-lg overflow-hidden bg-white border border-slate-300">
-                <canvas
-                  ref={canvasRef}
-                  onMouseDown={handleCanvasMouseDown}
-                  onMouseMove={handleCanvasMouseMove}
-                  onMouseUp={handleCanvasMouseUp}
-                  className={`${
-                    activeMode === 'pencil'
-                      ? 'cursor-crosshair'
-                      : activeMode === 'eraser'
-                      ? 'cursor-pointer'
-                      : activeMode === 'move'
-                      ? 'cursor-grab'
-                      : 'cursor-crosshair'
-                  }`}
-                />
-              </div>
+              {(() => {
+                const currentThumb = thumbnails[currentPageIndex];
+                const displayScale = zoomLevel / 100;
+                const baseDisplayWidth = currentThumb ? Math.min(850, currentThumb.width) : 800;
+                const cssWidth = baseDisplayWidth * displayScale;
+                const cssHeight = currentThumb
+                  ? (baseDisplayWidth / currentThumb.width) * currentThumb.height * displayScale
+                  : 1100;
+
+                return (
+                  <div
+                    className="relative shadow-2xl rounded-lg overflow-hidden bg-white border border-slate-300 transition-all duration-150 shrink-0"
+                    style={{ width: `${cssWidth}px`, height: `${cssHeight}px` }}
+                  >
+                    <canvas
+                      ref={canvasRef}
+                      onMouseDown={handleCanvasMouseDown}
+                      onMouseMove={handleCanvasMouseMove}
+                      onMouseUp={handleCanvasMouseUp}
+                      style={{ width: '100%', height: '100%' }}
+                      className={`${
+                        activeMode === 'pencil'
+                          ? 'cursor-crosshair'
+                          : activeMode === 'eraser'
+                          ? 'cursor-pointer'
+                          : activeMode === 'move'
+                          ? 'cursor-grab'
+                          : 'cursor-crosshair'
+                      }`}
+                    />
+                  </div>
+                );
+              })()}
 
               {/* FLOATING DARK CONTROL PILL BAR AT BOTTOM CENTER (Exact matching screenshot) */}
               <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#1e293b] text-white px-5 py-2.5 rounded-full shadow-2xl border border-slate-700/80 flex items-center gap-4 text-xs font-medium select-none backdrop-blur-md bg-opacity-95">

@@ -81,7 +81,8 @@ export async function getPdfPageCount(arrayBuffer: ArrayBuffer): Promise<number>
  */
 export async function renderAllPageThumbnails(
   arrayBuffer: ArrayBuffer,
-  onProgress?: (current: number, total: number) => void
+  onProgress?: (current: number, total: number) => void,
+  targetWidth: number = 1400
 ): Promise<PageThumbnailInfo[]> {
   const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer.slice(0)) });
   const pdf = await loadingTask.promise;
@@ -92,9 +93,8 @@ export async function renderAllPageThumbnails(
     const page = await pdf.getPage(pageNum);
     const originalRotation = page.rotate || 0;
 
-    // Viewport scaled for crisp thumbnail preview
+    // Viewport scaled for high-resolution crisp rendering
     const unscaledViewport = page.getViewport({ scale: 1.0 });
-    const targetWidth = 260;
     const scale = targetWidth / unscaledViewport.width;
     const viewport = page.getViewport({ scale });
 
@@ -106,14 +106,17 @@ export async function renderAllPageThumbnails(
     if (context) {
       context.fillStyle = '#ffffff';
       context.fillRect(0, 0, canvas.width, canvas.height);
-      // Render page
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      // Render page with high DPI quality
       await page.render({
         canvasContext: context,
         viewport,
       }).promise;
     }
 
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    // High quality PNG dataUrl for razor sharp text rendering
+    const dataUrl = canvas.toDataURL('image/png');
 
     thumbnails.push({
       pageNumber: pageNum,
