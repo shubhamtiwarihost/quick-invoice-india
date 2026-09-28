@@ -336,7 +336,14 @@ export async function exportEditedPdf(
         // In PDF coordinates, Y=0 is bottom
         const pdfY = pageHeight - (ann.y * scaleY) - (fontPdfSize * 0.8);
 
-        page.drawText(ann.text, {
+        const safeText = ann.text
+          .replace(/❌/g, 'X')
+          .replace(/✓/g, 'V')
+          .replace(/💬/g, '[Note] ')
+          .replace(/🔗/g, '[Link] ')
+          .replace(/[^\x00-\xFF]/g, '');
+
+        page.drawText(safeText || ann.text, {
           x: Math.max(0, pdfX),
           y: Math.max(0, pdfY),
           size: Math.max(6, fontPdfSize),

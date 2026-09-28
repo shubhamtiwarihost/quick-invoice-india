@@ -94,6 +94,72 @@ export const EditPdfTool: React.FC = () => {
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const [editingTextContent, setEditingTextContent] = useState<string>('');
 
+  // Text Input Modal state (replaces prompt())
+  const [textModal, setTextModal] = useState<{
+    show: boolean;
+    mode: 'text' | 'editText' | 'annotation' | 'link';
+    title: string;
+    coords: { x: number; y: number };
+    inputValue: string;
+    targetId?: string;
+  }>({
+    show: false,
+    mode: 'text',
+    title: '',
+    coords: { x: 0, y: 0 },
+    inputValue: '',
+  });
+
+  const handleTextModalSubmit = () => {
+    if (!textModal.inputValue || !textModal.inputValue.trim()) {
+      setTextModal((prev) => ({ ...prev, show: false }));
+      return;
+    }
+    const val = textModal.inputValue.trim();
+    if (textModal.mode === 'text') {
+      const newTextAnn: PdfAnnotation = {
+        id: Date.now().toString(36),
+        type: 'text',
+        pageIndex: currentPageIndex,
+        x: textModal.coords.x,
+        y: textModal.coords.y,
+        text: val,
+        fontSize: fontSize,
+        colorHex: textColor,
+      };
+      pushHistory([...annotations, newTextAnn]);
+    } else if (textModal.mode === 'editText' && textModal.targetId) {
+      pushHistory(
+        annotations.map((a) => (a.id === textModal.targetId ? { ...a, text: val } : a))
+      );
+    } else if (textModal.mode === 'annotation') {
+      const newNote: PdfAnnotation = {
+        id: Date.now().toString(36),
+        type: 'text',
+        pageIndex: currentPageIndex,
+        x: textModal.coords.x,
+        y: textModal.coords.y,
+        text: `💬 ${val}`,
+        fontSize: 14,
+        colorHex: '#d97706',
+      };
+      pushHistory([...annotations, newNote]);
+    } else if (textModal.mode === 'link') {
+      const newLink: PdfAnnotation = {
+        id: Date.now().toString(36),
+        type: 'text',
+        pageIndex: currentPageIndex,
+        x: textModal.coords.x,
+        y: textModal.coords.y,
+        text: `🔗 ${val}`,
+        fontSize: 14,
+        colorHex: '#2563eb',
+      };
+      pushHistory([...annotations, newLink]);
+    }
+    setTextModal((prev) => ({ ...prev, show: false }));
+  };
+
   // Drawing state
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [currentDrawPoints, setCurrentDrawPoints] = useState<{ x: number; y: number }[]>([]);
@@ -306,41 +372,60 @@ export const EditPdfTool: React.FC = () => {
   const getCanvasCoordinates = (e: MouseEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return { x: 0, y: 0 };
     const rect = canvasRef.current.getBoundingClientRect();
-    const scale = zoomLevel / 100;
+    if (rect.width === 0 || rect.height === 0) return { x: 0, y: 0 };
     return {
-      x: (e.clientX - rect.left) / scale,
-      y: (e.clientY - rect.top) / scale,
+      x: (e.clientX - rect.left) * (canvasRef.current.width / rect.width),
+      y: (e.clientY - rect.top) * (canvasRef.current.height / rect.height),
     };
   };
 
   const handleCanvasMouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
     const coords = getCanvasCoordinates(e);
 
-    if (activeMode === 'move') {
+    const pageAnnots = annotations.filter((a) => a.pageIndex === currentPageIndex);
+    const clicked = pageAnnots.find((a) => {
+      if (a.type === 'text') {
+        const textWidth = Math.max(80, a.text.length * (a.fontSize * 0.6));
+        return (
+          coords.x >= a.x - 10 &&
+          coords.x <= a.x + textWidth + 10 &&
+          coords.y >= a.y - 10 &&
+          coords.y <= a.y + a.fontSize + 15
+        );
+      } else if (a.type === 'shape' || a.type === 'image') {
+        return (
+          coords.x >= a.x - 10 &&
+          coords.x <= a.x + a.width + 10 &&
+          coords.y >= a.y - 10 &&
+          coords.y <= a.y + a.height + 10
+        );
+      } else if (a.type === 'drawing' && a.points.length > 0) {
+        const minX = Math.min(...a.points.map((p) => p.x));
+        const maxX = Math.max(...a.points.map((p) => p.x));
+        const minY = Math.min(...a.points.map((p) => p.y));
+        const maxY = Math.max(...a.points.map((p) => p.y));
+        return (
+          coords.x >= minX - 15 &&
+          coords.x <= maxX + 15 &&
+          coords.y >= minY - 15 &&
+          coords.y <= maxY + 15
+        );
+      }
+      return false;
+    });
+
+    if (activeMode === 'move' || activeMode === 'select') {
+      if (clicked) {
+        setSelectedAnnId(clicked.id);
+        setIsDragging(true);
+        setDragStart(coords);
+      } else {
+        setSelectedAnnId(null);
+      }
       return;
     }
 
     if (activeMode === 'eraser') {
-      // Find annotation under mouse and delete it
-      const pageAnnots = annotations.filter((a) => a.pageIndex === currentPageIndex);
-      const clicked = pageAnnots.find((a) => {
-        if (a.type === 'text') {
-          return (
-            coords.x >= a.x &&
-            coords.x <= a.x + 150 &&
-            coords.y >= a.y &&
-            coords.y <= a.y + a.fontSize + 10
-          );
-        } else if (a.type === 'shape' || a.type === 'image') {
-          return (
-            coords.x >= a.x &&
-            coords.x <= a.x + a.width &&
-            coords.y >= a.y &&
-            coords.y <= a.y + a.height
-          );
-        }
-        return false;
-      });
       if (clicked) {
         pushHistory(annotations.filter((a) => a.id !== clicked.id));
       }
@@ -348,38 +433,32 @@ export const EditPdfTool: React.FC = () => {
     }
 
     if (activeMode === 'text') {
-      const input = prompt('Enter text to place on PDF:', 'Type text here');
-      if (input && input.trim()) {
-        const newTextAnn: PdfAnnotation = {
-          id: Date.now().toString(36),
-          type: 'text',
-          pageIndex: currentPageIndex,
-          x: coords.x,
-          y: coords.y,
-          text: input.trim(),
-          fontSize: fontSize,
-          colorHex: textColor,
-        };
-        pushHistory([...annotations, newTextAnn]);
-      }
+      setTextModal({
+        show: true,
+        mode: 'text',
+        title: 'Add Text to PDF',
+        coords,
+        inputValue: '',
+      });
     } else if (activeMode === 'editText') {
-      // Find text annotation to edit
-      const target = annotations.find(
-        (a) =>
-          a.pageIndex === currentPageIndex &&
-          a.type === 'text' &&
-          coords.x >= a.x - 10 &&
-          coords.x <= a.x + 200 &&
-          coords.y >= a.y - 10 &&
-          coords.y <= a.y + 40
-      );
-      if (target && target.type === 'text') {
-        const updated = prompt('Edit text content:', target.text);
-        if (updated !== null && updated.trim()) {
-          pushHistory(
-            annotations.map((a) => (a.id === target.id ? { ...a, text: updated.trim() } : a))
-          );
-        }
+      if (clicked && clicked.type === 'text') {
+        setTextModal({
+          show: true,
+          mode: 'editText',
+          title: 'Edit Text Content',
+          coords,
+          inputValue: clicked.text,
+          targetId: clicked.id,
+        });
+      } else {
+        // If clicked in whitespace in editText mode, also allow adding text
+        setTextModal({
+          show: true,
+          mode: 'text',
+          title: 'Add Text to PDF',
+          coords,
+          inputValue: '',
+        });
       }
     } else if (activeMode === 'pencil') {
       setIsDrawing(true);
@@ -414,7 +493,6 @@ export const EditPdfTool: React.FC = () => {
       };
       pushHistory([...annotations, newEllipse]);
     } else if (activeMode === 'cross') {
-      // Stamp Red Cross
       const newCross: PdfAnnotation = {
         id: Date.now().toString(36),
         type: 'text',
@@ -427,7 +505,6 @@ export const EditPdfTool: React.FC = () => {
       };
       pushHistory([...annotations, newCross]);
     } else if (activeMode === 'check') {
-      // Stamp Green Checkmark
       const newCheck: PdfAnnotation = {
         id: Date.now().toString(36),
         type: 'text',
@@ -440,46 +517,64 @@ export const EditPdfTool: React.FC = () => {
       };
       pushHistory([...annotations, newCheck]);
     } else if (activeMode === 'annotation') {
-      const comment = prompt('Enter sticky note / comment annotation:', 'Note: Review this section');
-      if (comment && comment.trim()) {
-        const newNote: PdfAnnotation = {
-          id: Date.now().toString(36),
-          type: 'text',
-          pageIndex: currentPageIndex,
-          x: coords.x,
-          y: coords.y,
-          text: `💬 ${comment.trim()}`,
-          fontSize: 14,
-          colorHex: '#d97706',
-        };
-        pushHistory([...annotations, newNote]);
-      }
+      setTextModal({
+        show: true,
+        mode: 'annotation',
+        title: 'Add Sticky Note / Comment',
+        coords,
+        inputValue: '',
+      });
     } else if (activeMode === 'link') {
-      const url = prompt('Enter URL link for hyperlink box:', 'https://');
-      if (url && url.trim()) {
-        const newLink: PdfAnnotation = {
-          id: Date.now().toString(36),
-          type: 'text',
-          pageIndex: currentPageIndex,
-          x: coords.x,
-          y: coords.y,
-          text: `🔗 ${url.trim()}`,
-          fontSize: 14,
-          colorHex: '#2563eb',
-        };
-        pushHistory([...annotations, newLink]);
-      }
+      setTextModal({
+        show: true,
+        mode: 'link',
+        title: 'Add Hyperlink Box',
+        coords,
+        inputValue: 'https://',
+      });
     }
   };
 
   const handleCanvasMouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
+    const coords = getCanvasCoordinates(e);
+
+    if (isDragging && selectedAnnId) {
+      const dx = coords.x - dragStart.x;
+      const dy = coords.y - dragStart.y;
+
+      setAnnotations((prev) =>
+        prev.map((a) => {
+          if (a.id !== selectedAnnId) return a;
+          if (a.type === 'drawing') {
+            return {
+              ...a,
+              points: a.points.map((p) => ({ x: p.x + dx, y: p.y + dy })),
+            };
+          }
+          return {
+            ...a,
+            x: a.x + dx,
+            y: a.y + dy,
+          };
+        })
+      );
+      setDragStart(coords);
+      return;
+    }
+
     if (activeMode === 'pencil' && isDrawing) {
-      const coords = getCanvasCoordinates(e);
       setCurrentDrawPoints((prev) => [...prev, coords]);
     }
   };
 
   const handleCanvasMouseUp = () => {
+    if (isDragging && selectedAnnId) {
+      setIsDragging(false);
+      setHistoryStack((prev) => [...prev, annotations]);
+      setRedoStack([]);
+      return;
+    }
+
     if (activeMode === 'pencil' && isDrawing) {
       setIsDrawing(false);
       if (currentDrawPoints.length > 1) {
@@ -1028,7 +1123,7 @@ export const EditPdfTool: React.FC = () => {
             {/* CANVAS WORKSPACE VIEWPORT */}
             <div
               ref={containerRef}
-              className="flex-1 p-8 overflow-auto flex items-center justify-center relative min-h-[550px]"
+              className="flex-1 p-8 overflow-auto flex relative min-h-[550px]"
             >
               {(() => {
                 const currentThumb = thumbnails[currentPageIndex];
@@ -1041,7 +1136,7 @@ export const EditPdfTool: React.FC = () => {
 
                 return (
                   <div
-                    className="relative shadow-2xl rounded-lg overflow-hidden bg-white border border-slate-300 transition-all duration-150 shrink-0"
+                    className="relative shadow-2xl rounded-lg overflow-hidden bg-white border border-slate-300 transition-all duration-150 shrink-0 m-auto"
                     style={{ width: `${cssWidth}px`, height: `${cssHeight}px` }}
                   >
                     <canvas
@@ -1140,6 +1235,74 @@ export const EditPdfTool: React.FC = () => {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* TEXT / ANNOTATION INPUT MODAL */}
+      {textModal.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+                <Type className="w-5 h-5 text-indigo-600" />
+                <span>{textModal.title}</span>
+              </h3>
+              <button
+                onClick={() => setTextModal((prev) => ({ ...prev, show: false }))}
+                className="p-1 text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleTextModalSubmit();
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-medium text-slate-700 mb-1">
+                  {textModal.mode === 'link'
+                    ? 'Enter Target URL:'
+                    : textModal.mode === 'annotation'
+                    ? 'Enter Comment / Sticky Note:'
+                    : 'Text Content:'}
+                </label>
+                <input
+                  type="text"
+                  autoFocus
+                  value={textModal.inputValue}
+                  onChange={(e) => setTextModal((prev) => ({ ...prev, inputValue: e.target.value }))}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  placeholder={
+                    textModal.mode === 'link'
+                      ? 'https://example.com'
+                      : textModal.mode === 'annotation'
+                      ? 'Note: Review section 3'
+                      : 'Enter text...'
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setTextModal((prev) => ({ ...prev, show: false }))}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md cursor-pointer"
+                >
+                  Apply to PDF
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
