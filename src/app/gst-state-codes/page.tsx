@@ -5,7 +5,7 @@ import { STATE_CODE_FAQS } from "./faqs";
 export const metadata: Metadata = {
   title: "GST State Code List 2026: All States & UTs (01–38)",
   description:
-    "Complete list of GST state codes for all 28 States and 8 Union Territories (01 to 38, plus 97 and the old Andhra Pradesh code 28). Search by name or code, copy in one click, and validate a GSTIN.",
+    "GST state code list: Delhi 07, Gujarat 24, Maharashtra 27, Karnataka 29, Tamil Nadu 33, Uttar Pradesh 09 and every other State and UT (01–38, plus 97). Search by name or code and copy in one click.",
   keywords: [
     "GST state codes",
     "GST state code list",

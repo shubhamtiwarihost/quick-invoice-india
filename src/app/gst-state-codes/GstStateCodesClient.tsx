@@ -111,7 +111,7 @@ export default function GstStateCodesClient() {
             Official CBIC 2-Digit GST Jurisdiction Directory
           </div>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Indian GST State Codes & Capitals Directory
+            GST State Code List: All Indian States & Union Territories
           </h1>
           <p className="mt-1 text-sm text-slate-600 max-w-3xl">
             Searchable directory of all {totalCodes} GST state codes: 28 States, 8 Union Territories, the older Andhra Pradesh code and Other Territory. Look up any 2-digit code, copy it in one click, and validate a GSTIN instantly.
