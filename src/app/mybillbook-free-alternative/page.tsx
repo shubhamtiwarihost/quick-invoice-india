@@ -13,6 +13,27 @@ import {
   HardDriveDownload,
 } from "lucide-react";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_MYBILLBOOK_FREE_ALTERNATIVE: GuideBlock[] = [
+  {
+    "heading": "Where SwiftGST fits",
+    "bullets": [
+      "You want quick invoices without creating an account.",
+      "You bill from a laptop or phone and want a clean PDF to share on WhatsApp.",
+      "You want a free tool for small, occasional billing."
+    ]
+  },
+  {
+    "heading": "When myBillBook may suit you better",
+    "bullets": [
+      "You need cloud sync across devices and team members.",
+      "You want built-in e-invoicing, e-way bill generation or return filing.",
+      "You need payment reminders and reports that update across a whole team."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Free myBillBook Alternative for GST Invoicing",
@@ -326,6 +347,7 @@ export default function MyBillBookAlternativePage() {
           Start Billing in Browser Now
         </Link>
       </section>
+    <GuideExtras title="Is SwiftGST the right fit compared with myBillBook?" blocks={EXTRAS_MYBILLBOOK_FREE_ALTERNATIVE} />
     </main>
   );
 }

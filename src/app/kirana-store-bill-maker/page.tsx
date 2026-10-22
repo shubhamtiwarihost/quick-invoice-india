@@ -9,6 +9,32 @@ import {
 } from "lucide-react";
 import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_KIRANA_STORE_BILL_MAKER: GuideBlock[] = [
+  {
+    "heading": "Tax invoice, bill of supply or composition?",
+    "paragraphs": [
+      "A regular GST dealer issues a tax invoice. A composition dealer, who pays tax as a small percentage of turnover, issues a bill of supply and cannot charge GST separately. Switch GST off in the generator to make a bill of supply."
+    ]
+  },
+  {
+    "heading": "Small cash sales to walk-in customers",
+    "paragraphs": [
+      "For supplies to unregistered customers under ₹200, GST rules allow you to skip a separate invoice unless the customer asks for one, and to issue a consolidated invoice at the end of the day. Many stores still print a bill for every sale because customers expect one."
+    ]
+  },
+  {
+    "heading": "Getting rates right on the shelf",
+    "bullets": [
+      "Many staples such as loose, unbranded rice and flour are nil-rated, while the same item pre-packed and branded can be 5%.",
+      "Biscuits, namkeen and packaged foods saw rate changes on 22 September 2025, so check older saved items.",
+      "Use the HSN finder on this site to confirm a code and rate before you save an item.",
+      "Keep auto round-off on so the total comes to a whole rupee."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Kirana Store Bill Maker & GST Invoice Generator",
@@ -296,6 +322,7 @@ export default function KiranaStoreBillMakerPage() {
                 </Link>
               </div>
             </section>
+          <GuideExtras title="Billing notes for kirana and grocery stores" blocks={EXTRAS_KIRANA_STORE_BILL_MAKER} />
           </article>
         }
       />

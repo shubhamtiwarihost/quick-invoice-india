@@ -12,6 +12,27 @@ import {
   FileSpreadsheet,
 } from "lucide-react";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_CLEARTAX_FREE_ALTERNATIVE: GuideBlock[] = [
+  {
+    "heading": "Where SwiftGST fits",
+    "bullets": [
+      "You only need a fast invoice or a GST calculation without logging in.",
+      "You are a freelancer, boutique or kirana owner with simple billing.",
+      "You want free tools that explain the current GST 2.0 rates."
+    ]
+  },
+  {
+    "heading": "When ClearTax may suit you better",
+    "bullets": [
+      "You file GST returns or need ITC reconciliation.",
+      "You need e-invoicing (IRN) for a larger business.",
+      "Your CA works inside ClearTax and wants your data there."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Free ClearTax Alternative for GST Invoicing",
@@ -325,6 +346,7 @@ export default function ClearTaxAlternativePage() {
           Start Free Invoicing Now
         </Link>
       </section>
+    <GuideExtras title="Is SwiftGST the right fit compared with ClearTax?" blocks={EXTRAS_CLEARTAX_FREE_ALTERNATIVE} />
     </main>
   );
 }

@@ -12,6 +12,27 @@ import {
   Users,
 } from "lucide-react";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_VYAPAR_FREE_ALTERNATIVE: GuideBlock[] = [
+  {
+    "heading": "Where SwiftGST fits",
+    "bullets": [
+      "You want to start billing right now in a browser, with no install or signup.",
+      "You mainly need GST invoices, POS bills and a customer ledger on one device.",
+      "You prefer your data to stay in your own browser."
+    ]
+  },
+  {
+    "heading": "When Vyapar may suit you better",
+    "bullets": [
+      "You need several staff logins or multiple branches synced together.",
+      "You want a full accounting module or integrations.",
+      "You want a dedicated offline desktop or mobile app with cloud backup."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Free Vyapar Alternative — No Watermark, Zero Fees",
@@ -335,6 +356,7 @@ export default function VyaparAlternativePage() {
         </div>
         <FaqAccordion items={VYAPAR_FAQS} />
       </section>
+    <GuideExtras title="Is SwiftGST the right fit compared with Vyapar?" blocks={EXTRAS_VYAPAR_FREE_ALTERNATIVE} />
     </main>
   );
 }

@@ -10,6 +10,32 @@ import {
 } from "lucide-react";
 import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_BOUTIQUE_INVOICE_GENERATOR: GuideBlock[] = [
+  {
+    "heading": "Goods or service?",
+    "paragraphs": [
+      "If you sell ready-made garments, you are supplying goods and use an HSN code. If you stitch cloth the customer brings, you are supplying a service (job work) and use SAC 998822. The rate and the invoice description differ, so keep the two types on separate lines."
+    ]
+  },
+  {
+    "heading": "The ₹2,500 garment threshold",
+    "paragraphs": [
+      "Under GST 2.0, apparel priced up to ₹2,500 per piece is taxed at 5%, and apparel above ₹2,500 per piece at 18%. Check the price per piece, not the invoice total, when you pick the slab."
+    ]
+  },
+  {
+    "heading": "Good habits for made-to-order work",
+    "bullets": [
+      "Record advances taken at booking and show the balance on the final invoice.",
+      "Add measurements or the order number in the notes field so the bill matches the job card.",
+      "Show a clear delivery date and your alteration policy under terms.",
+      "Share the PDF on WhatsApp straight from the invoice screen."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Boutique & Tailoring GST Invoice Generator",
@@ -291,6 +317,7 @@ export default function BoutiqueInvoiceGeneratorPage() {
                 </Link>
               </div>
             </section>
+          <GuideExtras title="Tax notes for boutiques and tailors" blocks={EXTRAS_BOUTIQUE_INVOICE_GENERATOR} />
           </article>
         }
       />

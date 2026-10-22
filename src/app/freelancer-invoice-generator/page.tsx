@@ -10,6 +10,32 @@ import {
 } from "lucide-react";
 import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_FREELANCER_INVOICE_GENERATOR: GuideBlock[] = [
+  {
+    "heading": "When do you need GST registration?",
+    "paragraphs": [
+      "A service provider generally must register once aggregate turnover crosses ₹20 lakh in a financial year (₹10 lakh in most special category states). Below that you can still register voluntarily, which lets business clients claim input tax credit on your invoices. Until you are registered, issue a plain invoice without GST."
+    ]
+  },
+  {
+    "heading": "Invoicing clients outside India",
+    "paragraphs": [
+      "Services exported to a client abroad can be zero-rated under IGST, either by paying IGST and claiming a refund or by supplying under a Letter of Undertaking (LUT) without paying tax. Mention the LUT details on the invoice and set the GST slab to 0% for those line items."
+    ]
+  },
+  {
+    "heading": "Habits that keep invoices clean",
+    "bullets": [
+      "Use one numbering series per financial year and never reuse a number.",
+      "Write the SAC code and a clear description for every line, for example 998314 for IT design and development.",
+      "Put your payment terms and due date on the invoice, and record advance payments separately.",
+      "If a company client deducts TDS, your invoice value stays the same; the deduction shows up when they pay you."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Freelancer Invoice Generator India (GST & Non-GST)",
@@ -292,6 +318,7 @@ export default function FreelancerInvoiceGeneratorPage() {
                 </Link>
               </div>
             </section>
+          <GuideExtras title="Practical notes for freelancers and consultants" blocks={EXTRAS_FREELANCER_INVOICE_GENERATOR} />
           </article>
         }
       />

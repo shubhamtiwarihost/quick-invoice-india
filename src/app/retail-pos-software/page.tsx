@@ -13,6 +13,33 @@ import {
   WifiOff,
 } from "lucide-react";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_RETAIL_POS_SOFTWARE: GuideBlock[] = [
+  {
+    "heading": "Hardware that works",
+    "bullets": [
+      "Barcode scanner: most USB and Bluetooth scanners behave like a keyboard, so they work without drivers.",
+      "Receipt printer: 58 mm and 80 mm thermal printers are the common sizes for counter bills.",
+      "Device: a phone, tablet or PC with a modern browser is enough."
+    ]
+  },
+  {
+    "heading": "End-of-day routine",
+    "bullets": [
+      "Compare cash in the drawer against the day's cash sales.",
+      "Check low-stock items before ordering.",
+      "Export the GSTR-1 CSV from saved invoices at month end for your accountant."
+    ]
+  },
+  {
+    "heading": "Know the limits",
+    "paragraphs": [
+      "SwiftGST keeps data in your browser, so it suits a single counter. Clearing browser data removes it, so download your PDFs and CSVs regularly. It does not file returns or generate e-way bills; those are done on the GST portal."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Free Retail POS Billing Software India",
@@ -294,6 +321,7 @@ export default function RetailPosSoftwarePage() {
         </div>
         <FaqAccordion items={POS_FAQS} />
       </section>
+    <GuideExtras title="Setting up a retail counter" blocks={EXTRAS_RETAIL_POS_SOFTWARE} />
     </main>
   );
 }

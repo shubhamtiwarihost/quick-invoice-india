@@ -1,6 +1,29 @@
 import type { Metadata } from "next";
 import { QuotationWorkspace } from "@/components/quotation/QuotationWorkspace";
 import { QuotationComplianceGuide, QUOTATION_FAQS } from "@/components/quotation/QuotationComplianceGuide";
+import { GuideExtras, type GuideBlock } from "@/components/shared/GuideExtras";
+
+const EXTRAS_QUOTATION_MAKER: GuideBlock[] = [
+  {
+    "heading": "Which document do you need?",
+    "bullets": [
+      "A quotation or estimate is an offer of price. It is not a tax document and creates no GST liability.",
+      "A proforma invoice is a preview of the final bill, often used for advance payment or customs. It is not a tax invoice.",
+      "A tax invoice is issued when you supply the goods or services and is what the buyer uses to claim input tax credit."
+    ]
+  },
+  {
+    "heading": "Writing a quote that gets accepted",
+    "bullets": [
+      "State how long the price is valid.",
+      "Itemise quantity, rate and GST so the buyer sees the final amount.",
+      "List what is included and excluded.",
+      "Add payment terms, such as an advance percentage.",
+      "Once accepted, convert the quote to a tax invoice so figures carry over."
+    ]
+  }
+];
+
 
 export const metadata: Metadata = {
   title: "Free Estimate & Quotation Maker (GST Compliant)",
@@ -75,7 +98,14 @@ export default function QuotationMakerPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
       />
-      <QuotationWorkspace childrenBelowWorkspace={<QuotationComplianceGuide />} />
+      <QuotationWorkspace
+        childrenBelowWorkspace={
+          <>
+            <QuotationComplianceGuide />
+            <div className="px-4 pb-12"><GuideExtras title="Quotation, proforma invoice and tax invoice: what is the difference?" blocks={EXTRAS_QUOTATION_MAKER} /></div>
+          </>
+        }
+      />
     </>
   );
 }
