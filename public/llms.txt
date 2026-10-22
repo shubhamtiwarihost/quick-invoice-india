@@ -42,7 +42,7 @@ SwiftGST (https://swiftgst.in) eliminates subscription paywalls and telemarketin
 
 ## Competitive Alternatives & Advantages
 
-- [Vyapar Free Alternative](https://swiftgst.in/vyapar-free-alternative/): Permanent 100% free alternative to Vyapar. No ₹2,999/yr subscription fee, no 100MB download, zero watermarks on bills.
+- [Vyapar Free Alternative](https://swiftgst.in/vyapar-free-alternative/): Permanent 100% free alternative to Vyapar. No subscription, no download, zero watermarks on bills.
 - [ClearTax Free Alternative](https://swiftgst.in/cleartax-free-alternative/): Browser-based alternative to ClearTax with private on-device processing and GSTR-1 CSV export.
 - [myBillBook Free Alternative](https://swiftgst.in/mybillbook-free-alternative/): Mobile and desktop web billing alternative with zero signup requirement and free WhatsApp sharing.
 - [Retail POS Billing Software India](https://swiftgst.in/retail-pos-software/): Guide to modern browser POS counters, thermal printers, and barcode scanners.

@@ -16,7 +16,7 @@ import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 export const metadata: Metadata = {
   title: "Free Vyapar Alternative — No Watermark, Zero Fees",
   description:
-    "Looking for a 100% free alternative to Vyapar billing software? SwiftGST requires no costly ₹2,999+ yearly renewal, no 100MB software download, and leaves zero watermarks on bills. Includes retail POS, barcode inventory, customer Khata & instant PDF/thermal receipts.",
+    "Looking for a 100% free alternative to Vyapar billing software? SwiftGST requires no paid plan or yearly renewal, no software download, and leaves zero watermarks on bills. Includes retail POS, barcode inventory, customer Khata & instant PDF/thermal receipts.",
   keywords: [
     "vyapar alternative",
     "free vyapar alternative",
@@ -50,19 +50,19 @@ export const metadata: Metadata = {
 const COMPARISON_ROWS = [
   {
     feature: "Annual License Cost / Subscription",
-    vyapar: "₹2,999 to ₹6,999 / year per device",
+    vyapar: "Paid plans for full features (check Vyapar's site for current pricing)",
     swiftgst: "100% Free forever (₹0) — zero hidden charges",
     swiftAdvantage: true,
   },
   {
     feature: "Bill / Invoice Watermarks",
-    vyapar: "Mandatory 'Made with Vyapar' branding on free versions",
+    vyapar: "Branding may appear on free plans (check current terms)",
     swiftgst: "100% White-label — zero watermarks or company logos",
     swiftAdvantage: true,
   },
   {
     feature: "Installation & Storage Footprint",
-    vyapar: "Heavy 100MB+ desktop/mobile executable download",
+    vyapar: "Desktop and mobile app install",
     swiftgst: "0 MB install — runs in any browser, PWA offline ready",
     swiftAdvantage: true,
   },
@@ -108,7 +108,7 @@ const VYAPAR_FAQS: FaqItem[] = [
   {
     question: "Why are Indian shopkeepers switching from Vyapar to SwiftGST?",
     answer:
-      "Vyapar originally attracted merchants with free features, but later locked critical functions behind annual subscription paywalls ranging from ₹2,999 to ₹6,999/year per device. Merchants without active licenses face annoying watermark banners and locked reports. SwiftGST was built to provide a permanent, 100% free solution with high-speed POS billing, thermal printing, barcode scanning, and GSTR-1 compliance without any subscription fees.",
+      "Vyapar is a full-featured desktop and mobile billing suite, and many of its advanced features are on paid plans (see Vyapar's site for current pricing). SwiftGST was built to provide a permanent, 100% free solution with high-speed POS billing, thermal printing, barcode scanning, and GSTR-1 compliance without any subscription fees.",
   },
   {
     question: "Do I need to download or install any heavy software for PC?",
@@ -183,7 +183,7 @@ export default function VyaparAlternativePage() {
           The 100% Free Alternative to Vyapar Billing Software
         </h1>
         <p className="mt-3 text-sm md:text-base leading-relaxed text-teal-100 max-w-3xl">
-          Tired of paying ₹2,999 to ₹6,999 every year just to print retail bills without watermarks? Switch to SwiftGST: zero annual fees, zero software download, retail POS with barcode scanning, thermal printing &amp; customer Khata.
+          Want to print retail bills without a subscription or watermark? Switch to SwiftGST: zero annual fees, zero software download, retail POS with barcode scanning, thermal printing &amp; customer Khata.
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -300,7 +300,7 @@ export default function VyaparAlternativePage() {
       <section className="mt-16 rounded-3xl bg-slate-900 p-8 md:p-12 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="max-w-2xl">
           <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            Ready to stop paying ₹3,000+ yearly for billing software?
+            Looking for free billing software with no yearly renewal?
           </h2>
           <p className="mt-2 text-xs md:text-sm text-slate-300 leading-relaxed">
             Start billing in seconds. No app downloads, no subscriptions, and complete offline capability.

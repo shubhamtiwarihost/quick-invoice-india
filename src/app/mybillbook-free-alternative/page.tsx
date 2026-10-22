@@ -107,7 +107,7 @@ const MYBILLBOOK_FAQS: FaqItem[] = [
   {
     question: "Do I have to pay any subscription fee to use SwiftGST on my desktop computer?",
     answer:
-      "No. While myBillBook charges ₹2,500 to ₹5,000+ per year for desktop computer access, SwiftGST is completely free on all devices—including laptops, desktops, tablets, and smartphones.",
+      "No. SwiftGST is completely free on all devices—including laptops, desktops, tablets, and smartphones.",
   },
   {
     question: "Can I share invoices directly to my customer's WhatsApp for free?",

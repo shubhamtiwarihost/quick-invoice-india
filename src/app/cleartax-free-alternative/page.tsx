@@ -289,7 +289,7 @@ export default function ClearTaxAlternativePage() {
           Why Indian SMBs and Freelancers Are Switching to SwiftGST
         </h3>
         <p>
-          ClearTax built a massive software platform for corporate tax returns and large enterprises. Over time, their free tools became lead-generation funnels. Small business owners, boutique designers, kirana merchants, and freelance developers found that creating a quick 3-item invoice meant handing over their personal phone number, dealing with OTP logins, and receiving high-pressure sales calls for ₹5,000+ software suites.
+          ClearTax built a massive software platform for corporate tax returns and large enterprises. ClearTax is aimed mainly at larger businesses and filing workflows. For a quick 3-item invoice, small business owners, boutique designers, kirana merchants and freelancers often want something lighter: no login and no setup. That is the gap SwiftGST is built for.
         </p>
         <p>
           SwiftGST was created with a straightforward mission: provide Indian entrepreneurs with an instant, private, and 100% free tool that handles GST calculation, dynamic UPI QR payment generation, and pixel-perfect A4 printing without corporate baggage.

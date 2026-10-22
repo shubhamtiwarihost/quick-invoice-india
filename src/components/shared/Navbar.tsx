@@ -547,7 +547,7 @@ export function Navbar() {
               </div>
               <span>Explore All Tools &amp; Utilities Hub</span>
             </div>
-            <span className="text-[10px] rounded-full bg-teal-100 text-teal-800 px-2 py-0.5 font-semibold">13+ Tools</span>
+            <span className="text-[10px] rounded-full bg-teal-100 text-teal-800 px-2 py-0.5 font-semibold">All Tools</span>
           </Link>
 
           {/* Primary Public Tools on Mobile */}

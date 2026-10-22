@@ -13,7 +13,7 @@ import {
 export const metadata: Metadata = {
   title: "Disclaimer & Legal Tax Notice",
   description:
-    "Official non-government legal disclaimer for SwiftGST (swiftgst.in). SwiftGST is an independent software tool not affiliated with the Goods and Services Tax Network (GSTN) or CBIC.",
+    "Disclaimer for SwiftGST (swiftgst.in). SwiftGST is an independent software tool not affiliated with the Goods and Services Tax Network (GSTN) or CBIC.",
   keywords: [
     "SwiftGST disclaimer",
     "non-government GST disclaimer",
@@ -40,13 +40,13 @@ export default function DisclaimerPage() {
       <div className="rounded-3xl border border-amber-300/80 bg-gradient-to-br from-amber-950 via-slate-900 to-slate-900 p-8 md:p-12 text-white shadow-lg">
         <div className="inline-flex items-center gap-2 rounded-full bg-amber-500/20 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-300 border border-amber-400/20 mb-4">
           <AlertTriangle className="h-3.5 w-3.5" />
-          <span>Statutory Notice &amp; Disclaimers</span>
+          <span>Important Notices</span>
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
           Legal &amp; Tax Disclaimer
         </h1>
         <p className="mt-2 text-xs text-amber-200/90 font-medium">
-          <em>Last Revised &amp; Verified: September 2026</em>
+          <em>Last updated: October 2026</em>
         </p>
         <p className="mt-4 text-base sm:text-lg text-amber-100/90 leading-relaxed font-normal max-w-3xl">
           Please read this legal notice carefully before utilizing any invoicing, calculation, or compliance tools provided on SwiftGST (
@@ -147,9 +147,10 @@ export default function DisclaimerPage() {
             </div>
           </div>
           <p>
-            While our development team takes rigorous care to calibrate calculation engines against official GST rounding norms
-            under Rule 46 (e.g. half-even rounding, 2-decimal fractional rupee handling, and intra/inter-state tax splitting),
-            SwiftGST provides no guarantee of absolute mathematical accuracy or statutory fitness for any specific commercial transaction.
+            SwiftGST calculates tax to two decimals using standard half-up rounding, and splits tax into CGST/SGST or IGST based on the
+            states you select. We aim to keep calculations and rates current with GST 2.0 (slabs of 0%, 5%, 18% and 40%, plus 3% for gold
+            and jewellery, effective 22 September 2025), but we provide no guarantee of accuracy or fitness for any specific transaction.
+            HSN/SAC rates shown are a convenience reference, not a legal notification.
           </p>
           <p>
             Users are advised to double-check their exported PDF figures, applicable cess components, and reverse charge applicability

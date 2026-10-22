@@ -48,7 +48,7 @@ export default function PrivacyPolicyPage() {
           Privacy Policy
         </h1>
         <p className="mt-2 text-xs text-teal-200/90 font-medium">
-          <em>Effective Date: September 2024 · Last Revised &amp; Verified: September 2026</em>
+          <em>Effective Date: September 2024 · Last updated: October 2026</em>
         </p>
         <p className="mt-4 text-base sm:text-lg text-teal-100/90 leading-relaxed font-normal max-w-3xl">
           At SwiftGST (accessible via{" "}

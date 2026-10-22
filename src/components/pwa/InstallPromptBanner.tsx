@@ -103,7 +103,7 @@ export function InstallPromptBanner() {
             <div className="flex items-center gap-1.5">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
-                Official Android PWA
+                Install as an app
               </p>
             </div>
             <h4 className="text-sm font-bold text-slate-900 leading-tight">
