@@ -141,7 +141,7 @@ export function AnalyticsComplianceGuide() {
             </p>
             <p>
               When reporting retail sales in <strong>Form GSTR-1</strong>, B2C transactions are consolidated under Table 7 (B2C Small)
-              classified by Place of Supply (POS) and GST tax rate (0%, 5%, 12%, 18%, 28%). Maintaining an exportable sales register
+              classified by Place of Supply (POS) and GST tax rate (0%, 5%, 18%, 40%, and older 12%/28% sales). Maintaining an exportable sales register
               with pre-split CGST and SGST columns ensures that tax filings reconcile seamlessly against your bank statements, eliminating
               costly departmental notices under Section 61.
             </p>

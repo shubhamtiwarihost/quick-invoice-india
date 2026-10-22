@@ -123,7 +123,7 @@ export function HomeComplianceGuide() {
               { num: "08", title: "Quantity & Unit of Measurement (UOM)", desc: "Count, metric volume, hours, meters, kilograms, or pieces." },
               { num: "09", title: "Total Value of Supply", desc: "Gross commercial price before discounts and trade rebates." },
               { num: "10", title: "Taxable Value of Supply", desc: "Net assessable base value upon which GST rates are mathematically applied." },
-              { num: "11", title: "Applicable Tax Slabs", desc: "Clear identification of CGST, SGST, IGST, or Cess percentages (0%, 5%, 12%, 18%, 28%)." },
+              { num: "11", title: "Applicable Tax Slabs", desc: "Clear identification of CGST, SGST, IGST, or Cess percentages (0%, 5%, 18% or 40%)." },
               { num: "12", title: "Tax Amount Charged", desc: "Exact rupee amount of central tax, state tax, and integrated tax charged." },
               { num: "13", title: "Place of Supply & State Code", desc: "Destination state name and 2-digit GST state code under the IGST Act." },
               { num: "14", title: "Delivery Destination Address", desc: "Explicit consignee address if different from the primary billing address." },

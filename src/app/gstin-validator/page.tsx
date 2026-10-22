@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import GstinValidatorClient from "./GstinValidatorClient";
+import { GstinGuide, GSTIN_FAQS } from "@/components/gstin/GstinGuide";
 
 export const metadata: Metadata = {
-  title: "GSTIN Validator & Checksum Checker — SwiftGST",
+  title: "GSTIN Validator & Checksum Checker",
   description:
     "Verify 15-digit Indian GSTIN format and official MOD 36 check digit. Get instant breakdown of State Code, PAN number, Entity Type, and validity status.",
   keywords: [
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     canonical: "https://swiftgst.in/gstin-validator/",
   },
   openGraph: {
-    title: "GSTIN Validator & Checksum Checker — SwiftGST",
+    title: "GSTIN Validator & Checksum Checker",
     description:
       "Verify 15-digit Indian GSTIN format, 2-digit state code, PAN entity, and MOD 36 check digit online.",
     url: "https://swiftgst.in/gstin-validator/",
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GSTIN Validator & MOD 36 Checksum Checker — SwiftGST",
+    title: "GSTIN Validator & MOD 36 Checksum Checker",
     description:
       "Free online 15-digit Indian GSTIN number validation and entity analysis.",
   },
@@ -51,11 +52,28 @@ export default function GstinValidatorPage() {
       "Verify 15-digit Indian GSTIN structure, MOD 36 algorithm check digit, and taxpayer registration state.",
   };
 
+  const jsonLdFaq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: GSTIN_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: typeof faq.answer === "string" ? faq.answer : faq.question,
+      },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
       />
       <Suspense
         fallback={
@@ -81,6 +99,7 @@ export default function GstinValidatorPage() {
       >
         <GstinValidatorClient />
       </Suspense>
+      <GstinGuide />
     </>
   );
 }

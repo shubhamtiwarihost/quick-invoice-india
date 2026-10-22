@@ -29,7 +29,7 @@ export const INVENTORY_FAQS: FaqItem[] = [
   {
     question: "What are the columns required for bulk CSV product catalog uploads?",
     answer:
-      "The SwiftGST bulk CSV importer accepts standard tabular columns: 'Name' (Product Title), 'Category' (e.g., Grocery, Beverages, Apparel), 'Barcode' (UPC, EAN-13, or custom SKU), 'HSN' (4 to 8 digit code), 'Cost Price' (Purchase cost in INR), 'Sale Price' (Selling retail price), 'GST Rate' (0, 5, 12, 18, 28), 'Stock' (Current in-hand units), and 'Min Stock' (Low-inventory reorder alert threshold).",
+      "The SwiftGST bulk CSV importer accepts standard tabular columns: 'Name' (Product Title), 'Category' (e.g., Grocery, Beverages, Apparel), 'Barcode' (UPC, EAN-13, or custom SKU), 'HSN' (4 to 8 digit code), 'Cost Price' (Purchase cost in INR), 'Sale Price' (Selling retail price), 'GST Rate' (0, 3, 5, 18, 40), 'Stock' (Current in-hand units), and 'Min Stock' (Low-inventory reorder alert threshold).",
   },
   {
     question: "How does the low-stock alert threshold work?",
@@ -88,7 +88,7 @@ export function InventoryComplianceGuide() {
                 <span>Add &amp; Map Products</span>
               </div>
               <p className="leading-relaxed">
-                Click &quot;Add Product&quot; to enter item name, selling price, purchase cost, HSN code, and assigned GST tax slab (0%, 5%, 12%, 18%, 28%). Enter or scan barcode numbers for instant POS lookup.
+                Click &quot;Add Product&quot; to enter item name, selling price, purchase cost, HSN code, and assigned GST tax slab (0%, 3%, 5%, 18% or 40%). Enter or scan barcode numbers for instant POS lookup.
               </p>
             </div>
 

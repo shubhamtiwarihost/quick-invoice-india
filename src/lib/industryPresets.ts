@@ -178,7 +178,7 @@ export const boutiquePreset: InvoiceDraft = {
       rate: 7500,
       discountType: "percent",
       discountValue: 5,
-      gstSlab: 12,
+      gstSlab: 18,
     },
     {
       id: "bout-4",
@@ -298,7 +298,7 @@ export const kiranaPreset: InvoiceDraft = {
       rate: 285,
       discountType: "flat",
       discountValue: 5,
-      gstSlab: 12,
+      gstSlab: 5,
     },
     {
       id: "kir-5",
@@ -407,7 +407,7 @@ export const b2bPreset: InvoiceDraft = {
       rate: 120,
       discountType: "percent",
       discountValue: 5,
-      gstSlab: 12,
+      gstSlab: 5,
     },
     {
       id: "sample-3",

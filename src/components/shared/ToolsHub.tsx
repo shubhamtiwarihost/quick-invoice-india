@@ -146,7 +146,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
         href: "/gst-calculator",
         badge: "Reverse Calc",
         description:
-          "Extract base price and net tax from total gross amounts or add 5%, 12%, 18%, 28% GST with intra/inter-state breakdown.",
+          "Extract base price and net tax from total gross amounts or add GST at the current 0%, 5%, 18% and 40% slabs with intra/inter-state breakdown.",
         icon: Calculator,
       },
       {
@@ -224,7 +224,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
         href: "/boutique-invoice-generator",
         badge: "Dual Apparel Slabs",
         description:
-          "Configured for tailors, boutiques, and fashion designers with stitching SAC 998822 and standard 5%/12% apparel GST slabs.",
+          "Configured for tailors, boutiques, and fashion designers with stitching SAC 998822 and current 5%/18% apparel GST slabs.",
         icon: Scissors,
       },
       {

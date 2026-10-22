@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Store Settings & Cashier Quick-PIN — SwiftGST",
+  title: "Store Settings & Cashier Quick-PIN",
   description:
     "Configure store details, cashier lock PIN, receipt header/footer notes, GSTIN, and business category.",
   alternates: {

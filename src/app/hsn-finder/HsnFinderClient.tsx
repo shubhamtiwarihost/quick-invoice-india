@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { searchHsn } from "@/lib/hsnCodes";
+import { toGstSlab } from "@/lib/gstSlabs";
 import { useInvoiceStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
 
@@ -18,12 +19,7 @@ export default function HsnFinderClient({
   const router = useRouter();
 
   function applyToInvoice(code: string, description: string, gst: number) {
-    const slab =
-      gst === 3
-        ? 5
-        : gst === 0 || gst === 5 || gst === 12 || gst === 18 || gst === 28
-        ? gst
-        : 18;
+    const slab = toGstSlab(gst);
     const currentItems = useInvoiceStore.getState().items;
     const isSingleEmptyItem =
       currentItems.length === 1 &&
@@ -35,7 +31,7 @@ export default function HsnFinderClient({
       updateItem(currentItems[0].id, {
         description,
         hsnSac: code,
-        gstSlab: slab as 0 | 5 | 12 | 18 | 28,
+        gstSlab: slab,
       });
     } else {
       addItem();
@@ -45,7 +41,7 @@ export default function HsnFinderClient({
         updateItem(created.id, {
           description,
           hsnSac: code,
-          gstSlab: slab as 0 | 5 | 12 | 18 | 28,
+          gstSlab: slab,
         });
       }
     }
@@ -56,7 +52,7 @@ export default function HsnFinderClient({
     <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
       <h1 className="text-2xl md:text-3xl font-bold text-slate-900">HSN & SAC Code Finder</h1>
       <p className="mt-1 text-sm text-slate-500">
-        Search 4 to 8 digit HSN codes for goods and SAC codes for services with official GST tax slabs. 1-click apply to your draft invoice.
+        Search 4 to 8 digit HSN codes for goods and SAC codes for services with typical GST rates under GST 2.0 (0%, 5%, 18% and 40%). 1-click apply to your draft invoice. Always confirm the exact rate for your product in the official CBIC rate notification.
       </p>
       <input
         value={q}
@@ -83,7 +79,12 @@ export default function HsnFinderClient({
               <tr key={row.code + row.description} className="hover:bg-slate-50/70 transition">
                 <td className="px-4 py-2.5 font-mono font-bold text-xs text-teal-700">{row.code}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-600 font-medium">{row.type}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-800">{row.description}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-800">
+                  {row.description}
+                  {row.note ? (
+                    <span className="mt-0.5 block text-[11px] leading-snug text-slate-500">{row.note}</span>
+                  ) : null}
+                </td>
                 <td className="px-4 py-2.5 text-xs font-semibold text-slate-700">{row.typicalGst}%</td>
                 <td className="px-4 py-2.5 text-right">
                   <button

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Business Analytics, Profit Tracking & GSTR-1 Sales Report — SwiftGST",
+  title: "Business Analytics & GSTR-1 Sales Report",
   description:
     "Real-time retail financial pulse: gross sales, cash in drawer, UPI receipts, gross profit margin calculation, current stock valuation, and 1-click CA-compliant GSTR-1 sales register CSV export.",
   keywords: [

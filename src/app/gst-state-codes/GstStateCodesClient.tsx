@@ -14,7 +14,14 @@ import {
   Landmark,
   Compass,
 } from "lucide-react";
-import { INDIAN_STATES, type IndianState } from "@/lib/indianStates";
+import {
+  INDIAN_STATES,
+  ALL_GST_CODE_ROWS,
+  getStateByCode,
+  getStateByName,
+  type IndianState,
+} from "@/lib/indianStates";
+import { STATE_CODE_FAQS } from "./faqs";
 import { useInvoiceStore } from "@/lib/store";
 
 export default function GstStateCodesClient() {
@@ -30,7 +37,7 @@ export default function GstStateCodesClient() {
   // Filtered and sorted states
   const filteredStates = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return INDIAN_STATES.filter((st) => {
+    return ALL_GST_CODE_ROWS.filter((st) => {
       // Type filter
       if (filterType !== "all" && st.type !== filterType) return false;
       // Zone filter
@@ -61,7 +68,9 @@ export default function GstStateCodesClient() {
     }
   }
 
-  function handleCreateInvoiceForState(st: IndianState) {
+  function handleCreateInvoiceForState(row: IndianState) {
+    // Legacy codes (e.g. 28) resolve to the current state so tax logic stays intra-state.
+    const st = getStateByCode(row.code) ?? row;
     setClient({
       billingState: st.name,
       billingStateCode: st.code,
@@ -73,6 +82,24 @@ export default function GstStateCodesClient() {
 
   const stateCount = INDIAN_STATES.filter((s) => s.type === "State").length;
   const utCount = INDIAN_STATES.filter((s) => s.type === "Union Territory").length;
+  const specialRows = ALL_GST_CODE_ROWS.filter((s) => s.type === "Other");
+  const totalCodes = ALL_GST_CODE_ROWS.length;
+  const POPULAR_STATES = [
+    "Maharashtra",
+    "Delhi",
+    "Karnataka",
+    "Gujarat",
+    "Tamil Nadu",
+    "Uttar Pradesh",
+    "West Bengal",
+    "Rajasthan",
+    "Telangana",
+    "Kerala",
+    "Haryana",
+    "Madhya Pradesh",
+  ]
+    .map((name) => getStateByName(name))
+    .filter((s): s is IndianState => Boolean(s));
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
@@ -87,7 +114,7 @@ export default function GstStateCodesClient() {
             Indian GST State Codes & Capitals Directory
           </h1>
           <p className="mt-1 text-sm text-slate-600 max-w-3xl">
-            Searchable directory of all 37 Indian States, Union Territories, and central jurisdictions with official 2-digit GST codes, state capitals, 1-click copy, and instant GSTIN validation.
+            Searchable directory of all {totalCodes} GST state codes: 28 States, 8 Union Territories, the older Andhra Pradesh code and Other Territory. Look up any 2-digit code, copy it in one click, and validate a GSTIN instantly.
           </p>
         </div>
 
@@ -105,8 +132,8 @@ export default function GstStateCodesClient() {
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs">
           <p className="text-xs font-medium text-slate-500">Total Operational Codes</p>
-          <p className="mt-1 text-2xl font-bold text-slate-900">37</p>
-          <p className="mt-0.5 text-[11px] text-teal-700 font-medium">Codes 01 through 38, 97</p>
+          <p className="mt-1 text-2xl font-bold text-slate-900">{totalCodes}</p>
+          <p className="mt-0.5 text-[11px] text-teal-700 font-medium">Codes 01 through 38 (no 25), and 97</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs">
           <p className="text-xs font-medium text-slate-500">Full Indian States</p>
@@ -119,9 +146,9 @@ export default function GstStateCodesClient() {
           <p className="mt-0.5 text-[11px] text-slate-500">Includes Delhi, J&K, Ladakh</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs">
-          <p className="text-xs font-medium text-slate-500">Special Territories</p>
-          <p className="mt-1 text-2xl font-bold text-slate-900">1</p>
-          <p className="mt-0.5 text-[11px] text-slate-500">Code 97 (Center / Offshore)</p>
+          <p className="text-xs font-medium text-slate-500">Special &amp; Legacy Codes</p>
+          <p className="mt-1 text-2xl font-bold text-slate-900">{specialRows.length}</p>
+          <p className="mt-0.5 text-[11px] text-slate-500">Code 97 (offshore) and old AP code 28</p>
         </div>
       </div>
 
@@ -160,7 +187,7 @@ export default function GstStateCodesClient() {
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
-              All (37)
+              All ({totalCodes})
             </button>
             <button
               type="button"
@@ -171,7 +198,7 @@ export default function GstStateCodesClient() {
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
-              States (28)
+              States ({stateCount})
             </button>
             <button
               type="button"
@@ -182,7 +209,7 @@ export default function GstStateCodesClient() {
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
-              Union Territories (8)
+              Union Territories ({utCount})
             </button>
 
             {/* Zone Selector */}
@@ -280,6 +307,9 @@ export default function GstStateCodesClient() {
                       {/* State Name */}
                       <td className="px-4 py-3.5">
                         <p className="font-semibold text-slate-900 text-sm">{st.name}</p>
+                        {st.note ? (
+                          <p className="mt-0.5 max-w-xs text-[11px] leading-snug text-amber-700">{st.note}</p>
+                        ) : null}
                         <span className="text-[11px] text-slate-400 font-mono">
                           GSTIN Prefix: {st.code}XXXXXXXXXX
                         </span>
@@ -382,6 +412,70 @@ export default function GstStateCodesClient() {
           </div>
         </div>
 
+        {/* How to read a GSTIN */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs">
+          <h2 className="text-lg font-bold text-slate-900">How to read the state code in a GSTIN</h2>
+          <p className="mt-2 text-xs leading-relaxed text-slate-600">
+            A GSTIN has 15 characters. The state code is always the first two digits, followed by the
+            taxpayer&apos;s 10-character PAN, a registration number for that PAN in the state, the letter Z,
+            and a final checksum character.
+          </p>
+          <div className="mt-3 overflow-x-auto rounded-xl bg-slate-900 p-4 font-mono text-xs text-teal-300">
+            <p>27 ABCDE1234F 1 Z 5</p>
+            <p className="mt-1 text-slate-400">
+              ── state code · PAN · entity no. · Z · checksum
+            </p>
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-slate-600">
+            The example above is a placeholder, not a real number. A GSTIN starting with{" "}
+            <strong>27</strong> belongs to Maharashtra. To check a real number, including its checksum, use the{" "}
+            <Link href="/gstin-validator/" className="font-semibold text-teal-700 hover:underline">
+              GSTIN validator
+            </Link>
+            .
+          </p>
+        </div>
+
+        {/* Popular codes */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs">
+          <h2 className="text-lg font-bold text-slate-900">GST state codes of the most-searched states</h2>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+            {POPULAR_STATES.map((st) => (
+              <div
+                key={st.code}
+                className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3 py-2 text-xs"
+              >
+                <span className="font-medium text-slate-800">{st.name}</span>
+                <span className="font-mono font-bold text-teal-800">{st.code}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-slate-600">
+            Putting codes to work: a supplier in Maharashtra (27) selling to a buyer in Maharashtra (27)
+            charges CGST and SGST. The same supplier selling to Karnataka (29) charges IGST. Try your own
+            figures in the{" "}
+            <Link href="/gst-calculator/" className="font-semibold text-teal-700 hover:underline">
+              GST calculator
+            </Link>
+            , or check whether a movement needs an e-way bill with the{" "}
+            <Link href="/eway-bill-checker/" className="font-semibold text-teal-700 hover:underline">
+              e-way bill checker
+            </Link>
+            .
+          </p>
+        </div>
+
+        {/* Hindi summary */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs" lang="hi">
+          <h2 className="text-lg font-bold text-slate-900">GST राज्य कोड क्या है?</h2>
+          <p className="mt-2 text-xs leading-relaxed text-slate-600">
+            GSTIN के पहले दो अंक उस राज्य या केंद्र शासित प्रदेश का कोड होते हैं जहाँ व्यापार पंजीकृत है।
+            उदाहरण: उत्तर प्रदेश 09, दिल्ली 07, महाराष्ट्र 27, कर्नाटक 29, गुजरात 24, राजस्थान 08, बिहार 10,
+            मध्य प्रदेश 23। अगर विक्रेता और ग्राहक का राज्य कोड एक ही है तो CGST + SGST लगता है, और अलग
+            होने पर पूरा IGST लगता है।
+          </p>
+        </div>
+
         {/* FAQ Cards */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs">
           <div className="flex items-center gap-2">
@@ -392,41 +486,15 @@ export default function GstStateCodesClient() {
           </div>
 
           <div className="mt-4 space-y-4 text-xs">
-            <div className="border-b border-slate-100 pb-3">
-              <h3 className="font-semibold text-slate-900">
-                What happened to State Code 25 (Daman and Diu)?
-              </h3>
-              <p className="mt-1 text-slate-600 leading-relaxed">
-                Following the merger of Dadra & Nagar Haveli and Daman & Diu in January 2020, existing GSTINs starting with code 25 were migrated to code <strong>26</strong>. Today, 26 is the unified operational GST state code for Dadra and Nagar Haveli and Daman and Diu.
-              </p>
-            </div>
-
-            <div className="border-b border-slate-100 pb-3">
-              <h3 className="font-semibold text-slate-900">
-                What is GST State Code 38?
-              </h3>
-              <p className="mt-1 text-slate-600 leading-relaxed">
-                Following the Jammu and Kashmir Reorganisation Act, Ladakh was established as a separate Union Territory and assigned official GST State Code <strong>38</strong>, while Jammu and Kashmir retained State Code <strong>01</strong>.
-              </p>
-            </div>
-
-            <div className="border-b border-slate-100 pb-3">
-              <h3 className="font-semibold text-slate-900">
-                What is GST State Code 97 (Other Territory)?
-              </h3>
-              <p className="mt-1 text-slate-600 leading-relaxed">
-                Code <strong>97</strong> represents supplies occurring in territorial waters of India beyond the baseline or offshore oil extraction installations outside any specific state boundary.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold text-slate-900">
-                Can I test any GSTIN using the state code?
-              </h3>
-              <p className="mt-1 text-slate-600 leading-relaxed">
-                Yes. Click &quot;Validate GSTIN&quot; next to any state code in the table above to test a 100% mathematically valid sample GSTIN generated with official MOD 36 checksum verification.
-              </p>
-            </div>
+            {STATE_CODE_FAQS.map((faq, i) => (
+              <div
+                key={faq.question}
+                className={i === STATE_CODE_FAQS.length - 1 ? "" : "border-b border-slate-100 pb-3"}
+              >
+                <h3 className="font-semibold text-slate-900">{faq.question}</h3>
+                <p className="mt-1 text-slate-600 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

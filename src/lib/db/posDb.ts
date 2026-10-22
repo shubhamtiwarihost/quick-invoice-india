@@ -7,7 +7,7 @@ export interface Product {
   hsn?: string;
   costPrice: number;
   salePrice: number;
-  gstRate: number; // 0, 5, 12, 18, 28
+  gstRate: number; // current: 0, 3, 5, 18, 40 (GST 2.0). 12 and 28 may exist on older saved products.
   stock: number;
   minStock: number;
   category?: string;

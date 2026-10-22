@@ -12,9 +12,9 @@ import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Boutique & Tailoring GST Invoice Generator — SwiftGST",
+  title: "Boutique & Tailoring GST Invoice Generator",
   description:
-    "Free GST invoice generator for fashion boutiques, tailoring studios, and designer ateliers in India. Pre-loaded stitching SAC 998822, 5% & 12% apparel GST slabs, and instant PDF.",
+    "Free GST invoice generator for fashion boutiques, tailoring studios, and designer ateliers in India. Pre-loaded stitching SAC 998822, 5% and 18% apparel GST slabs (₹2,500 per piece rule), and instant PDF.",
   keywords: [
     "boutique invoice generator",
     "tailoring bill format GST",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Boutique & Tailoring GST Invoice Generator — SwiftGST",
     description:
-      "Generate compliant GST bills for fashion boutiques, stitching, alterations, and designer apparel in India. Pre-seeded with 5% and 12% slabs.",
+      "Generate compliant GST bills for fashion boutiques, stitching, alterations, and designer apparel in India. Pre-seeded with the current 5% (up to ₹2,500) and 18% (above ₹2,500) apparel slabs.",
     url: "https://swiftgst.in/boutique-invoice-generator/",
     siteName: "SwiftGST",
     locale: "en_IN",
@@ -48,7 +48,7 @@ const BOUTIQUE_FAQS: FaqItem[] = [
   {
     question: "What is the official GST rate for stitching and tailoring services?",
     answer:
-      "Under GST SAC Code 998822 ('Job work services on textile and apparel'), custom stitching and tailoring services attract a concessional GST rate of 5% when the customer provides their own fabric. If you supply the complete readymade stitched apparel including fabric, the GST rate is 5% for sale value up to ₹1,000 per piece and 12% for apparel valued above ₹1,000.",
+      "Under GST SAC Code 998822 ('Job work services on textile and apparel'), custom stitching and tailoring services attract a concessional GST rate of 5% when the customer provides their own fabric. If you supply the complete readymade stitched apparel including fabric, the GST rate is 5% for garments priced up to ₹2,500 per piece and 18% for garments priced above ₹2,500. The threshold was ₹1,000 (with 12% above it) until 22 September 2025.",
   },
   {
     question: "How should a boutique bill if the customer brings their own cloth?",
@@ -73,7 +73,7 @@ const BOUTIQUE_FAQS: FaqItem[] = [
   {
     question: "What essential details should be included on a boutique invoice?",
     answer:
-      "A boutique tax invoice must include: GSTIN & PAN of the boutique, serialized invoice number, date of trial/delivery, customer name and phone, itemized description (stitching vs fabric vs embellishments), correct HSN/SAC code, applicable GST slab (5% or 12%), payment breakdown (advance paid vs balance due), and clear alteration/return terms.",
+      "A boutique tax invoice must include: GSTIN & PAN of the boutique, serialized invoice number, date of trial/delivery, customer name and phone, itemized description (stitching vs fabric vs embellishments), correct HSN/SAC code, applicable GST slab (5% or 18%), payment breakdown (advance paid vs balance due), and clear alteration/return terms.",
   },
 ];
 
@@ -91,7 +91,7 @@ export default function BoutiqueInvoiceGeneratorPage() {
       priceCurrency: "INR",
     },
     description:
-      "Free GST invoice generator for fashion boutiques, tailoring studios, and designer ateliers. Pre-loaded stitching SAC 998822 and 5%/12% apparel GST slabs.",
+      "Free GST invoice generator for fashion boutiques, tailoring studios, and designer ateliers. Pre-loaded stitching SAC 998822 and 5%/18% apparel GST slabs.",
   };
 
   const jsonLdFaq = {
@@ -121,7 +121,7 @@ export default function BoutiqueInvoiceGeneratorPage() {
       <InvoiceWorkspace
         initialPreset="boutique"
         pageTitle="Boutique & Tailoring Studio GST Invoice Generator"
-        badgeText="Pre-loaded: Stitching SAC 998822 · 5% / 12% Apparel Slabs"
+        badgeText="Pre-loaded: Stitching SAC 998822 · 5% / 18% Apparel Slabs"
         childrenBelowWorkspace={
           <article className="mx-auto max-w-5xl px-4 py-12 space-y-16 text-slate-800">
             {/* Guide Introduction Banner */}
@@ -134,7 +134,7 @@ export default function BoutiqueInvoiceGeneratorPage() {
                 How to Bill Under GST as a Fashion Boutique & Tailoring Studio
               </h2>
               <p className="mt-3 text-sm md:text-base leading-relaxed text-pink-100 max-w-3xl">
-                Navigating GST in the Indian fashion industry requires distinguishing between pure tailoring services (SAC 998822 @ 5%), raw fabrics (HSN 5007/5208 @ 5%), and finished designer garments (5% vs 12% slab threshold). Here is your complete compliance guide.
+                Navigating GST in the Indian fashion industry requires distinguishing between pure tailoring services (SAC 998822 @ 5%), raw fabrics (HSN 5007/5208 @ 5%), and finished designer garments (5% up to ₹2,500 per piece, 18% above). Here is your complete compliance guide.
               </p>
             </section>
 
@@ -172,10 +172,10 @@ export default function BoutiqueInvoiceGeneratorPage() {
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-100 text-pink-900 text-xs">
                       2
                     </span>
-                    <h4>Understand the ₹1,000 Garment Slab Rule</h4>
+                    <h4>Understand the ₹2,500 Garment Slab Rule</h4>
                   </div>
                   <p className="mt-2 text-xs leading-relaxed text-slate-600">
-                    For readymade or complete stitched garments sold off-the-rack: garments with sale value up to ₹1,000 per piece attract 5% GST. Garments priced above ₹1,000 per piece attract 12% GST.
+                    For readymade or complete stitched garments sold off-the-rack: garments with sale value up to ₹2,500 per piece attract 5% GST. Garments priced above ₹2,500 per piece attract 18% GST. The old ₹1,000 and 12% rule ended on 22 September 2025.
                   </p>
                 </div>
 
@@ -245,8 +245,8 @@ export default function BoutiqueInvoiceGeneratorPage() {
                     <tr>
                       <td className="px-4 py-3 font-mono font-bold text-pink-700">6214</td>
                       <td className="px-4 py-3 font-medium text-slate-900">Shawls, Scarves & Dupattas</td>
-                      <td className="px-4 py-3 font-semibold text-slate-700">12%</td>
-                      <td className="px-4 py-3 text-slate-500">Handcrafted embroidered dupattas and stoles priced over ₹1,000</td>
+                      <td className="px-4 py-3 font-semibold text-slate-700">5% / 18%</td>
+                      <td className="px-4 py-3 text-slate-500">Embroidered dupattas and stoles: 5% up to ₹2,500 per piece, 18% above</td>
                     </tr>
                   </tbody>
                 </table>

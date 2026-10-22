@@ -15,7 +15,7 @@ import {
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Best Free myBillBook Alternative for GST Invoicing (No 100MB App) — SwiftGST",
+  title: "Free myBillBook Alternative for GST Invoicing",
   description:
     "Looking for a free alternative to myBillBook? SwiftGST requires no 100MB app download, no mobile OTP login, and zero monthly subscription fees. Generate GST invoices in any browser with zero watermarks.",
   keywords: [

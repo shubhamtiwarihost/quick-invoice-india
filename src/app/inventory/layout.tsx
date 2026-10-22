@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Free Inventory & Stock Management Software (Barcode & CSV Import/Export) — SwiftGST",
+  title: "Free Inventory & Stock Management Software",
   description:
     "Private, browser-based inventory and stock tracking for Indian retail stores. Manage SKU catalogs, GST tax slabs, low-stock threshold alerts, and bulk CSV import/export with zero account required.",
   keywords: [

@@ -3,9 +3,9 @@ import GstCalculatorClient from "./GstCalculatorClient";
 import { GstCalculatorGuide, GST_CALC_FAQS } from "@/components/calculator/GstCalculatorGuide";
 
 export const metadata: Metadata = {
-  title: "GST Calculator Online (Inclusive & Exclusive) — SwiftGST",
+  title: "GST Calculator — Add or Remove GST (GST 2.0 Rates)",
   description:
-    "Fast online GST calculator for Indian businesses. Calculate inclusive and exclusive GST for 0%, 5%, 12%, 18%, and 28% slabs with CGST, SGST, and IGST breakdown.",
+    "Free GST calculator updated for GST 2.0. Add or remove GST at 5%, 18% and 40% (plus 0% and 3%) with CGST, SGST and IGST breakup, worked examples and amount in words.",
   keywords: [
     "GST calculator India",
     "reverse GST calculator",
@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     "exclusive GST calculator",
     "CGST SGST calculator",
     "18% GST calculator",
+    "GST 2.0 calculator",
+    "40% GST calculator",
+    "GST rates after 22 September 2025",
     "GST amount calculation online",
   ],
   alternates: {
@@ -21,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "GST Calculator Online (Inclusive & Exclusive) — SwiftGST",
     description:
-      "Calculate GST inclusive and exclusive amounts with CGST, SGST, and IGST breakdowns for 5%, 12%, 18%, and 28% tax slabs.",
+      "Calculate GST inclusive and exclusive amounts with CGST, SGST and IGST for the current 0%, 5%, 18% and 40% GST 2.0 slabs.",
     url: "https://swiftgst.in/gst-calculator/",
     siteName: "SwiftGST",
     locale: "en_IN",
@@ -49,7 +52,7 @@ export default function GstCalculatorPage() {
       priceCurrency: "INR",
     },
     description:
-      "Free forward and reverse GST calculator with intra/inter-state splits for 0%, 5%, 12%, 18%, and 28% slabs.",
+      "Free forward and reverse GST calculator with intra/inter-state splits for the current GST 2.0 slabs: 0%, 5%, 18% and 40%, plus 3% for gold and jewellery.",
   };
 
   const jsonLdFaq = {

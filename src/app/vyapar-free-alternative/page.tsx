@@ -14,7 +14,7 @@ import {
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Best Free Vyapar Alternative for PC & Mobile (No Watermark & Zero Fees) — SwiftGST",
+  title: "Free Vyapar Alternative — No Watermark, Zero Fees",
   description:
     "Looking for a 100% free alternative to Vyapar billing software? SwiftGST requires no costly ₹2,999+ yearly renewal, no 100MB software download, and leaves zero watermarks on bills. Includes retail POS, barcode inventory, customer Khata & instant PDF/thermal receipts.",
   keywords: [

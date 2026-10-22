@@ -15,7 +15,7 @@ import {
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Free GST Invoice Templates (Excel, Word, PDF) — SwiftGST",
+  title: "Free GST Invoice Templates (Excel, Word, PDF)",
   description:
     "Download 100% free GST invoice formats in Excel (.XLSX), Word (.DOCX), and printable PDF. Compliant with CBIC rules, CGST/SGST/IGST formulas, and instant online editor.",
   keywords: [
@@ -124,12 +124,12 @@ const TEMPLATES: TemplateCardData[] = [
     format: "Excel / XLS",
     formatTagColor: "bg-pink-100 text-pink-800 border-pink-200",
     description:
-      "Tailored for custom stitching, fabric supply, and designer apparel. Pre-configured with 5% apparel job work (SAC 998822) and 12% garment slabs.",
+      "Tailored for custom stitching, fabric supply, and designer apparel. Pre-configured with 5% apparel job work (SAC 998822) and the 5% / 18% garment slabs (₹2,500 per piece rule).",
     features: [
       "Separate line items for Stitching vs Pure Fabric material",
       "Advance deposit received and balance due tracking",
       "Trial fitting date and alteration terms included",
-      "Formula calculation for 5% & 12% dual GST rates",
+      "Formula calculation for 5% & 18% apparel GST rates",
     ],
     downloadUrl: "/templates/boutique-tailoring-bill-format.xlsx",
     downloadFilename: "boutique-tailoring-bill-format.xlsx",

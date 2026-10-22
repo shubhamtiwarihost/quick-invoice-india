@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RelatedTools } from "@/components/shared/RelatedTools";
 import CompositionClient from "./CompositionClient";
 import {
   CompositionComplianceGuide,
@@ -6,7 +7,7 @@ import {
 } from "@/components/calculator/CompositionComplianceGuide";
 
 export const metadata: Metadata = {
-  title: "Composition Scheme vs Regular GST Calculator — SwiftGST",
+  title: "Composition Scheme vs Regular GST Calculator",
   description:
     "Compare Composition Scheme (1%, 5%, 6% flat tax) vs Regular GST scheme (Output tax minus ITC). Find out your net tax liability and compliance savings.",
   keywords: [
@@ -80,6 +81,7 @@ export default function CompositionCalculatorPage() {
       <CompositionClient>
         <CompositionComplianceGuide />
       </CompositionClient>
+      <RelatedTools current="/composition-calculator/" prefer={["/gst-calculator/", "/invoice/", "/hsn-finder/"]} />
     </>
   );
 }

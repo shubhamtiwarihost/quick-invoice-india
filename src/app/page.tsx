@@ -5,7 +5,7 @@ import { HomeComplianceGuide, HOME_FAQS } from "@/components/home/HomeCompliance
 import { RetailSuiteShowcase } from "@/components/home/RetailSuiteShowcase";
 
 export const metadata: Metadata = {
-  title: "SwiftGST — Free Retail POS & GST Billing Software India",
+  title: { absolute: "SwiftGST — Free Retail POS & GST Billing Software India" },
   description:
     "SwiftGST (Swift GST) is India's 100% free retail POS billing software, barcode inventory tracker, customer Khata ledger, and instant GST invoice generator. 100% private, offline-ready, zero sign-up required.",
   keywords: [

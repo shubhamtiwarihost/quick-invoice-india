@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Disclaimer & Legal Tax Notice — SwiftGST",
+  title: "Disclaimer & Legal Tax Notice",
   description:
     "Official non-government legal disclaimer for SwiftGST (swiftgst.in). SwiftGST is an independent software tool not affiliated with the Goods and Services Tax Network (GSTN) or CBIC.",
   keywords: [

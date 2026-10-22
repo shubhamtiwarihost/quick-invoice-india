@@ -15,7 +15,7 @@ import {
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Free Retail POS Billing Software India (Barcode, 58/80mm Thermal & UPI QR) — SwiftGST",
+  title: "Free Retail POS Billing Software India",
   description:
     "Fast, 100% free Retail POS billing counter software for Indian stores. Auto-detects USB/Bluetooth barcode scanners, prints 58mm/80mm thermal receipts, generates dynamic UPI payment QR codes, and works offline.",
   keywords: [

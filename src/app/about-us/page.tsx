@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us — SwiftGST Mission, Team & Compliance Standards",
+  title: "About Us — Mission & Compliance Standards",
   description:
     "Learn about SwiftGST (swiftgst.in) — our founding mission, editorial standards, creator background, and commitment to 100% private, fast Indian GST invoicing and compliance.",
   keywords: [
@@ -273,7 +273,7 @@ export default function AboutUsPage() {
                   GST Calculator
                 </h3>
                 <p className="mt-1 text-xs text-slate-500 leading-relaxed">
-                  Forward and reverse tax computations for 5%, 12%, 18%, 28% slabs.
+                  Forward and reverse tax computations for the current 0%, 5%, 18% and 40% slabs.
                 </p>
               </div>
               <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-teal-700">

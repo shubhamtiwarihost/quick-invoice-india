@@ -135,7 +135,7 @@ export function PosComplianceGuide() {
           <div className="text-xs sm:text-sm text-slate-600 space-y-3 leading-relaxed">
             <p>
               In the Indian retail sector, issuing an accurate legal document at the counter is mandatory.
-              Registered businesses charging standard GST (0%, 5%, 12%, 18%, 28%) must issue a <strong>Tax Invoice</strong>
+              Registered businesses charging standard GST (0%, 5%, 18% or 40%) must issue a <strong>Tax Invoice</strong>
               under <strong>Rule 46</strong> or a simplified retail cash memo. Composition taxpayers (under Section 10) must issue a
               <strong>Bill of Supply</strong> under <strong>Rule 49</strong> with the mandatory words <em>&quot;Composition taxable person, not eligible to collect tax on supplies&quot;</em> clearly displayed.
             </p>

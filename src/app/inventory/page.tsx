@@ -28,8 +28,8 @@ import {
   type Product,
 } from "@/lib/db/posDb";
 import { InventoryComplianceGuide } from "@/components/inventory/InventoryComplianceGuide";
+import { slabOptions, legacySlabLabel } from "@/lib/gstSlabs";
 
-const GST_SLABS = [0, 5, 12, 18, 28];
 
 export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -836,9 +836,9 @@ export default function InventoryPage() {
                     }
                     className="w-full rounded-xl border border-slate-300 p-2.5 font-semibold text-slate-900 focus:border-teal-600 focus:outline-none bg-white"
                   >
-                    {GST_SLABS.map((rate) => (
+                    {slabOptions(formData.gstRate).map((rate) => (
                       <option key={rate} value={rate}>
-                        {rate}% GST {rate === 0 ? "(Exempt / Nil)" : ""}
+                        {legacySlabLabel(rate)} GST {rate === 0 ? "(Exempt / Nil)" : ""}
                       </option>
                     ))}
                   </select>

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Free Customer Khata & Loyalty CRM (Udhaar Ledger & WhatsApp Reminders) — SwiftGST",
+  title: "Free Customer Khata & Udhaar Ledger App",
   description:
     "Track customer Udhaar (credit balance), maintain transactional Khata ledgers, award customer loyalty points, and send 1-click WhatsApp payment reminders with dynamic UPI links.",
   keywords: [

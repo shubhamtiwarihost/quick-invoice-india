@@ -9,10 +9,10 @@ import { useQuotationStore } from "@/lib/quotationStore";
 import type { CurrencyCode, GstSlab, ItemUnit } from "@/types/invoice";
 import { BankDetailsForm } from "@/components/invoice/BankDetailsForm";
 import { SignatureDrawPad } from "@/components/invoice/SignatureDrawPad";
+import { slabOptions, legacySlabLabel } from "@/lib/gstSlabs";
 
 const ACCENTS = ["#DEBA5F", "#059669", "#1d4ed8", "#f59e0b", "#5b21b6", "#0f172a"];
 const UNITS: ItemUnit[] = ["Nos", "Hrs", "Pcs", "Mtrs", "Bags", "Kgs"];
-const SLABS: GstSlab[] = [0, 5, 12, 18, 28];
 
 const TERMS_PRESETS = [
   {
@@ -527,8 +527,8 @@ export function QuotationForm({ grandTotal }: { grandTotal: number }) {
                           }
                           className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs text-slate-900 outline-none transition focus:border-teal-600 focus:bg-white"
                         >
-                          {SLABS.map((s) => (
-                            <option key={s} value={s}>{s}%</option>
+                          {slabOptions(item.gstSlab).map((s) => (
+                            <option key={s} value={s}>{legacySlabLabel(s)}</option>
                           ))}
                         </select>
                       </div>

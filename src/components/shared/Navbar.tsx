@@ -116,7 +116,7 @@ export const ALL_TOOLS = [
     href: "/gst-calculator",
     label: "GST Calculator",
     shortLabel: "GST Calc",
-    desc: "Inclusive and exclusive GST breakdown for 5%, 12%, 18%, 28% slabs.",
+    desc: "Inclusive and exclusive GST breakdown for the 5%, 18% and 40% GST 2.0 slabs.",
     icon: Calculator,
   },
   {
@@ -179,7 +179,7 @@ export const ALL_TOOLS = [
     href: "/boutique-invoice-generator",
     label: "Boutique & Tailoring Bill",
     shortLabel: "Boutique",
-    desc: "Stitching SAC 998822 and 5%/12% dual apparel GST slabs.",
+    desc: "Stitching SAC 998822 and 5%/18% apparel GST slabs.",
     icon: Scissors,
   },
   {
@@ -787,7 +787,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/gst-calculator" className="hover:text-teal-700">
-                  GST Calculator (5%, 12%, 18%, 28%)
+                  GST Calculator (5%, 18%, 40%)
                 </Link>
               </li>
               <li>

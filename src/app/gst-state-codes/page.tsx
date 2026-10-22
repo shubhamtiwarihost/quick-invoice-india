@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import GstStateCodesClient from "./GstStateCodesClient";
+import { STATE_CODE_FAQS } from "./faqs";
 
 export const metadata: Metadata = {
-  title: "Indian GST State Code List 2026 — 2-Digit Codes & Capitals Directory — SwiftGST",
+  title: "GST State Code List 2026: All States & UTs (01–38)",
   description:
-    "Complete list of 2-digit Indian GST State Codes (01 to 38, 97) with state names, capitals, union territories, and instant GSTIN validation. Fast 1-click copy for invoices and e-way bills.",
+    "Complete list of GST state codes for all 28 States and 8 Union Territories (01 to 38, plus 97 and the old Andhra Pradesh code 28). Search by name or code, copy in one click, and validate a GSTIN.",
   keywords: [
     "GST state codes",
     "GST state code list",
@@ -19,9 +20,9 @@ export const metadata: Metadata = {
     canonical: "https://swiftgst.in/gst-state-codes/",
   },
   openGraph: {
-    title: "GST State Code List 2026 — Indian State Codes & Capitals Directory — SwiftGST",
+    title: "GST State Code List 2026: All States & UTs (01–38)",
     description:
-      "Official CBIC 2-digit GST state codes for all 37 Indian States and Union Territories. Search by name, capital, or code with 1-click copy.",
+      "All GST state codes in one list: 28 States, 8 Union Territories, code 97 and the old Andhra Pradesh code 28. Search by name, capital or code.",
     url: "https://swiftgst.in/gst-state-codes/",
     siteName: "SwiftGST",
     locale: "en_IN",
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "GST State Codes Directory — SwiftGST",
     description:
-      "Search all 37 Indian State and UT 2-digit GST codes with 1-click copy.",
+      "Search every Indian State and UT 2-digit GST code with 1-click copy.",
   },
 };
 
@@ -39,48 +40,14 @@ export default function GstStateCodesPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "What are GST State Codes in India?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "GST State Codes are two-digit numerical identifiers assigned by the Central Board of Indirect Taxes and Customs (CBIC) representing each State and Union Territory in India. They form the first two characters of any 15-digit GSTIN.",
-        },
+    mainEntity: STATE_CODE_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
       },
-      {
-        "@type": "Question",
-        name: "What is the GST state code for Maharashtra?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The GST state code for Maharashtra is 27.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What is the GST state code for Delhi?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The GST state code for Delhi is 07.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What is the GST state code for Karnataka?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The GST state code for Karnataka is 29.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How many GST state codes exist in India?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "There are currently 37 active GST state codes in India covering 28 States, 8 Union Territories, and 1 Other Territory (Code 97).",
-        },
-      },
-    ],
+    })),
   };
 
   return (

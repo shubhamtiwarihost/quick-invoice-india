@@ -12,7 +12,7 @@ import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Freelancer Invoice Generator India (GST & Non-GST) — SwiftGST",
+  title: "Freelancer Invoice Generator India (GST & Non-GST)",
   description:
     "Free GST invoice generator for Indian freelancers, software developers, and consultants. Pre-loaded SAC 998314, hourly rates, LUT zero-rated export & instant PDF download.",
   keywords: [

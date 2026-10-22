@@ -11,7 +11,7 @@ import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Kirana Store Bill Maker & Retail GST Invoice Generator — SwiftGST",
+  title: "Kirana Store Bill Maker & GST Invoice Generator",
   description:
     "Free retail cash memo and GST bill maker for Indian Kirana stores, FMCG retailers, and grocery shops. Pre-loaded 0% & 5% grocery essentials, instant print & WhatsApp share.",
   keywords: [
@@ -62,7 +62,7 @@ const KIRANA_FAQS: FaqItem[] = [
   {
     question: "When should a Kirana store issue a 'Tax Invoice' vs a 'Bill of Supply'?",
     answer:
-      "Issue a Tax Invoice if you are a regular registered taxpayer selling taxable items (like edible oils, branded snacks, soaps @ 5%, 12%, or 18%) to B2B or retail buyers where GST is separately charged. Issue a Bill of Supply if you are a Composition dealer OR if you are selling 100% exempt goods (like unbranded rice, salt, fresh milk). SwiftGST allows 1-click toggling between Tax Invoice and Bill of Supply (Non-GST mode).",
+      "Issue a Tax Invoice if you are a regular registered taxpayer selling taxable items (like edible oils, branded snacks, soaps @ 5% or 18%) to B2B or retail buyers where GST is separately charged. Issue a Bill of Supply if you are a Composition dealer OR if you are selling 100% exempt goods (like unbranded rice, salt, fresh milk). SwiftGST allows 1-click toggling between Tax Invoice and Bill of Supply (Non-GST mode).",
   },
   {
     question: "Can Kirana stores issue retail bills without the buyer's GSTIN or address?",
@@ -133,7 +133,7 @@ export default function KiranaStoreBillMakerPage() {
                 How to Bill Under GST as a Kirana Store & FMCG Retailer
               </h2>
               <p className="mt-3 text-sm md:text-base leading-relaxed text-emerald-100 max-w-3xl">
-                Indian grocery shops handle hundreds of fast-moving products every day across 0%, 5%, 12%, and 18% GST slabs. Learn how to maintain clear retail accounts, handle walk-in cash memos, and take advantage of the 1% Composition Scheme.
+                Indian grocery shops handle hundreds of fast-moving products every day across 0%, 5% and 18% GST slabs. Learn how to maintain clear retail accounts, handle walk-in cash memos, and take advantage of the 1% Composition Scheme.
               </p>
             </section>
 
@@ -244,14 +244,14 @@ export default function KiranaStoreBillMakerPage() {
                     <tr>
                       <td className="px-4 py-3 font-mono font-bold text-emerald-700">0405</td>
                       <td className="px-4 py-3 font-medium text-slate-900">Butter & Ghee</td>
-                      <td className="px-4 py-3 font-semibold text-slate-700">12%</td>
-                      <td className="px-4 py-3 text-slate-500">Processed dairy products (butter, ghee, cheese)</td>
+                      <td className="px-4 py-3 font-semibold text-slate-700">5%</td>
+                      <td className="px-4 py-3 text-slate-500">Butter, ghee and cheese (was 12% before 22 Sept 2025)</td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 font-mono font-bold text-emerald-700">3401 / 3402</td>
                       <td className="px-4 py-3 font-medium text-slate-900">Soaps & Washing Detergent Powders</td>
-                      <td className="px-4 py-3 font-semibold text-slate-700">18%</td>
-                      <td className="px-4 py-3 text-slate-500">Standard cleaning and personal care FMCG products</td>
+                      <td className="px-4 py-3 font-semibold text-slate-700">5% / 18%</td>
+                      <td className="px-4 py-3 text-slate-500">Toilet soap (3401) is 5%; washing detergent powders (3402) are 18%</td>
                     </tr>
                   </tbody>
                 </table>

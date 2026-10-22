@@ -5,9 +5,9 @@ import { useInvoiceStore } from "@/lib/store";
 import { Plus, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { lineTaxable } from "@/lib/gstEngine";
 import { formatCurrency } from "@/lib/format";
+import { slabOptions, legacySlabLabel } from "@/lib/gstSlabs";
 
 const UNITS: ItemUnit[] = ["Pcs", "Mtrs", "Hrs", "Nos", "Bags", "Kgs"];
-const SLABS: GstSlab[] = [0, 5, 12, 18, 28];
 
 export function LineItemsTable({ gstOn }: { gstOn: boolean }) {
   const items = useInvoiceStore((s) => s.items);
@@ -224,9 +224,9 @@ function ItemCard({
                 onChange={(e) => onChange({ gstSlab: Number(e.target.value) as GstSlab })}
                 className={inputClass}
               >
-                {SLABS.map((s) => (
+                {slabOptions(item.gstSlab).map((s) => (
                   <option key={s} value={s}>
-                    {s}%
+                    {legacySlabLabel(s)}
                   </option>
                 ))}
               </select>

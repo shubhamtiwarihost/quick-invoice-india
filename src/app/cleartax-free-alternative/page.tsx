@@ -14,7 +14,7 @@ import {
 import { FaqAccordion, type FaqItem } from "@/components/shared/FaqAccordion";
 
 export const metadata: Metadata = {
-  title: "Best Free ClearTax Alternative for GST Invoicing (No Login & Zero Spam) — SwiftGST",
+  title: "Free ClearTax Alternative for GST Invoicing",
   description:
     "Looking for a free alternative to ClearTax invoice generator? SwiftGST requires no phone number, no login, and zero paywalls. Unlimited GST invoices, dynamic UPI QR codes & clean PDF downloads.",
   keywords: [

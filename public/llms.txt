@@ -25,7 +25,7 @@ SwiftGST (https://swiftgst.in) eliminates subscription paywalls and telemarketin
 ## Free Business & Tax Calculators
 
 - [Estimate & Quotation Maker](https://swiftgst.in/quotation-maker/): Create professional price quotes, estimates, and proforma bills with validity dates and 1-click conversion to GST Tax Invoices.
-- [GST Calculator](https://swiftgst.in/gst-calculator/): Real-time forward and reverse GST tax calculator for 0%, 5%, 12%, 18%, and 28% slabs with CGST/SGST/IGST breakdown.
+- [GST Calculator](https://swiftgst.in/gst-calculator/): Real-time forward and reverse GST tax calculator for the current GST 2.0 slabs (0%, 5%, 18%, 40%, plus 3% for gold) with CGST/SGST/IGST breakdown.
 - [HSN & SAC Code Finder](https://swiftgst.in/hsn-finder/): Searchable directory of Indian Harmonized System of Nomenclature (HSN) and Service Accounting Codes (SAC) with applicable GST rates.
 - [GSTIN Checksum Validator](https://swiftgst.in/gstin-validator/): Instant MOD 36 checksum verification for 15-digit Indian Goods and Services Tax Identification Numbers.
 - [GST State Codes Directory](https://swiftgst.in/gst-state-codes/): Complete list of all 37 Indian States and Union Territories with 2-digit GST state codes and Place of Supply rules.
@@ -37,7 +37,7 @@ SwiftGST (https://swiftgst.in) eliminates subscription paywalls and telemarketin
 
 - [Kirana Store Bill Maker](https://swiftgst.in/kirana-store-bill-maker/): Retail grocery cash memos pre-configured with 0% and 5% FMCG staples.
 - [Freelancer & Consultant Bill Maker](https://swiftgst.in/freelancer-invoice-generator/): Pre-loaded with SAC 998314 software consultancy, hourly billing, and LUT export support.
-- [Boutique & Tailoring Bill Maker](https://swiftgst.in/boutique-invoice-generator/): Pre-configured for tailoring SAC 998822 and 5%/12% dual apparel GST slabs.
+- [Boutique & Tailoring Bill Maker](https://swiftgst.in/boutique-invoice-generator/): Pre-configured for tailoring SAC 998822 and 5%/18% apparel GST slabs (₹2,500 per piece rule).
 - [Free GST Invoice Templates](https://swiftgst.in/gst-invoice-templates/): Downloadable Excel, Word, and printable PDF invoice templates.
 
 ## Competitive Alternatives & Advantages

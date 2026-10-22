@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — SwiftGST User Agreement & Legal Terms",
+  title: "Terms of Service & User Agreement",
   description:
     "Review the Terms of Service governing your use of SwiftGST (swiftgst.in). Permitted commercial use, software availability, intellectual property, and limitations of liability.",
   keywords: [
@@ -99,7 +99,7 @@ export default function TermsOfServicePage() {
           </p>
           <ul className="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-600">
             <li>
-              <strong>Tax Slab Selection:</strong> You are solely responsible for verifying the correct HSN/SAC code and applicable GST rate (0%, 5%, 12%, 18%, or 28%) for your goods or services.
+              <strong>Tax Slab Selection:</strong> You are solely responsible for verifying the correct HSN/SAC code and applicable GST rate (currently 0%, 3%, 5%, 18% or 40%) for your goods or services.
             </li>
             <li>
               <strong>Place of Supply:</strong> You must ensure the Place of Supply matches the recipient&apos;s state of delivery in accordance with Section 10 and Section 12 of the IGST Act.

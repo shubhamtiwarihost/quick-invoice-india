@@ -5,7 +5,7 @@ import { HomeComplianceGuide } from "@/components/home/HomeComplianceGuide";
 import { RetailSuiteShowcase } from "@/components/home/RetailSuiteShowcase";
 
 export const metadata: Metadata = {
-  title: "Free GST Invoice Generator Online — SwiftGST",
+  title: "Free GST Invoice Generator Online",
   description:
     "Generate 100% free GST-compliant tax invoices and bills of supply online. Instant PDF download, UPI QR code, automatic tax calculations, and GSTR-1 CSV export.",
   alternates: {

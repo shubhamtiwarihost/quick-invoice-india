@@ -5,7 +5,9 @@ import { formatCurrency } from "@/lib/format";
 import { numberToWordsIndian } from "@/lib/numberToWordsIndian";
 import { round2 } from "@/lib/gstEngine";
 
-const RATES = [0, 5, 12, 18, 28];
+import { CURRENT_GST_SLABS } from "@/lib/gstSlabs";
+
+const RATES: number[] = CURRENT_GST_SLABS;
 
 export default function GstCalculatorClient({
   children,
@@ -41,7 +43,7 @@ export default function GstCalculatorClient({
     <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
       <h1 className="text-2xl md:text-3xl font-bold text-slate-900">GST Calculator (Inclusive & Exclusive)</h1>
       <p className="mt-1 text-sm text-slate-500">
-        Forward (exclusive) or reverse (inclusive) GST with intra-state (CGST + SGST) and inter-state (IGST) split for 0%, 5%, 12%, 18%, 28% slabs.
+        Forward (exclusive) or reverse (inclusive) GST with intra-state (CGST + SGST) and inter-state (IGST) split for the current GST 2.0 slabs: 0%, 5%, 18% and 40% (plus 3% for gold and jewellery).
       </p>
 
       <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">

@@ -4,6 +4,8 @@ export interface IndianState {
   capital: string;
   type: "State" | "Union Territory" | "Other";
   zone: "Northern" | "Southern" | "Western" | "Eastern" | "Central" | "North-Eastern" | "Special";
+  /** Extra context shown in the state codes directory (e.g. legacy or merged codes). */
+  note?: string;
 }
 
 export const INDIAN_STATES: IndianState[] = [
@@ -46,10 +48,39 @@ export const INDIAN_STATES: IndianState[] = [
   { name: "Other Territory", code: "97", capital: "New Delhi", type: "Other", zone: "Special" },
 ];
 
+/**
+ * Legacy GST codes that still appear on real GSTINs but are not offered as a separate
+ * state in forms. Code 28 was Andhra Pradesh before Telangana was carved out; businesses
+ * registered under it are still in Andhra Pradesh, so tax logic must treat 28 as 37.
+ */
+export const LEGACY_GST_CODES: { code: string; mapsToCode: string; row: IndianState }[] = [
+  {
+    code: "28",
+    mapsToCode: "37",
+    row: {
+      name: "Andhra Pradesh (old code)",
+      code: "28",
+      capital: "Amaravati",
+      type: "Other",
+      zone: "Southern",
+      note: "Original Andhra Pradesh code, still seen on older GSTINs. New registrations use 37. Both mean the same state for CGST/SGST vs IGST.",
+    },
+  },
+];
+
+/** Every code shown in the public state codes directory, including legacy codes. */
+export const ALL_GST_CODE_ROWS: IndianState[] = [
+  ...INDIAN_STATES,
+  ...LEGACY_GST_CODES.map((l) => l.row),
+];
+
 export function getStateByName(name: string): IndianState | undefined {
   return INDIAN_STATES.find((s) => s.name === name);
 }
 
 export function getStateByCode(code: string): IndianState | undefined {
-  return INDIAN_STATES.find((s) => s.code === code);
+  const direct = INDIAN_STATES.find((s) => s.code === code);
+  if (direct) return direct;
+  const legacy = LEGACY_GST_CODES.find((l) => l.code === code);
+  return legacy ? INDIAN_STATES.find((s) => s.code === legacy.mapsToCode) : undefined;
 }

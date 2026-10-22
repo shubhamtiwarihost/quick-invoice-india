@@ -3,7 +3,8 @@ export type DiscountType = "percent" | "flat";
 export type InvoiceTemplate = "modern" | "classic" | "creative";
 export type CurrencyCode = "INR" | "USD" | "EUR";
 export type ItemUnit = "Pcs" | "Mtrs" | "Hrs" | "Nos" | "Bags" | "Kgs";
-export type GstSlab = 0 | 5 | 12 | 18 | 28;
+// 12 and 28 are legacy slabs (removed by GST 2.0 on 22 Sep 2025) kept so older saved invoices still load.
+export type GstSlab = 0 | 3 | 5 | 12 | 18 | 28 | 40;
 
 export interface BankDetails {
   bankName: string;

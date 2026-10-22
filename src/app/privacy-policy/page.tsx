@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — SwiftGST Data Protection & Cookie Disclosure",
+  title: "Privacy Policy & Cookie Disclosure",
   description:
     "Official Privacy Policy for SwiftGST (swiftgst.in). Comprehensive disclosures on browser LocalStorage usage, Cookie Consent policy, Google AdSense & Analytics third-party cookies, and DPDP / GDPR compliance.",
   keywords: [

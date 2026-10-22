@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { RelatedTools } from "@/components/shared/RelatedTools";
 import HsnFinderClient from "./HsnFinderClient";
 import { HsnComplianceGuide, HSN_FAQS } from "@/components/hsn/HsnComplianceGuide";
 
 export const metadata: Metadata = {
-  title: "HSN & SAC Code Finder (GST Rates Directory) — SwiftGST",
+  title: "HSN & SAC Code Finder (GST Rates Directory)",
   description:
-    "Search 4 to 8 digit Indian HSN codes for goods and SAC codes for services. Instant GST slab rates (0%, 5%, 12%, 18%, 28%) and 1-click apply to invoice.",
+    "Search 4 to 8 digit Indian HSN codes for goods and SAC codes for services. Typical GST 2.0 rates (0%, 5%, 18%, 40%) with price thresholds and 1-click apply to invoice.",
   keywords: [
     "HSN code finder",
     "SAC code directory India",
@@ -78,6 +79,7 @@ export default function HsnFinderPage() {
       <HsnFinderClient>
         <HsnComplianceGuide />
       </HsnFinderClient>
+      <RelatedTools current="/hsn-finder/" prefer={["/gst-calculator/", "/invoice/", "/gstin-validator/"]} />
     </>
   );
 }

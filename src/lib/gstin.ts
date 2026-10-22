@@ -123,7 +123,7 @@ export function parseAndValidateGstin(input: string): GstinBreakdown {
   const stateCode = formatted.slice(0, 2);
   const state = stateCode.length === 2 ? getStateByCode(stateCode) : undefined;
   if (stateCode.length === 2 && !state) {
-    errors.push(`State code '${stateCode}' is not a recognized Indian State / UT code (01-38, 97).`);
+    errors.push(`State code '${stateCode}' is not a recognized Indian State / UT code (01-38 except 25, or 97).`);
   }
 
   const pan = formatted.slice(2, 12);

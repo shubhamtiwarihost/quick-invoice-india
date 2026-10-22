@@ -43,7 +43,7 @@ export function RetailSuiteShowcase() {
       features: [
         "Live Low-Stock Alert Thresholds",
         "Bulk CSV / Excel Catalog Import",
-        "GST Slabs (0%, 5%, 12%, 18%, 28%)",
+        "GST 2.0 Slabs (0%, 5%, 18%, 40%)",
       ],
       ctaText: "Manage Inventory",
     },

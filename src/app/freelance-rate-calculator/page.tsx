@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RelatedTools } from "@/components/shared/RelatedTools";
 import FreelanceRateClient from "./FreelanceRateClient";
 import {
   FreelanceRateGuide,
@@ -6,7 +7,7 @@ import {
 } from "@/components/calculator/FreelanceRateGuide";
 
 export const metadata: Metadata = {
-  title: "Freelance Rate & Hourly Income Calculator — SwiftGST",
+  title: "Freelance Rate & Hourly Income Calculator",
   description:
     "Calculate your ideal freelance hourly rate, daily retainer, and project costs based on your target income, working hours, business expenses, and taxes.",
   keywords: [
@@ -80,6 +81,7 @@ export default function FreelanceRateCalculatorPage() {
       <FreelanceRateClient>
         <FreelanceRateGuide />
       </FreelanceRateClient>
+      <RelatedTools current="/freelance-rate-calculator/" prefer={["/invoice/", "/gst-calculator/", "/gstin-validator/"]} />
     </>
   );
 }

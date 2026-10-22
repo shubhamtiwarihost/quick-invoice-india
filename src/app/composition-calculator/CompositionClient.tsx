@@ -180,10 +180,9 @@ export default function CompositionClient({
               onChange={(e) => setRegularGstRate(Number(e.target.value))}
               className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs font-semibold text-slate-900 outline-none focus:border-teal-600 focus:bg-white"
             >
-              <option value={5}>5% (Basic goods / restaurants)</option>
-              <option value={12}>12% (Processed foods / business items)</option>
-              <option value={18}>18% (Standard services / manufacturing)</option>
-              <option value={28}>28% (Luxury / automobiles)</option>
+              <option value={5}>5% (Essentials, packaged food, restaurants)</option>
+              <option value={18}>18% (Standard rate: most goods and services)</option>
+              <option value={40}>40% (Luxury / sin goods)</option>
             </select>
           </div>
 
@@ -219,9 +218,8 @@ export default function CompositionClient({
               className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs font-semibold text-slate-900 outline-none focus:border-teal-600 focus:bg-white"
             >
               <option value={5}>5% Inward Rate</option>
-              <option value={12}>12% Inward Rate</option>
               <option value={18}>18% Inward Rate</option>
-              <option value={28}>28% Inward Rate</option>
+              <option value={40}>40% Inward Rate</option>
             </select>
           </div>
         </div>

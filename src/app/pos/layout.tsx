@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { AuthGuard } from "@/lib/auth/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Free POS Billing Counter (58mm/80mm Thermal Slip, Barcode & UPI QR) — SwiftGST",
+  title: "Free POS Billing Counter — Barcode & UPI QR",
   description:
     "Fast retail billing counter with USB/Bluetooth barcode scanner auto-focus, dynamic UPI intent QR, split payment modes, cash drawer change calculation, and 58mm/80mm thermal receipt printing. 100% free and offline-capable.",
   keywords: [

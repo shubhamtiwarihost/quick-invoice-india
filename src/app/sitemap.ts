@@ -2,154 +2,42 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://swiftgst.in";
-  const now = new Date().toISOString();
+const BASE_URL = "https://swiftgst.in";
 
-  return [
-    {
-      url: `${baseUrl}/`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/retail-pos-software/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/vyapar-free-alternative/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/cleartax-free-alternative/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/mybillbook-free-alternative/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/invoice/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/pdf-tools/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/kirana-store-bill-maker/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/boutique-invoice-generator/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/freelancer-invoice-generator/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/gst-invoice-templates/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/quotation-maker/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/gst-calculator/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/hsn-finder/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/gstin-validator/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/gst-state-codes/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/eway-bill-checker/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/composition-calculator/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/freelance-rate-calculator/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about-us/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact-us/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/privacy-policy/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/terms-of-service/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/disclaimer/`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-  ];
+/**
+ * Pages that are meant to rank. Legal and trust pages (privacy, terms, disclaimer,
+ * about, contact) stay crawlable through the footer but are deliberately left out of
+ * the sitemap so Google's attention goes to the pages that answer search queries.
+ *
+ * `updated` is the date of the last real content change. Google uses lastmod only when
+ * it has proven accurate, so do NOT bump it for cosmetic edits and do NOT use the build
+ * time. Leave it undefined for pages whose content has not changed recently.
+ */
+const PAGES: { path: string; updated?: string }[] = [
+  { path: "/", updated: "2026-10-22" },
+  { path: "/invoice/", updated: "2026-10-22" },
+  { path: "/gst-calculator/", updated: "2026-10-22" },
+  { path: "/hsn-finder/", updated: "2026-10-22" },
+  { path: "/gst-state-codes/", updated: "2026-10-22" },
+  { path: "/gstin-validator/", updated: "2026-10-22" },
+  { path: "/composition-calculator/", updated: "2026-10-22" },
+  { path: "/eway-bill-checker/" },
+  { path: "/freelance-rate-calculator/" },
+  { path: "/quotation-maker/", updated: "2026-10-22" },
+  { path: "/gst-invoice-templates/", updated: "2026-10-22" },
+  { path: "/kirana-store-bill-maker/", updated: "2026-10-22" },
+  { path: "/boutique-invoice-generator/", updated: "2026-10-22" },
+  { path: "/freelancer-invoice-generator/" },
+  { path: "/retail-pos-software/" },
+  { path: "/vyapar-free-alternative/" },
+  { path: "/cleartax-free-alternative/" },
+  { path: "/mybillbook-free-alternative/" },
+  { path: "/pdf-tools/" },
+];
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  return PAGES.map(({ path, updated }) => ({
+    url: `${BASE_URL}${path}`,
+    ...(updated ? { lastModified: new Date(updated) } : {}),
+  }));
 }

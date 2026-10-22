@@ -46,11 +46,13 @@
   RewriteCond %{REQUEST_FILENAME}.html -f
   RewriteRule ^(.*)$ $1.html [L]
 
-  # Fallback to index.html if using SPA routing
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  # Unknown URLs must return a real 404 (see ErrorDocument below). Serving the homepage
+  # with a 200 status for every missing URL creates "soft 404" duplicates that Google
+  # reports as duplicate or non-indexed pages. Every real route is a static folder, so
+  # no route depends on an index.html fallback.
 </IfModule>
+
+ErrorDocument 404 /404.html
 
 # Static Asset Long-Term Caching via mod_expires
 <IfModule mod_expires.c>
