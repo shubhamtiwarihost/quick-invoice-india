@@ -94,6 +94,7 @@ export default function HomePage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "SwiftGST",
+    alternateName: ["Swift GST", "SwiftGST India", "swiftgst.in"],
     url: "https://swiftgst.in/",
     logo: "https://swiftgst.in/logo.png",
     sameAs: [

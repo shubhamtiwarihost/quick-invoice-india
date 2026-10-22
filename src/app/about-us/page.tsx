@@ -45,6 +45,7 @@ export default function AboutUsPage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "SwiftGST",
+    alternateName: ["Swift GST", "SwiftGST India", "swiftgst.in"],
     url: "https://swiftgst.in",
     logo: "https://swiftgst.in/logo.png",
     sameAs: [
@@ -87,6 +88,10 @@ export default function AboutUsPage() {
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
           About SwiftGST
         </h1>
+        <p className="mt-3 text-sm text-teal-100/90 max-w-3xl">
+          SwiftGST (also written Swift GST) is a free GST billing and invoicing website at swiftgst.in,
+          built in India by Shubham Tiwari. It is not related to SWIFT, the international bank messaging network.
+        </p>
         <p className="mt-4 text-base sm:text-lg text-teal-100/90 leading-relaxed font-normal max-w-3xl">
           Empowering Indian freelancers, small businesses, and accountants with instantaneous,
           100% private GST compliance tools — zero sign-up paywalls, zero tele-calling, and zero cloud tracking.
