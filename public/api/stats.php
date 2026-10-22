@@ -18,12 +18,11 @@ if (!$authHeader && function_exists('getallheaders')) {
 $adminKey = '';
 if (preg_match('/Bearer\s+(\S+)/i', $authHeader, $matches)) {
     $adminKey = $matches[1];
-} elseif (!empty($_GET['key'])) {
-    $adminKey = trim($_GET['key']);
 }
 
-// Secret Admin Key
-if ($adminKey !== 'swift_master_2026' && $adminKey !== 'admin123') {
+// Admin key comes from the server-side .env (ADMIN_KEY); never hardcode it here.
+$expectedKey = swiftgst_env('ADMIN_KEY');
+if ($expectedKey === '' || $adminKey === '' || !hash_equals($expectedKey, $adminKey)) {
     http_response_code(403);
     echo json_encode(["status" => "error", "message" => "Unauthorized"]);
     exit;

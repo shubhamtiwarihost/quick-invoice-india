@@ -67,7 +67,27 @@
     </script>
   </head>
   <body class="h-full antialiased text-slate-900 selection:bg-indigo-500 selection:text-white">
-    <div id="root" class="min-h-full flex flex-col"></div>
+    <div id="root" class="min-h-full flex flex-col">
+      <!-- Static content for crawlers and no-JS visitors; replaced by the app once it loads. -->
+      <main style="max-width:760px;margin:0 auto;padding:32px 16px;font-family:system-ui,sans-serif;line-height:1.6">
+        <h1>Free PDF Tools: Merge, Rotate, Convert &amp; Protect PDFs Online</h1>
+        <p>SwiftGST PDF Tools runs entirely in your browser. Your files are processed on your own device and are not uploaded to a server. No signup is needed.</p>
+        <h2>What you can do</h2>
+        <ul>
+          <li><strong>Merge PDF:</strong> combine several PDF files into one and reorder them by drag and drop.</li>
+          <li><strong>Rotate pages:</strong> turn individual pages or the whole document by 90° or 180°.</li>
+          <li><strong>Delete pages:</strong> preview your pages and remove the ones you do not need.</li>
+          <li><strong>Images to PDF:</strong> convert JPG, PNG and WebP images into a single PDF.</li>
+          <li><strong>PDF to images:</strong> export each page as a PNG or JPG and download them as a ZIP.</li>
+          <li><strong>Watermark:</strong> add text with your choice of opacity and angle.</li>
+          <li><strong>Password protect:</strong> encrypt a PDF with a password. This uses 128-bit RC4, which is a basic level of protection and is not suited to highly sensitive documents.</li>
+        </ul>
+        <h2>Made for GST paperwork</h2>
+        <p>Combine invoices and challans into one file, convert photographed bills to PDF, or lock a PDF before emailing it to your CA.</p>
+        <p>Need to create an invoice first? Try the <a href="/invoice/">free GST invoice generator</a> or the <a href="/gst-calculator/">GST calculator</a>.</p>
+        <noscript><p>Please enable JavaScript to use the PDF tools.</p></noscript>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

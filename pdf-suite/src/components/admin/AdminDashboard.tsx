@@ -57,7 +57,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
   const refreshData = async () => {
     setIsRefreshing(true);
     const localData = getStoredEvents();
-    const adminKey = sessionStorage.getItem(MASTER_KEY_STORAGE) || 'swift_master_2026';
+    const adminKey = sessionStorage.getItem(MASTER_KEY_STORAGE) || '';
 
     try {
       const res = await fetch('/api/stats.php', {
@@ -123,19 +123,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToApp }) =
     }
   }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const envPass = import.meta.env.VITE_ADMIN_PASS;
     const input = passwordInput.trim();
+    if (!input) return;
 
-    if (input === 'admin123' || input === 'swift_master_2026' || (envPass && input === envPass)) {
-      sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
-      sessionStorage.setItem(MASTER_KEY_STORAGE, input);
-      setIsAuthenticated(true);
-      setAuthError(null);
-    } else {
-      setAuthError('Invalid administrator password or PIN.');
+    // The key is verified by the server (ADMIN_KEY in the server .env).
+    // Nothing secret is stored in this client bundle.
+    try {
+      const res = await fetch('/api/stats.php', {
+        headers: { Authorization: `Bearer ${input}` },
+      });
+      if (res.ok) {
+        sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
+        sessionStorage.setItem(MASTER_KEY_STORAGE, input);
+        setIsAuthenticated(true);
+        setAuthError(null);
+        return;
+      }
+    } catch {
+      // fall through to the error message
     }
+    setAuthError('Invalid administrator key.');
   };
 
   const handleLogout = () => {
