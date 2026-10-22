@@ -140,11 +140,6 @@ export default function ClearTaxAlternativePage() {
     },
     description:
       "100% free alternative to ClearTax invoice generator with no phone number login, zero watermarks, and local browser privacy.",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      ratingCount: "840",
-    },
   };
 
   const jsonLdFaq = {

@@ -141,11 +141,6 @@ export default function MyBillBookAlternativePage() {
     },
     description:
       "100% free alternative to myBillBook for GST invoicing without 100MB app installation, zero watermarks, and no monthly fees.",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      ratingCount: "910",
-    },
   };
 
   const jsonLdFaq = {

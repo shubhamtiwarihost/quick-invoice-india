@@ -130,11 +130,6 @@ export default function RetailPosSoftwarePage() {
     },
     description:
       "Free retail Point-of-Sale billing counter with barcode scanner support, 58mm/80mm thermal receipts, dynamic UPI QR, and offline capability.",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      ratingCount: "940",
-    },
   };
 
   const jsonLdFaq = {

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { InvoiceWorkspace } from "@/components/invoice/InvoiceWorkspace";
-import { ToolsHub } from "@/components/shared/ToolsHub";
-import { HomeComplianceGuide } from "@/components/home/HomeComplianceGuide";
-import { RetailSuiteShowcase } from "@/components/home/RetailSuiteShowcase";
+import { InvoiceGuide } from "@/components/invoice/InvoiceGuide";
 
 export const metadata: Metadata = {
   title: "Free GST Invoice Generator Online",
@@ -31,13 +29,9 @@ export const metadata: Metadata = {
 export default function InvoicePage() {
   return (
     <InvoiceWorkspace
-      childrenBelowWorkspace={
-        <>
-          <RetailSuiteShowcase />
-          <ToolsHub />
-          <HomeComplianceGuide />
-        </>
-      }
+      pageTitle="Free GST Invoice Generator"
+      badgeText="Tax Invoice & Bill of Supply"
+      childrenBelowWorkspace={<InvoiceGuide />}
     />
   );
 }

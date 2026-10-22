@@ -88,11 +88,6 @@ export default function HomePage() {
     },
     description:
       "Free browser-based GST invoice generator and tax utility for Indian small businesses, freelancers, and enterprises.",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      ratingCount: "1280",
-    },
   };
 
   const jsonLdOrg = {

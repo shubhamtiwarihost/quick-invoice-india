@@ -147,11 +147,6 @@ export default function VyaparAlternativePage() {
     },
     description:
       "100% free alternative to Vyapar billing software with retail POS, barcode scanning, zero watermark, and no yearly renewal fees.",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      ratingCount: "1150",
-    },
   };
 
   const jsonLdFaq = {

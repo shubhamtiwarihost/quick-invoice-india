@@ -183,9 +183,9 @@ const TOOL_CATEGORIES: ToolCategory[] = [
       {
         title: "HSN & SAC Code Directory",
         href: "/hsn-finder",
-        badge: "10,000+ Codes",
+        badge: "Common Codes",
         description:
-          "Search 4 to 8 digit Harmonized System Nomenclature (HSN) and Service Accounting Codes (SAC) with standard GST rates.",
+          "Search commonly used HSN and SAC codes with their GST 2.0 rates.",
         icon: Search,
       },
       {

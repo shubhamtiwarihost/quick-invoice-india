@@ -484,19 +484,18 @@ export function InvoiceWorkspace({
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
           <div className="flex items-center gap-4 sm:gap-7 flex-wrap">
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-slate-900 font-mono text-xs sm:text-sm">₹125Cr+</span>
-              <span className="text-[11px] text-slate-500">Invoices Generated</span>
+              <span className="font-extrabold text-slate-900 text-xs sm:text-sm">No signup</span>
+              <span className="text-[11px] text-slate-500">Start billing instantly</span>
             </div>
             <div className="h-3 w-px bg-slate-200 hidden sm:block" />
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-slate-900 font-mono text-xs sm:text-sm">65,000+</span>
-              <span className="text-[11px] text-slate-500">Indian Kiranas &amp; SMBs</span>
+              <span className="font-extrabold text-slate-900 text-xs sm:text-sm">GST 2.0</span>
+              <span className="text-[11px] text-slate-500">0 / 5 / 18 / 40% slabs</span>
             </div>
             <div className="h-3 w-px bg-slate-200 hidden sm:block" />
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-amber-500 text-xs">★★★★★</span>
-              <span className="font-bold text-slate-900 text-[11px]">4.9 / 5.0</span>
-              <span className="text-[11px] text-slate-500">(1,280+ Reviews)</span>
+              <span className="font-extrabold text-slate-900 text-xs sm:text-sm">Private</span>
+              <span className="text-[11px] text-slate-500">Data stays in your browser</span>
             </div>
           </div>
           <div className="hidden xl:flex items-center gap-2 text-[11px] font-semibold text-slate-500">
